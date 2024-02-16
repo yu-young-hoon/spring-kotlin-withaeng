@@ -7,7 +7,7 @@ import jakarta.persistence.Table
 
 @Table(name = "accompany_reply_like")
 @Entity
-class AccompanyReplyLikeEntity(
+class AccompanyReplyLike(
     @Column(name = "accompany_reply_id", nullable = false)
     val accompanyReplyId: Long,
 
