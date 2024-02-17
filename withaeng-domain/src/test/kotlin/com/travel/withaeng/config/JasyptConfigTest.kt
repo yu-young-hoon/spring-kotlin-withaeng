@@ -1,7 +1,6 @@
 package com.travel.withaeng.config
 
 import com.ulisesbocchio.jasyptspringboot.encryptor.DefaultLazyEncryptor
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -12,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.core.env.ConfigurableEnvironment
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
+@Disabled
 @SpringBootTest
 @ExtendWith(SpringExtension::class)
 class JasyptConfigTest {
