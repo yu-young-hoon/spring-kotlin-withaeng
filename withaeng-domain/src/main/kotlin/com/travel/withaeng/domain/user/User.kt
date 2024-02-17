@@ -7,7 +7,7 @@ import java.time.LocalDate
 
 @Table(name = "users")
 @Entity
-class UserEntity(
+class User(
     @Column(name = "nickname", nullable = false)
     val nickname: String,
 
