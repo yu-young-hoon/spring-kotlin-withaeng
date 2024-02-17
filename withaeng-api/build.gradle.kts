@@ -1,8 +1,8 @@
-tasks.bootJar {
+tasks.getByName("bootJar") {
     enabled = true
 }
 
-tasks.jar {
+tasks.getByName("jar") {
     enabled = false
 }
 
