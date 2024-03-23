@@ -11,19 +11,14 @@ class UserService(private val userRepository: UserRepository) {
     fun createUser(createUserDto: CreateUserDto): UserDto {
         return userRepository.save(
             User.create(
+                email = createUserDto.email,
+                password = createUserDto.password,
                 nickname = createUserDto.nickname,
-                socialType = createUserDto.socialType,
                 profileImageUrl = createUserDto.profileImageUrl,
-                providerUniqueKey = createUserDto.providerUniqueKey,
                 birth = createUserDto.birth,
                 isMale = createUserDto.isMale,
                 bio = createUserDto.bio
             )
         ).toDto()
     }
-
-    fun findByProviderUniqueKeyOrNull(providerUniqueKey: String): UserDto? {
-        return userRepository.findByProviderUniqueKey(providerUniqueKey)?.toDto()
-    }
-
 }

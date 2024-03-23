@@ -2,21 +2,23 @@ package com.travel.withaeng.domain.user
 
 import com.travel.withaeng.converter.UserRoleConverter
 import com.travel.withaeng.domain.BaseEntity
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Convert
+import jakarta.persistence.Entity
+import jakarta.persistence.Table
 import java.time.LocalDate
 
 @Table(name = "users")
 @Entity
 class User(
+    @Column(name = "email", nullable = false)
+    val email: String,
+
+    @Column(name = "password", nullable = false)
+    val password: String,
+
     @Column(name = "nickname", nullable = false)
     val nickname: String,
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "social_type", nullable = false)
-    val socialType: SocialType,
-
-    @Column(name = "provider_unique_key", nullable = false)
-    val providerUniqueKey: String,
 
     @Column(name = "birth", nullable = true)
     val birth: LocalDate? = null,
@@ -38,19 +40,19 @@ class User(
     companion object {
 
         fun create(
+            email: String,
+            password: String,
             nickname: String,
-            socialType: SocialType,
-            providerUniqueKey: String,
             birth: LocalDate? = null,
             isMale: Boolean? = null,
             profileImageUrl: String? = null,
             bio: String? = null,
         ): User {
             return User(
+                email = email,
+                password = password,
                 nickname = nickname,
-                socialType = socialType,
                 profileImageUrl = profileImageUrl,
-                providerUniqueKey = providerUniqueKey,
                 birth = birth,
                 isMale = isMale,
                 bio = bio,

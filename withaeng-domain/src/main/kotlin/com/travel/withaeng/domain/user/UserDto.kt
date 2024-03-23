@@ -4,9 +4,9 @@ import java.time.LocalDate
 
 data class UserDto(
     val id: Long,
+    val email: String,
+    val password: String,
     val nickname: String,
-    val socialType: SocialType,
-    val providerUniqueKey: String,
     val birth: LocalDate? = null,
     val isMale: Boolean? = null,
     val profileImageUrl: String? = null,
@@ -16,9 +16,9 @@ data class UserDto(
 
 fun User.toDto(): UserDto = UserDto(
     id = id,
+    email = email,
+    password = password,
     nickname = nickname,
-    socialType = socialType,
-    providerUniqueKey = providerUniqueKey,
     birth = birth,
     isMale = isMale,
     profileImageUrl = profileImageUrl,
@@ -27,9 +27,9 @@ fun User.toDto(): UserDto = UserDto(
 )
 
 data class CreateUserDto(
+    val email: String,
+    val password: String,
     val nickname: String,
-    val socialType: SocialType,
-    val providerUniqueKey: String,
     val birth: LocalDate? = null,
     val isMale: Boolean? = null,
     val profileImageUrl: String? = null,
