@@ -15,6 +15,8 @@ dependencies {
     implementation(project(":withaeng-external"))
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
+    
     api("org.springframework.boot:spring-boot-starter-data-jpa")
 
     // jwt
