@@ -2,7 +2,8 @@ rootProject.name = "withaeng"
 include(
     "withaeng-api",
     "withaeng-domain",
-    "withaeng-common"
+    "withaeng-common",
+    "withaeng-external"
 )
 
 pluginManagement {
@@ -22,3 +23,4 @@ pluginManagement {
         }
     }
 }
+include("withaeng-external")
