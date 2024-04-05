@@ -1,0 +1,9 @@
+cloud:
+  aws:
+    credentials:
+      access-key: ENC(ebs6pebbMa3L64Bj4JRaYm8mR4L+mXbKtwIslRT8D1/1qeGoqvu8NbjUxcU7vcL8)
+      secret-key: ENC(I7orBCvSQW/PqGYJZFOa8Uz9pz4nbCp7QzuU7PNbYDuABMXzar4thmcXPRvQ+I3o)
+    region:
+      static: ENC(1OX/+Td6WwTc/zbC8t/DVgDHX24lMOV+ZQbza/IstkTM8E3UKwloe8EaH97FKpzT)
+    ses:
+      from: ENC(S6WIEUO3m5JKHw7PrhpgkAvQjd1LzwwLRXEu2I9yUtzErtBEDk6EEt28Ltzypo8/fZi7Ua8VkHjWh9498FT5DA==)
