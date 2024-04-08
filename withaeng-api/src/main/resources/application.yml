@@ -8,3 +8,4 @@ spring:
 witheang:
   auth:
     jwt-secret-key: ENC(i5HqamjyyaTwDSyiHXoAxJrP11XyQ8mArvAUI1RD15tteCbIEnzVVp+qcYB45xDkybBZmjY79HDp/Ci5YkkSyg==)
+    jwt-issuer: https://github.com/withaeng/withaeng-backend
