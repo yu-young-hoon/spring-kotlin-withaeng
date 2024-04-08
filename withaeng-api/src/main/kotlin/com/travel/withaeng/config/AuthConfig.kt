@@ -1,7 +1,8 @@
 package com.travel.withaeng.config
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.travel.withaeng.security.jwt.JwtProvider
+import com.travel.withaeng.security.jwt.JwtAgent
+import com.travel.withaeng.security.jwt.JwtAgentImpl
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
@@ -12,10 +13,10 @@ import org.springframework.context.annotation.Configuration
 class AuthConfig {
 
     @Bean
-    fun jwtProvider(mapper: ObjectMapper, authProperty: AuthProperty): JwtProvider {
-        return JwtProvider(mapper, authProperty.jwtSecretKey)
+    fun jwtAgent(mapper: ObjectMapper, authProperty: AuthProperty): JwtAgent {
+        return JwtAgentImpl(mapper, authProperty.jwtSecretKey, authProperty.jwtIssuer)
     }
 }
 
 @ConfigurationProperties(prefix = "witheang.auth")
-data class AuthProperty(val jwtSecretKey: String)
+data class AuthProperty(val jwtSecretKey: String, val jwtIssuer: String)
