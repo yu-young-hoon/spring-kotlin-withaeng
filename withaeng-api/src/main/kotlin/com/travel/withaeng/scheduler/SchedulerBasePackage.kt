@@ -1,0 +1,3 @@
+package com.travel.withaeng.scheduler
+
+interface SchedulerBasePackage
