@@ -14,7 +14,11 @@ class AuthConfig {
 
     @Bean
     fun jwtAgent(mapper: ObjectMapper, authProperty: AuthProperty): JwtAgent {
-        return JwtAgentImpl(mapper, authProperty.jwtSecretKey, authProperty.jwtIssuer)
+        return JwtAgentImpl(
+            objectMapper = mapper,
+            issuer = authProperty.jwtIssuer,
+            key = authProperty.jwtSecretKey
+        )
     }
 }
 

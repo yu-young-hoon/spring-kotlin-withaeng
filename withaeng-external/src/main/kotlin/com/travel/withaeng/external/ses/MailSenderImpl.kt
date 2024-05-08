@@ -9,14 +9,20 @@ import org.thymeleaf.context.Context
 import java.nio.charset.StandardCharsets
 
 @Service
-class MailSenderImpl(private val emailService: AmazonSimpleEmailService, private val templateEngine: TemplateEngine) :
-    MailSender {
+class MailSenderImpl(
+    private val emailService: AmazonSimpleEmailService,
+    private val templateEngine: TemplateEngine
+) : MailSender {
 
     @Value("\${cloud.aws.ses.from}")
     private lateinit var from: String
 
-    override fun send(subject: String, variables: Map<String, Any>, vararg to: String) {
-        val content = templateEngine.process("email-template", createContext(variables))
+    override fun sendValidatingEmail(validatingEmailUrl: String, vararg to: String) {
+        send("email-template", VALIDATING_EMAIL_SUBJECT, mapOf("validatingEmailUrl" to validatingEmailUrl), *to)
+    }
+
+    private fun send(template: String, subject: String, variables: Map<String, Any>, vararg to: String) {
+        val content = templateEngine.process(template, createContext(variables))
         val request = createSendEmailRequest(subject, content, *to)
         emailService.sendEmail(request)
     }
@@ -34,5 +40,9 @@ class MailSenderImpl(private val emailService: AmazonSimpleEmailService, private
                     .withSubject(Content().withCharset(StandardCharsets.UTF_8.name()).withData(subject))
                     .withBody(Body().withHtml(Content().withCharset(StandardCharsets.UTF_8.name()).withData(content)))
             )
+    }
+
+    companion object {
+        private const val VALIDATING_EMAIL_SUBJECT = "같이행 서비스 이메일 인증을 부탁드립니다."
     }
 }
