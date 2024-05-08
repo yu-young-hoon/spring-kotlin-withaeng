@@ -6,7 +6,6 @@ import com.travel.withaeng.domain.user.UserRole
 data class UserInfo(
     val id: Long,
     val email: String,
-    val nickname: String,
     val roles: Set<UserRole>,
 ) {
     companion object {
@@ -14,7 +13,6 @@ data class UserInfo(
             return UserInfo(
                 id = user.id,
                 email = user.email,
-                nickname = user.nickname,
                 roles = user.roles
             )
         }
