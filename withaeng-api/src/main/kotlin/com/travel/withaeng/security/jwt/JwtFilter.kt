@@ -3,6 +3,7 @@ package com.travel.withaeng.security.jwt
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.travel.withaeng.common.ApiResponse
 import com.travel.withaeng.common.Constants.Authentication.BEARER_TYPE
+import com.travel.withaeng.common.WhiteList.getWhiteListForAuthenticationFilter
 import com.travel.withaeng.common.exception.WithaengException
 import com.travel.withaeng.common.exception.WithaengExceptionType
 import com.travel.withaeng.security.authentication.JwtAuthentication
@@ -70,19 +71,10 @@ class JwtFilter(
     private fun HttpServletRequest.getAuthorization(): String? = getHeader(HttpHeaders.AUTHORIZATION)
 
     private fun isNotCheckEndpoint(request: HttpServletRequest): Boolean {
-        return NOT_CHECK_ENDPOINTS.any { request.requestURI.startsWith(it) }
+        return getWhiteListForAuthenticationFilter().any { request.requestURI.startsWith(it) }
     }
 
     companion object {
         private const val AUTH_PROVIDER_SPLIT_DELIMITER: String = " "
-        private val NOT_CHECK_ENDPOINTS = listOf(
-            // Common
-            "/favicon.ico",
-            "/error",
-            // Swagger
-            "/api-docs", "/swagger-ui", "/swagger-resources",
-            // SignIn/SignUp Endpoints
-            "/api/v1/auth",
-        )
     }
 }
