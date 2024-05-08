@@ -17,14 +17,14 @@ class User(
     @Column(name = "password", nullable = false)
     val password: String,
 
-    @Column(name = "nickname", nullable = false)
-    val nickname: String,
+    @Column(name = "nickname", nullable = true)
+    val nickname: String? = null,
 
-    @Column(name = "birth", nullable = true)
-    val birth: LocalDate? = null,
+    @Column(name = "birth", nullable = false)
+    val birth: LocalDate,
 
-    @Column(name = "is_male", nullable = true)
-    val isMale: Boolean? = null,
+    @Column(name = "is_male", nullable = false)
+    val isMale: Boolean,
 
     @Column(name = "profile_image_url")
     val profileImageUrl: String? = null,
@@ -42,21 +42,15 @@ class User(
         fun create(
             email: String,
             password: String,
-            nickname: String,
-            birth: LocalDate? = null,
-            isMale: Boolean? = null,
-            profileImageUrl: String? = null,
-            bio: String? = null,
+            birth: LocalDate,
+            isMale: Boolean
         ): User {
             return User(
                 email = email,
                 password = password,
-                nickname = nickname,
-                profileImageUrl = profileImageUrl,
                 birth = birth,
                 isMale = isMale,
-                bio = bio,
-                roles = setOf(UserRole.USER)
+                roles = setOf(UserRole.NON_USER)
             )
         }
     }

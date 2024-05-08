@@ -13,12 +13,18 @@ class UserService(private val userRepository: UserRepository) {
             User.create(
                 email = createUserDto.email,
                 password = createUserDto.password,
-                nickname = createUserDto.nickname,
-                profileImageUrl = createUserDto.profileImageUrl,
                 birth = createUserDto.birth,
-                isMale = createUserDto.isMale,
-                bio = createUserDto.bio
+                isMale = createUserDto.isMale
             )
         ).toDto()
+    }
+
+    fun findByEmailOrNull(email: String): UserDto? {
+        return userRepository.findByEmail(email)?.toDto()
+    }
+
+    @Transactional
+    fun deleteByEmail(email: String) {
+        return userRepository.deleteByEmail(email)
     }
 }

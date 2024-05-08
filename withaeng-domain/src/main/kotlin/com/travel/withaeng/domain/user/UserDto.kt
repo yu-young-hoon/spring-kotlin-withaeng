@@ -6,7 +6,7 @@ data class UserDto(
     val id: Long,
     val email: String,
     val password: String,
-    val nickname: String,
+    val nickname: String? = null,
     val birth: LocalDate? = null,
     val isMale: Boolean? = null,
     val profileImageUrl: String? = null,
@@ -29,9 +29,6 @@ fun User.toDto(): UserDto = UserDto(
 data class CreateUserDto(
     val email: String,
     val password: String,
-    val nickname: String,
-    val birth: LocalDate? = null,
-    val isMale: Boolean? = null,
-    val profileImageUrl: String? = null,
-    val bio: String? = null,
+    val birth: LocalDate,
+    val isMale: Boolean
 )
