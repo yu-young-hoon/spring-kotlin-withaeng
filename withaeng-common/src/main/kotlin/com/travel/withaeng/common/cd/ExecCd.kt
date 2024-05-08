@@ -1,10 +1,8 @@
 package com.travel.withaeng.common.cd
 
-enum class ExecCd (
-
-        val execCd : String,
-        val execNm : String
-
+enum class ExecCd(
+    val execCd: String,
+    val execNm: String
 ) {
 
     CREATE("CREATE", "등록"),

@@ -1,12 +1,12 @@
 package com.travel.withaeng.common.cd
 
-enum class CityCd (
+enum class CityCd(
 
     val countryCd: String,
-    val cityCd : String,
-    val cityNm : String
+    val cityCd: String,
+    val cityNm: String
 
-){
+) {
 
     SEOUL(CountryCd.KOREA.countryCd, "SEOUL", "서울"),
     BUSAN(CountryCd.KOREA.countryCd, "BUSAN", "부산"),

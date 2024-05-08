@@ -1,10 +1,8 @@
 package com.travel.withaeng.common.cd
 
 enum class ContinentCd(
-
-    val continentCd : String,
-    val continentNm : String
-
+    val continentCd: String,
+    val continentNm: String
 ) {
 
     EAST_ASIA("EA", "동아시아"),

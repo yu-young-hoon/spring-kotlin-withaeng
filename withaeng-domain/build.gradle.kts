@@ -21,5 +21,3 @@ dependencies {
     // jasypt
     api("com.github.ulisesbocchio:jasypt-spring-boot-starter:$jasyptVersion")
 }
-
-

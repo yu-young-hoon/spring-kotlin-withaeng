@@ -1,10 +1,8 @@
 package com.travel.withaeng.common.cd
 
-enum class AccompanyStatusCd (
-
-    val statusCd : String,
-    val statusNm : String
-
+enum class AccompanyStatusCd(
+    val statusCd: String,
+    val statusNm: String
 ) {
 
     ING("ING", "동행 구인중"),
