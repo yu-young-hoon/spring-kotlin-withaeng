@@ -4,17 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.travel.withaeng.common.cd.AccompanyStatusCd
 import com.travel.withaeng.common.cd.ExecCd
 import jakarta.validation.constraints.NotBlank
-import lombok.Getter
-import lombok.Setter
 import org.jetbrains.annotations.NotNull
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
-class AccompanyDto
-
-@Setter
-@Getter
 class CreateAccompanyDTO(
 
     @NotNull
@@ -115,8 +109,6 @@ class CreateAccompanyDTO(
     }
 }
 
-@Setter
-@Getter
 class ModifyAccompanyDTO(
 
     @NotNull

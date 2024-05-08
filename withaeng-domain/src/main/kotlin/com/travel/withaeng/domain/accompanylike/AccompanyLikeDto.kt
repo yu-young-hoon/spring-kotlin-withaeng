@@ -1,14 +1,8 @@
 package com.travel.withaeng.domain.accompanylike
 
 import com.travel.withaeng.common.cd.ExecCd
-import lombok.Getter
-import lombok.Setter
 import org.jetbrains.annotations.NotNull
 
-class AccompanyLikeDto
-
-@Setter
-@Getter
 class CreateAccompanyLikeDTO(
 
     @NotNull
@@ -38,8 +32,6 @@ class CreateAccompanyLikeDTO(
 
 }
 
-@Setter
-@Getter
 class DeleteAccompanyLikeDTO(
 
     @NotNull

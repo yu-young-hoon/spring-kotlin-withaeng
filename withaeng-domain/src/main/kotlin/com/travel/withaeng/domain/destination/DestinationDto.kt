@@ -1,20 +1,11 @@
 package com.travel.withaeng.domain.destination
 
 
-import lombok.Getter
-import lombok.NoArgsConstructor
-import lombok.Setter
-
-@Setter
-@Getter
 class DestinationDto(
 
     var continentList: List<Continent>
 )
 
-@Setter
-@Getter
-@NoArgsConstructor
 class Continent(
 
     var continentCd: String,
@@ -27,9 +18,6 @@ class Continent(
 
 }
 
-@Setter
-@Getter
-@NoArgsConstructor
 class Country(
 
     var countryCd: String,
@@ -43,8 +31,6 @@ class Country(
 
 }
 
-@Setter
-@Getter
 class City(
 
     var cityCd: String,

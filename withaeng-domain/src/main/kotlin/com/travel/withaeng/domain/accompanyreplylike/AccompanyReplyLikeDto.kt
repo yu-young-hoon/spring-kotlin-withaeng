@@ -1,14 +1,10 @@
 package com.travel.withaeng.domain.accompanyreplylike
 
 import com.travel.withaeng.common.cd.ExecCd
-import lombok.Getter
-import lombok.Setter
 import org.jetbrains.annotations.NotNull
 
 class AccompanyReplyLikeDto
 
-@Setter
-@Getter
 class CreateAccompanyReplyLikeDTO(
 
     @NotNull
@@ -38,8 +34,6 @@ class CreateAccompanyReplyLikeDTO(
 
 }
 
-@Setter
-@Getter
 class DeleteAccompanyReplyLikeDTO(
 
     @NotNull

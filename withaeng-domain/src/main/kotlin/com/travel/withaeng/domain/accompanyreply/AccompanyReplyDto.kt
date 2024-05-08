@@ -2,14 +2,8 @@ package com.travel.withaeng.domain.accompanyreply
 
 import com.travel.withaeng.common.cd.ExecCd
 import jakarta.validation.constraints.NotBlank
-import lombok.Getter
-import lombok.Setter
 import org.jetbrains.annotations.NotNull
 
-class AccompanyReplyDto
-
-@Setter
-@Getter
 class CreateAccompanyReplyDTO(
 
     @NotNull
@@ -59,8 +53,6 @@ class CreateAccompanyReplyDTO(
 
 }
 
-@Setter
-@Getter
 class ModifyAccompanyReplyDTO(
 
     @NotNull
@@ -113,8 +105,6 @@ class ModifyAccompanyReplyDTO(
 
 }
 
-@Setter
-@Getter
 class DeleteAccompanyReplyDTO(
 
     @NotNull
