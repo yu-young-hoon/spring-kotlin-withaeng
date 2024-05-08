@@ -6,6 +6,15 @@ spring:
       - classpath:/application-domain.yml
       - classpath:/application-external.yml
 
+# Swagger docs
+springdoc:
+  swagger-ui:
+    path: /api-docs
+    operations-sorter: alpha
+  api-docs:
+    groups:
+      enabled: true
+
 witheang:
   auth:
     jwt-secret-key: ENC(1t2RYsNu8JCGgZjC5HuE9t9690mWUiygMhKfUQIn3ZpVlSYI0WvRPnQswh3Uti3gBoDqJ4Zk3moN6wWswWQC7g+IFiEDUvqjTLzhfJrl9A0TIW0MOY0kd+vnVu0sernJ)

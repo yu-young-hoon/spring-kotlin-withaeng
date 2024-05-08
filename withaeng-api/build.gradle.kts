@@ -7,6 +7,8 @@ tasks.getByName("jar") {
 }
 
 val jjwtVersion: String by project.extra
+val swaggerVersion: String by project.extra
+
 dependencies {
     implementation(project(":withaeng-domain"))
     implementation(project(":withaeng-common"))
@@ -19,4 +21,7 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:$jjwtVersion")
+
+    // Swagger
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$swaggerVersion")
 }
