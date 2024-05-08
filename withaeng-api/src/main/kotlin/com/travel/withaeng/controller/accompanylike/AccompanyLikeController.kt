@@ -1,7 +1,6 @@
-package com.travel.withaeng.accompanyLike.controller
+package com.travel.withaeng.controller.accompanylike
 
 import com.travel.withaeng.common.ApiResponse
-import com.travel.withaeng.domain.accompany.CreateAccompanyDTO
 import com.travel.withaeng.domain.accompanylike.AccompanyLikeService
 import com.travel.withaeng.domain.accompanylike.CreateAccompanyLikeDTO
 import com.travel.withaeng.domain.accompanylike.DeleteAccompanyLikeDTO

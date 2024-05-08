@@ -1,4 +1,4 @@
-package com.travel.withaeng.accompanyReply.controller
+package com.travel.withaeng.controller.accompanyreply
 
 import com.travel.withaeng.common.ApiResponse
 import com.travel.withaeng.domain.accompanyreply.AccompanyReplyService

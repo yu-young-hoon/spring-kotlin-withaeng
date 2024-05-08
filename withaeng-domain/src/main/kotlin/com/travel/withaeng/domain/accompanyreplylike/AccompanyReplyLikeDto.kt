@@ -1,9 +1,6 @@
 package com.travel.withaeng.domain.accompanyreplylike
 
 import com.travel.withaeng.common.cd.ExecCd
-import com.travel.withaeng.domain.accompanylike.AccompanyLikeEntity
-import com.travel.withaeng.domain.accompanylike.AccompanyLikeHistEntity
-import jakarta.persistence.Column
 import lombok.Getter
 import lombok.Setter
 import org.jetbrains.annotations.NotNull
