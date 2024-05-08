@@ -5,35 +5,34 @@ import lombok.Getter
 import lombok.Setter
 import org.jetbrains.annotations.NotNull
 
-class AccompanyReplyLikeDto {
-}
+class AccompanyReplyLikeDto
 
 @Setter
 @Getter
 class CreateAccompanyReplyLikeDTO(
 
-        @NotNull
-        val replyId: Long,
+    @NotNull
+    val replyId: Long,
 
-        @NotNull
-        val userId: Long,
+    @NotNull
+    val userId: Long,
 
-        ){
+    ) {
     fun toEntity(): AccompanyReplyLikeEntity {
         return AccompanyReplyLikeEntity(
-                0,
-                this.replyId,
-                this.userId
+            0,
+            this.replyId,
+            this.userId
         )
     }
 
     fun toHistEntity(entity: AccompanyReplyLikeEntity): AccompanyReplyLikeHistEntity {
         return AccompanyReplyLikeHistEntity(
-                0,
-                entity.replyLikeId,
-                entity.replyId,
-                entity.userId,
-                ExecCd.CREATE.execCd
+            0,
+            entity.replyLikeId,
+            entity.replyId,
+            entity.userId,
+            ExecCd.CREATE.execCd
         )
     }
 
@@ -43,31 +42,31 @@ class CreateAccompanyReplyLikeDTO(
 @Getter
 class DeleteAccompanyReplyLikeDTO(
 
-        @NotNull
-        val replyLikeId: Long,
+    @NotNull
+    val replyLikeId: Long,
 
-        @NotNull
-        val replyId: Long,
+    @NotNull
+    val replyId: Long,
 
-        @NotNull
-        val userId: Long
+    @NotNull
+    val userId: Long
 
-        ){
+) {
     fun toEntity(): AccompanyReplyLikeEntity {
         return AccompanyReplyLikeEntity(
-                this.replyLikeId,
-                this.replyId,
-                this.userId
+            this.replyLikeId,
+            this.replyId,
+            this.userId
         )
     }
 
     fun toHistEntity(entity: AccompanyReplyLikeEntity): AccompanyReplyLikeHistEntity {
         return AccompanyReplyLikeHistEntity(
-                0,
-                entity.replyLikeId,
-                entity.replyId,
-                entity.userId,
-                ExecCd.DELETE.execCd
+            0,
+            entity.replyLikeId,
+            entity.replyId,
+            entity.userId,
+            ExecCd.DELETE.execCd
         )
     }
 
@@ -75,6 +74,6 @@ class DeleteAccompanyReplyLikeDTO(
 
 data class GetReplyLikeDTO(
 
-    var replyId : Long,
-    var likeCnt : Long
+    var replyId: Long,
+    var likeCnt: Long
 )

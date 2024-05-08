@@ -1,20 +1,12 @@
 package com.travel.withaeng.domain.accompanyreply
 
 import com.travel.withaeng.common.cd.ExecCd
-import com.travel.withaeng.domain.accompany.AccompanyDestinationEntity
-import com.travel.withaeng.domain.accompany.AccompanyDetailEntity
-import com.travel.withaeng.domain.accompany.AccompanyEntity
-import com.travel.withaeng.domain.accompanylike.AccompanyLikeEntity
-import com.travel.withaeng.domain.accompanylike.AccompanyLikeHistEntity
-import jakarta.persistence.Column
 import jakarta.validation.constraints.NotBlank
 import lombok.Getter
 import lombok.Setter
 import org.jetbrains.annotations.NotNull
-import java.time.LocalDate
 
-class AccompanyReplyDto {
-}
+class AccompanyReplyDto
 
 @Setter
 @Getter
@@ -27,41 +19,41 @@ class CreateAccompanyReplyDTO(
     val accompanyId: Long,
 
     @NotNull
-    val parentId : Long,
+    val parentId: Long,
 
     @NotNull
-    val depth : Long,
+    val depth: Long,
 
     @NotNull
-    val replyOrder : Long,
+    val replyOrder: Long,
 
     @NotBlank(message = "댓글 내용이 존재하지 않습니다.")
     var content: String,
 
-    ){
+    ) {
     fun toEntity(): AccompanyReplyEntity {
         return AccompanyReplyEntity(
-                0,
-                this.accompanyId,
-                this.parentId,
-                this.depth,
-                this.replyOrder,
-                this.userId,
-                this.content
+            0,
+            this.accompanyId,
+            this.parentId,
+            this.depth,
+            this.replyOrder,
+            this.userId,
+            this.content
         )
     }
 
     fun toHistEntity(entity: AccompanyReplyEntity): AccompanyReplyHistEntity {
         return AccompanyReplyHistEntity(
-                0,
-                entity.replyId,
-                entity.accompanyId,
-                entity.parentId,
-                entity.depth,
-                entity.replyOrder,
-                entity.userId,
-                entity.content,
-                ExecCd.CREATE.execCd
+            0,
+            entity.replyId,
+            entity.accompanyId,
+            entity.parentId,
+            entity.depth,
+            entity.replyOrder,
+            entity.userId,
+            entity.content,
+            ExecCd.CREATE.execCd
         )
     }
 
@@ -71,51 +63,51 @@ class CreateAccompanyReplyDTO(
 @Getter
 class ModifyAccompanyReplyDTO(
 
-        @NotNull
-        val replyId : Long,
+    @NotNull
+    val replyId: Long,
 
-        @NotNull
-        val userId: Long,
+    @NotNull
+    val userId: Long,
 
-        @NotNull
-        val accompanyId: Long,
+    @NotNull
+    val accompanyId: Long,
 
-        @NotNull
-        val parentId : Long,
+    @NotNull
+    val parentId: Long,
 
-        @NotNull
-        val depth : Long,
+    @NotNull
+    val depth: Long,
 
-        @NotNull
-        val replyOrder : Long,
+    @NotNull
+    val replyOrder: Long,
 
-        @NotBlank(message = "댓글 내용이 존재하지 않습니다.")
-        var content: String,
+    @NotBlank(message = "댓글 내용이 존재하지 않습니다.")
+    var content: String,
 
-        ){
+    ) {
     fun toEntity(): AccompanyReplyEntity {
         return AccompanyReplyEntity(
-                0,
-                this.accompanyId,
-                this.parentId,
-                this.depth,
-                this.replyOrder,
-                this.userId,
-                this.content
+            0,
+            this.accompanyId,
+            this.parentId,
+            this.depth,
+            this.replyOrder,
+            this.userId,
+            this.content
         )
     }
 
     fun toHistEntity(entity: AccompanyReplyEntity): AccompanyReplyHistEntity {
         return AccompanyReplyHistEntity(
-                0,
-                entity.replyId,
-                entity.accompanyId,
-                entity.parentId,
-                entity.depth,
-                entity.replyOrder,
-                entity.userId,
-                entity.content,
-                ExecCd.UPDATE.execCd
+            0,
+            entity.replyId,
+            entity.accompanyId,
+            entity.parentId,
+            entity.depth,
+            entity.replyOrder,
+            entity.userId,
+            entity.content,
+            ExecCd.UPDATE.execCd
         )
     }
 
@@ -125,28 +117,28 @@ class ModifyAccompanyReplyDTO(
 @Getter
 class DeleteAccompanyReplyDTO(
 
-        @NotNull
-        val replyId : Long,
+    @NotNull
+    val replyId: Long,
 
-        @NotNull
-        val userId: Long,
+    @NotNull
+    val userId: Long,
 
-        @NotNull
-        val accompanyId: Long
+    @NotNull
+    val accompanyId: Long
 
-        ){
+) {
 
     fun toHistEntity(entity: AccompanyReplyEntity): AccompanyReplyHistEntity {
         return AccompanyReplyHistEntity(
-                0,
-                entity.replyId,
-                entity.accompanyId,
-                entity.parentId,
-                entity.depth,
-                entity.replyOrder,
-                entity.userId,
-                entity.content,
-                ExecCd.DELETE.execCd
+            0,
+            entity.replyId,
+            entity.accompanyId,
+            entity.parentId,
+            entity.depth,
+            entity.replyOrder,
+            entity.userId,
+            entity.content,
+            ExecCd.DELETE.execCd
         )
     }
 
@@ -154,27 +146,29 @@ class DeleteAccompanyReplyDTO(
 
 data class GetReplyDTO(
 
-        var replyId : Long,
-        var userId: Long,
-        var accompanyId: Long,
-        var parentId : Long,
-        var depth : Long,
-        var replyOrder : Long,
-        var content: String,
-        var likeCnt : Long
-){
+    var replyId: Long,
+    var userId: Long,
+    var accompanyId: Long,
+    var parentId: Long,
+    var depth: Long,
+    var replyOrder: Long,
+    var content: String,
+    var likeCnt: Long
+) {
 
-    constructor(replyId : Long, userId : Long, accompanyId: Long, parentId : Long,
-                depth : Long, replyOrder : Long, content : String) :
+    constructor(
+        replyId: Long, userId: Long, accompanyId: Long, parentId: Long,
+        depth: Long, replyOrder: Long, content: String
+    ) :
             this(replyId, userId, accompanyId, parentId, depth, replyOrder, content, 0)
 
-    fun addLikeCnt(cnt: Long){
+    fun addLikeCnt(cnt: Long) {
         likeCnt = cnt
     }
 
     companion object {
         @JvmStatic
-        fun toDto(accompanyReplyEntity : AccompanyReplyEntity, likeCnt : Long) : GetReplyDTO {
+        fun toDto(accompanyReplyEntity: AccompanyReplyEntity, likeCnt: Long): GetReplyDTO {
             return GetReplyDTO(
                 replyId = accompanyReplyEntity.replyId,
                 userId = accompanyReplyEntity.userId,
@@ -184,7 +178,7 @@ data class GetReplyDTO(
                 replyOrder = accompanyReplyEntity.replyOrder,
                 content = accompanyReplyEntity.content,
                 likeCnt = likeCnt
-                )
+            )
         }
     }
 

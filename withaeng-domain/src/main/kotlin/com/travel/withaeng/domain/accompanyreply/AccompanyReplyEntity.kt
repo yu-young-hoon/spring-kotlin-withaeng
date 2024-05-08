@@ -15,16 +15,16 @@ class AccompanyReplyEntity(
     val replyId: Long,
 
     @Column(name = "accompany_id", nullable = false)
-    val accompanyId : Long,
+    val accompanyId: Long,
 
     @Column(name = "parent_id", nullable = false)
-    val parentId : Long,
+    val parentId: Long,
 
     @Column(name = "depth", nullable = false)
-    val depth : Long,
+    val depth: Long,
 
     @Column(name = "reply_order", nullable = false)
-    val replyOrder : Long,
+    val replyOrder: Long,
 
     @Column(name = "user_id", nullable = false)
     val userId: Long,
@@ -32,4 +32,4 @@ class AccompanyReplyEntity(
     @Column(name = "content", nullable = false)
     var content: String,
 
-) : AccompanyBaseEntity()
+    ) : AccompanyBaseEntity()

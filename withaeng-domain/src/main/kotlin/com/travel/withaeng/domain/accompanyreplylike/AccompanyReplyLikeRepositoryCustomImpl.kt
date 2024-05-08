@@ -5,7 +5,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory
 import org.springframework.stereotype.Repository
 
 @Repository
-class AccompanyReplyLikeRepositoryCustomImpl(val jpaQueryFactory: JPAQueryFactory) : AccompanyReplyLikeRepositoryCustom {
+class AccompanyReplyLikeRepositoryCustomImpl(val jpaQueryFactory: JPAQueryFactory) :
+    AccompanyReplyLikeRepositoryCustom {
     override fun getAccompanyReplyLikeList(replyIds: List<Long>): List<GetReplyLikeDTO> {
         return jpaQueryFactory
             .select(
@@ -13,7 +14,8 @@ class AccompanyReplyLikeRepositoryCustomImpl(val jpaQueryFactory: JPAQueryFactor
                     GetReplyLikeDTO::class.java,
                     QAccompanyReplyLikeEntity.accompanyReplyLikeEntity.replyId,
                     QAccompanyReplyLikeEntity.accompanyReplyLikeEntity.replyId.count()
-                ))
+                )
+            )
             .from(QAccompanyReplyLikeEntity.accompanyReplyLikeEntity)
             .where(QAccompanyReplyLikeEntity.accompanyReplyLikeEntity.replyId.`in`(replyIds))
             .groupBy(QAccompanyReplyLikeEntity.accompanyReplyLikeEntity.replyId)

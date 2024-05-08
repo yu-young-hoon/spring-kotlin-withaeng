@@ -5,8 +5,7 @@ import lombok.Getter
 import lombok.Setter
 import org.jetbrains.annotations.NotNull
 
-class AccompanyLikeDto {
-}
+class AccompanyLikeDto
 
 @Setter
 @Getter
@@ -18,7 +17,7 @@ class CreateAccompanyLikeDTO(
     @NotNull
     val accompanyId: Long,
 
-){
+    ) {
     fun toEntity(): AccompanyLikeEntity {
         return AccompanyLikeEntity(
             0,
@@ -44,7 +43,7 @@ class CreateAccompanyLikeDTO(
 class DeleteAccompanyLikeDTO(
 
     @NotNull
-    val likeId : Long,
+    val likeId: Long,
 
     @NotNull
     val userId: Long,
@@ -52,7 +51,7 @@ class DeleteAccompanyLikeDTO(
     @NotNull
     val accompanyId: Long,
 
-    ){
+    ) {
     fun toEntity(): AccompanyLikeEntity {
         return AccompanyLikeEntity(
             this.likeId,

@@ -1,7 +1,10 @@
 package com.travel.withaeng.controller.accompany
 
 import com.travel.withaeng.common.ApiResponse
-import com.travel.withaeng.domain.accompany.*
+import com.travel.withaeng.domain.accompany.AccompanyService
+import com.travel.withaeng.domain.accompany.CreateAccompanyDTO
+import com.travel.withaeng.domain.accompany.ModifyAccompanyDTO
+import com.travel.withaeng.domain.accompany.SearchAccompanyDTO
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -12,34 +15,36 @@ import org.springframework.web.bind.annotation.*
 class AccompanyController(private val accompanyService: AccompanyService) {
 
     @PostMapping("")
-    fun create(@RequestBody @Valid param : CreateAccompanyDTO) : ResponseEntity<ApiResponse<Any>> {
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse(true, accompanyService.createAccompany(param), null))
+    fun create(@RequestBody @Valid param: CreateAccompanyDTO): ResponseEntity<ApiResponse<Any>> {
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(ApiResponse(true, accompanyService.createAccompany(param), null))
     }
 
     @PutMapping("/{accompanyId}")
-    fun modify(@RequestBody @Valid param : ModifyAccompanyDTO) : ResponseEntity<ApiResponse<Any>> {
-        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse(true, accompanyService.modifyAccompany(param), null))
+    fun modify(@RequestBody @Valid param: ModifyAccompanyDTO): ResponseEntity<ApiResponse<Any>> {
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(ApiResponse(true, accompanyService.modifyAccompany(param), null))
     }
 
     @GetMapping("/{accompanyId}")
-    fun getOne(@PathVariable("accompanyId") accompanyId : Long) : ResponseEntity<ApiResponse<Any>> {
+    fun getOne(@PathVariable("accompanyId") accompanyId: Long): ResponseEntity<ApiResponse<Any>> {
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse(true, accompanyService.getOne(accompanyId), null))
     }
 
     @PutMapping("/{accompanyId}/incr/viewCnt")
-    fun incrViewCnt(@PathVariable("accompanyId") accompanyId : Long) : ResponseEntity<ApiResponse<Any>> {
+    fun incrViewCnt(@PathVariable("accompanyId") accompanyId: Long): ResponseEntity<ApiResponse<Any>> {
         accompanyService.incrViewCnt(accompanyId)
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse(true, null, null))
     }
 
     @PutMapping("/{accompanyId}/decr/viewCnt")
-    fun decrViewCnt(@PathVariable("accompanyId") accompanyId : Long) : ResponseEntity<ApiResponse<Any>> {
+    fun decrViewCnt(@PathVariable("accompanyId") accompanyId: Long): ResponseEntity<ApiResponse<Any>> {
         accompanyService.decrViewCnt(accompanyId)
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse(true, null, null))
     }
 
     @GetMapping("/getList")
-    fun getList(@RequestBody param : SearchAccompanyDTO) : ResponseEntity<ApiResponse<Any>> {
+    fun getList(@RequestBody param: SearchAccompanyDTO): ResponseEntity<ApiResponse<Any>> {
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse(true, accompanyService.getList(param), null))
     }
 

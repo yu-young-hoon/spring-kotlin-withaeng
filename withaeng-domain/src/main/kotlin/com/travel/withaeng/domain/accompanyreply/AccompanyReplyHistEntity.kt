@@ -5,27 +5,27 @@ import jakarta.persistence.*
 
 @Table(name = "accompany_reply_hist")
 @Entity
-class AccompanyReplyHistEntity (
+class AccompanyReplyHistEntity(
 
-   @Id
-   @GeneratedValue(strategy = GenerationType.IDENTITY)
-   @Column(name = "hist_id", nullable = false)
-   val histId: Long,
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "hist_id", nullable = false)
+    val histId: Long,
 
-   @Column(name = "reply_id", nullable = false)
-   val replyId: Long,
+    @Column(name = "reply_id", nullable = false)
+    val replyId: Long,
 
     @Column(name = "accompany_id", nullable = false)
-    val accompanyId : Long,
+    val accompanyId: Long,
 
     @Column(name = "parent_id", nullable = false)
-    val parentId : Long,
+    val parentId: Long,
 
     @Column(name = "depth", nullable = false)
-    val depth : Long,
+    val depth: Long,
 
     @Column(name = "reply_order", nullable = false)
-    val replyOrder : Long,
+    val replyOrder: Long,
 
     @Column(name = "user_id", nullable = false)
     val userId: Long,
@@ -33,7 +33,7 @@ class AccompanyReplyHistEntity (
     @Column(name = "content", nullable = false)
     val content: String,
 
-   @Column(name = "exec_cd", nullable = false)
-   val execCd: String,
+    @Column(name = "exec_cd", nullable = false)
+    val execCd: String,
 
-) : AccompanyBaseEntity()
+    ) : AccompanyBaseEntity()

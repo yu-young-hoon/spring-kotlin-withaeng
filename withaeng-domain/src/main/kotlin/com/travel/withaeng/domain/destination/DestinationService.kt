@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service
 @Service
 class DestinationService {
 
-    fun getDestinationList() : DestinationDto{
+    fun getDestinationList(): DestinationDto {
 
         val continentList = mutableListOf<Continent>()
 
@@ -18,13 +18,13 @@ class DestinationService {
             val continent = Continent(continentCd.continentCd, continentCd.continentNm)
             val countryList = mutableListOf<Country>()
 
-            for(countryCd in CountryCd.entries){
-                if(continentCd.continentCd.equals(countryCd.continentCd)){
+            for (countryCd in CountryCd.entries) {
+                if (continentCd.continentCd.equals(countryCd.continentCd)) {
                     val country = Country(countryCd.countryCd, countryCd.countryNm)
 
                     val cityList = mutableListOf<City>()
-                    for(cityCd in CityCd.entries){
-                        if(countryCd.countryCd.equals(cityCd.countryCd)){
+                    for (cityCd in CityCd.entries) {
+                        if (countryCd.countryCd.equals(cityCd.countryCd)) {
                             val city = City(cityCd.cityCd, cityCd.cityNm)
                             cityList.add(city)
                         }
@@ -34,7 +34,7 @@ class DestinationService {
                 }
             }
 
-            continent.countryList = countryList;
+            continent.countryList = countryList
             // Add the continent to the list
             continentList.add(continent)
         }

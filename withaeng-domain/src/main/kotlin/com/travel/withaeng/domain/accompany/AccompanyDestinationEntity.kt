@@ -19,9 +19,9 @@ class AccompanyDestinationEntity(
     var continent: String,
 
     @Column(name = "country", nullable = true, updatable = true)
-    var country : String?,
+    var country: String?,
 
     @Column(name = "city", nullable = true, updatable = true)
-    var city : String?,
+    var city: String?,
 
-) : AccompanyBaseEntity()
+    ) : AccompanyBaseEntity()

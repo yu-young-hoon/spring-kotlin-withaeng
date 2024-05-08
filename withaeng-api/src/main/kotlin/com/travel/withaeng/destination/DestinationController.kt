@@ -14,7 +14,8 @@ class DestinationController(private val destinationService: DestinationService) 
 
 
     @GetMapping("/getList")
-    fun getList() : ResponseEntity<ApiResponse<Any>>{
-        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse(true, destinationService.getDestinationList(), null))
+    fun getList(): ResponseEntity<ApiResponse<Any>> {
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(ApiResponse(true, destinationService.getDestinationList(), null))
     }
 }

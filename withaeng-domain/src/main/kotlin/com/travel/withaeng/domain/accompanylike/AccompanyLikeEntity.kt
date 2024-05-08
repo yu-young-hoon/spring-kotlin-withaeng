@@ -18,4 +18,4 @@ class AccompanyLikeEntity(
     @Column(name = "user_id", nullable = false)
     val userId: Long,
 
-) : AccompanyBaseEntity()
+    ) : AccompanyBaseEntity()

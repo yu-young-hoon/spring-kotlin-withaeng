@@ -2,23 +2,22 @@ package com.travel.withaeng.domain.accompanyreply
 
 import com.travel.withaeng.common.exception.InvalidAccessException
 import com.travel.withaeng.common.exception.NotExistsException
-import com.travel.withaeng.domain.accompany.AccompanyTagEntity
 import com.travel.withaeng.domain.accompanyreplylike.AccompanyReplyLikeService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 @Transactional(readOnly = true)
-class AccompanyReplyService (
+class AccompanyReplyService(
 
-        private val accompanyReplyRepository: AccompanyReplyRepository,
-        private val accompanyReplyHistRepository : AccompanyReplyHistRepository,
-        private val accompanyReplyLikeService: AccompanyReplyLikeService
+    private val accompanyReplyRepository: AccompanyReplyRepository,
+    private val accompanyReplyHistRepository: AccompanyReplyHistRepository,
+    private val accompanyReplyLikeService: AccompanyReplyLikeService
 
 ) {
 
     @Transactional
-    fun createAccompanyReply(param : CreateAccompanyReplyDTO) : GetReplyDTO {
+    fun createAccompanyReply(param: CreateAccompanyReplyDTO): GetReplyDTO {
         val accompanyReplyEntity = param.toEntity()
         accompanyReplyRepository.save(accompanyReplyEntity)
 
@@ -30,13 +29,13 @@ class AccompanyReplyService (
     }
 
     @Transactional
-    fun modifyAccompanyReply(param : ModifyAccompanyReplyDTO) : GetReplyDTO {
+    fun modifyAccompanyReply(param: ModifyAccompanyReplyDTO): GetReplyDTO {
 
         val accompanyReplyEntity = accompanyReplyRepository.findByReplyId(param.replyId)
 
-        if(accompanyReplyEntity != null){
+        if (accompanyReplyEntity != null) {
 
-            if(accompanyReplyEntity.userId != param.userId){
+            if (accompanyReplyEntity.userId != param.userId) {
                 throw InvalidAccessException("등록자와 수정자가 달라 수정 요청을 거부 합니다.")
             }
 
@@ -52,13 +51,13 @@ class AccompanyReplyService (
     }
 
     @Transactional
-    fun deleteAccompanyReply(param : DeleteAccompanyReplyDTO) : DeleteAccompanyReplyDTO {
+    fun deleteAccompanyReply(param: DeleteAccompanyReplyDTO): DeleteAccompanyReplyDTO {
 
         val accompanyReplyEntity = accompanyReplyRepository.findByReplyId(param.replyId)
 
-        if(accompanyReplyEntity != null){
+        if (accompanyReplyEntity != null) {
 
-            if(accompanyReplyEntity.userId != param.userId){
+            if (accompanyReplyEntity.userId != param.userId) {
                 throw InvalidAccessException("등록자와 수정자가 달라 삭제 요청을 거부 합니다.")
             }
 
@@ -71,12 +70,12 @@ class AccompanyReplyService (
         return param
     }
 
-    fun getOne(param : Long) : GetReplyDTO {
+    fun getOne(param: Long): GetReplyDTO {
 
         val accompanyReplyEntity = accompanyReplyRepository.findByReplyId(param)
         val accompanyReplyLikeCnt = accompanyReplyLikeService.getAccompanyReplyLikeCnt(param)
 
-        if(accompanyReplyEntity != null){
+        if (accompanyReplyEntity != null) {
             return GetReplyDTO.toDto(accompanyReplyEntity, accompanyReplyLikeCnt)
         }
 
@@ -84,35 +83,36 @@ class AccompanyReplyService (
     }
 
     //TODO 댓글당 좋아요 누른 userId 목록을 추가로 조회하여 리턴은 추후 처리
-    fun getList(param : Long) : List<GetReplyDTO>? {
+    fun getList(param: Long): List<GetReplyDTO>? {
 
         val accompanyReplyList = accompanyReplyRepository.getAccompanyReplyList(param)
 
-        if(accompanyReplyList != null){
+        if (accompanyReplyList != null) {
 
-            val replyIdList : List<Long> = accompanyReplyList.map {accompanyReplyEntity -> accompanyReplyEntity.replyId}.toList()
+            val replyIdList: List<Long> =
+                accompanyReplyList.map { accompanyReplyEntity -> accompanyReplyEntity.replyId }.toList()
             val accompanyReplyLikeList = accompanyReplyLikeService.getAccompanyReplyLikeList(replyIdList)
 
-            for(reply in accompanyReplyList){
-                for(like in accompanyReplyLikeList){
-                    if(reply.replyId == like.replyId){
+            for (reply in accompanyReplyList) {
+                for (like in accompanyReplyLikeList) {
+                    if (reply.replyId == like.replyId) {
                         reply.likeCnt = like.likeCnt
                     }
                 }
             }
 
-            val parentList = accompanyReplyList.stream().filter{
-                e-> e.parentId.equals(0L)
+            val parentList = accompanyReplyList.stream().filter { e ->
+                e.parentId.equals(0L)
             }.toList()
 
-            val sortList = accompanyReplyList.sortedWith(compareBy({it.parentId},{it.depth}, {it.replyOrder})).toList()
+            val sortList =
+                accompanyReplyList.sortedWith(compareBy({ it.parentId }, { it.depth }, { it.replyOrder })).toList()
             val resultList = mutableListOf<GetReplyDTO>()
 
-            parentList.stream().forEach{
-                e->
+            parentList.stream().forEach { e ->
                 resultList.add(e)
-                sortList.forEach{a->
-                    if(e.replyId.equals(a.parentId)){
+                sortList.forEach { a ->
+                    if (e.replyId.equals(a.parentId)) {
                         resultList.add(a)
                     }
                 }

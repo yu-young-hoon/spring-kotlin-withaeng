@@ -2,10 +2,8 @@ package com.travel.withaeng.domain.accompany
 
 import com.travel.withaeng.common.exception.InvalidAccessException
 import com.travel.withaeng.common.exception.NotExistsException
-import com.travel.withaeng.domain.accompany.QAccompanyEntity.accompanyEntity
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.time.LocalDateTime
 import java.time.LocalTime
 
 @Service
@@ -13,15 +11,15 @@ import java.time.LocalTime
 class AccompanyService(
 
     private val accompanyRepository: AccompanyRepository,
-    private val accompanyHistRepository : AccompanyHistRepository,
-    private val accompanyDestinationRepository : AccompanyDestinationRepository,
-    private val accompanyDetailRepository : AccompanyDetailRepository,
+    private val accompanyHistRepository: AccompanyHistRepository,
+    private val accompanyDestinationRepository: AccompanyDestinationRepository,
+    private val accompanyDetailRepository: AccompanyDetailRepository,
     private val accompanyTagRepository: AccompanyTagRepository
 
 ) {
 
     @Transactional
-    fun createAccompany(param : CreateAccompanyDTO) : GetDTO {
+    fun createAccompany(param: CreateAccompanyDTO): GetDTO {
         val accompanyEntity = param.toEntity()
         accompanyRepository.save(accompanyEntity)
 
@@ -34,7 +32,7 @@ class AccompanyService(
         accompanyDestinationRepository.save(accompanyDestinationEntity)
         accompanyDetailRepository.save(accompanyDetailEntity)
 
-        if(accompanyTagEntityList != null){
+        if (accompanyTagEntityList != null) {
             accompanyTagRepository.saveAll(accompanyTagEntityList)
         }
 
@@ -42,13 +40,13 @@ class AccompanyService(
     }
 
     @Transactional
-    fun modifyAccompany(param : ModifyAccompanyDTO) : GetDTO {
+    fun modifyAccompany(param: ModifyAccompanyDTO): GetDTO {
 
         val accompanyEntity = accompanyRepository.findByAccompanyId(param.accompanyId)
 
-        if(accompanyEntity != null){
+        if (accompanyEntity != null) {
 
-            if(accompanyEntity.userId != param.userId){
+            if (accompanyEntity.userId != param.userId) {
                 throw InvalidAccessException("등록자와 수정자가 달라 수정 요청을 거부 합니다.")
             }
 
@@ -78,7 +76,7 @@ class AccompanyService(
 
             accompanyHistRepository.save(accompanyHistEntity)
             accompanyTagRepository.deleteByAccompanyId(accompanyEntity.accompanyId)
-            if(accompanyTagEntityList != null){
+            if (accompanyTagEntityList != null) {
                 accompanyTagRepository.saveAll(accompanyTagEntityList)
             }
 
@@ -87,12 +85,12 @@ class AccompanyService(
         return getOne(param.accompanyId)
     }
 
-    fun getOne(param : Long) : GetDTO {
+    fun getOne(param: Long): GetDTO {
 
         val getAccompany = accompanyRepository.getAccompany(param)
 
-        if(getAccompany != null){
-            val tagList:List<String>? = accompanyTagRepository.findByAccompanyId(param)?.map(AccompanyTagEntity::tagNm)
+        if (getAccompany != null) {
+            val tagList: List<String>? = accompanyTagRepository.findByAccompanyId(param)?.map(AccompanyTagEntity::tagNm)
             getAccompany.tags = tagList
             return getAccompany
         }
@@ -100,12 +98,12 @@ class AccompanyService(
         throw NotExistsException("존재하지 않는 동행 게시글 조회 요청 입니다.")
     }
 
-    fun getList(param : SearchAccompanyDTO) : List<GetDTO> {
-       return accompanyRepository.getAccompanyList(param)
+    fun getList(param: SearchAccompanyDTO): List<GetDTO> {
+        return accompanyRepository.getAccompanyList(param)
     }
 
     @Transactional
-    fun incrViewCnt(param : Long) {
+    fun incrViewCnt(param: Long) {
         val accompanyDetailEntity = accompanyDetailRepository.findByAccompanyId(param)
         accompanyDetailEntity.let {
             it.viewCnt++
@@ -113,7 +111,7 @@ class AccompanyService(
     }
 
     @Transactional
-    fun decrViewCnt(param : Long){
+    fun decrViewCnt(param: Long) {
         val accompanyDetailEntity = accompanyDetailRepository.findByAccompanyId(param)
         accompanyDetailEntity.let {
             it.viewCnt--

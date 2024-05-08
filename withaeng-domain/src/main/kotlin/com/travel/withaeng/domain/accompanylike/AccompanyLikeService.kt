@@ -10,13 +10,13 @@ import java.time.LocalDateTime
 class AccompanyLikeService(
 
     private val accompanyLikeRepository: AccompanyLikeRepository,
-    private val accompanyLikeHistRepository : AccompanyLikeHistRepository,
+    private val accompanyLikeHistRepository: AccompanyLikeHistRepository,
     private val accompanyDetailRepository: AccompanyDetailRepository
 
 ) {
 
     @Transactional
-    fun createAccompanyLike(param : CreateAccompanyLikeDTO) : CreateAccompanyLikeDTO {
+    fun createAccompanyLike(param: CreateAccompanyLikeDTO): CreateAccompanyLikeDTO {
 
         val accompanyLikeEntity = param.toEntity()
         accompanyLikeRepository.save(accompanyLikeEntity)
@@ -34,7 +34,7 @@ class AccompanyLikeService(
 
     //TODO delete 성능이 안나올 경우 boolean 형으로 좋아요 제어
     @Transactional
-    fun deleteAccompanyLike(param : DeleteAccompanyLikeDTO) : DeleteAccompanyLikeDTO{
+    fun deleteAccompanyLike(param: DeleteAccompanyLikeDTO): DeleteAccompanyLikeDTO {
 
         val accompanyLikeEntity = param.toEntity()
         accompanyLikeRepository.delete(accompanyLikeEntity)

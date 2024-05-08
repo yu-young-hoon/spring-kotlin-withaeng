@@ -71,13 +71,13 @@ class ControllerExceptionAdvice {
     }
 
     @ExceptionHandler(NotExistsException::class)
-    protected fun notExistsException(e: NotExistsException) : ResponseEntity<ApiResponse<Any>> {
+    protected fun notExistsException(e: NotExistsException): ResponseEntity<ApiResponse<Any>> {
         logger.error("notExistsException", e)
         return errorResponse(WithaengExceptionType.NOT_EXIST, e.message)
     }
 
     @ExceptionHandler(InvalidAccessException::class)
-    protected fun invalidAccessException(e: InvalidAccessException) : ResponseEntity<ApiResponse<Any>> {
+    protected fun invalidAccessException(e: InvalidAccessException): ResponseEntity<ApiResponse<Any>> {
         logger.error("invalidAccessException", e)
         return errorResponse(WithaengExceptionType.INVALID_ACCESS, e.message)
     }

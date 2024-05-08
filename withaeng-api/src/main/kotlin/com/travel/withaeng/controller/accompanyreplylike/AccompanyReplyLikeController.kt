@@ -13,13 +13,15 @@ import org.springframework.web.bind.annotation.*
 class AccompanyReplyLikeController(private val accompanyReplyLikeService: AccompanyReplyLikeService) {
 
     @PostMapping("")
-    fun create(@RequestBody param : CreateAccompanyReplyLikeDTO) : ResponseEntity<ApiResponse<Any>> {
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse(true, accompanyReplyLikeService.createAccompanyReplyLike(param), null))
+    fun create(@RequestBody param: CreateAccompanyReplyLikeDTO): ResponseEntity<ApiResponse<Any>> {
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(ApiResponse(true, accompanyReplyLikeService.createAccompanyReplyLike(param), null))
     }
 
     @DeleteMapping("")
-    fun delete(@RequestBody param : DeleteAccompanyReplyLikeDTO) : ResponseEntity<ApiResponse<Any>> {
-        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse(true, accompanyReplyLikeService.deleteAccompanyReplyLike(param), null))
+    fun delete(@RequestBody param: DeleteAccompanyReplyLikeDTO): ResponseEntity<ApiResponse<Any>> {
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(ApiResponse(true, accompanyReplyLikeService.deleteAccompanyReplyLike(param), null))
     }
 
 }

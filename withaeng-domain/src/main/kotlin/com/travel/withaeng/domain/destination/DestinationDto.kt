@@ -7,9 +7,9 @@ import lombok.Setter
 
 @Setter
 @Getter
-class DestinationDto (
+class DestinationDto(
 
-    var continentList : List<Continent>
+    var continentList: List<Continent>
 )
 
 @Setter
@@ -17,12 +17,12 @@ class DestinationDto (
 @NoArgsConstructor
 class Continent(
 
-    var continentCd : String,
-    var continentNm : String,
-    var countryList : List<Country>
+    var continentCd: String,
+    var continentNm: String,
+    var countryList: List<Country>
 
-){
-    constructor(continentCd : String, continentNm : String) :
+) {
+    constructor(continentCd: String, continentNm: String) :
             this(continentCd, continentNm, mutableListOf())
 
 }
@@ -32,12 +32,12 @@ class Continent(
 @NoArgsConstructor
 class Country(
 
-    var countryCd : String,
-    var countryNm : String,
-    var cityList : List<City>
-){
+    var countryCd: String,
+    var countryNm: String,
+    var cityList: List<City>
+) {
 
-    constructor(countryCd : String, countryNm : String) :
+    constructor(countryCd: String, countryNm: String) :
             this(countryCd, countryNm, mutableListOf())
 
 
@@ -47,6 +47,6 @@ class Country(
 @Getter
 class City(
 
-    var cityCd : String,
-    var cityNm : String,
+    var cityCd: String,
+    var cityNm: String,
 )

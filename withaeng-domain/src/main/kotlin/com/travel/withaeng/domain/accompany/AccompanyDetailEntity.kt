@@ -1,13 +1,16 @@
 package com.travel.withaeng.domain.accompany
 
 import com.travel.withaeng.domain.AccompanyBaseEntity
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.Table
 import org.hibernate.annotations.DynamicUpdate
 
 @DynamicUpdate
 @Table(name = "accompany_detail")
 @Entity
-class AccompanyDetailEntity (
+class AccompanyDetailEntity(
 
     @Id
     @Column(name = "accompany_id", nullable = false)
@@ -20,7 +23,7 @@ class AccompanyDetailEntity (
     var likeCnt: Long = 0L,
 
     @Column(name = "open_kakao_url", nullable = false)
-    var openKakaoUrl : String
+    var openKakaoUrl: String
 
 
 ) : AccompanyBaseEntity()

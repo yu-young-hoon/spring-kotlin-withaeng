@@ -5,7 +5,7 @@ import jakarta.persistence.*
 
 @Table(name = "accompany_like_hist")
 @Entity
-class AccompanyLikeHistEntity (
+class AccompanyLikeHistEntity(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +22,6 @@ class AccompanyLikeHistEntity (
     val accompanyId: Long,
 
     @Column(name = "exec_cd", nullable = false)
-    val execCd : String
+    val execCd: String
 
 ) : AccompanyBaseEntity()

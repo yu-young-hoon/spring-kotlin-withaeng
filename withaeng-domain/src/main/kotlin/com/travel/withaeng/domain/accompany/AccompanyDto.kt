@@ -5,16 +5,13 @@ import com.travel.withaeng.common.cd.AccompanyStatusCd
 import com.travel.withaeng.common.cd.ExecCd
 import jakarta.validation.constraints.NotBlank
 import lombok.Getter
-import lombok.NoArgsConstructor
 import lombok.Setter
 import org.jetbrains.annotations.NotNull
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.Pageable
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
-class AccompanyDto ()
+class AccompanyDto
 
 @Setter
 @Getter
@@ -35,9 +32,9 @@ class CreateAccompanyDTO(
     @NotBlank(message = "대륙은 필수 값 입니다.")
     val continent: String,
 
-    val country : String? = null,
+    val country: String? = null,
 
-    val city : String? = null,
+    val city: String? = null,
 
     val startTripDate: LocalDate,
 
@@ -46,14 +43,14 @@ class CreateAccompanyDTO(
     val bannerImageUrl: String? = null,
 
     @field:NotNull
-    val accompanyCnt : Long,
+    val accompanyCnt: Long,
 
-    val tags : List<String>?,
+    val tags: List<String>?,
 
     @NotBlank(message = "카카오 오픈 채팅 URL은 필수 값 입니다.")
-    val openKakaoUrl : String
+    val openKakaoUrl: String
 
-){
+) {
     fun toEntity(): AccompanyEntity {
         return AccompanyEntity(
             0,
@@ -84,17 +81,17 @@ class CreateAccompanyDTO(
         )
     }
 
-    fun toDestinationEntity(accompanyId : Long) : AccompanyDestinationEntity {
+    fun toDestinationEntity(accompanyId: Long): AccompanyDestinationEntity {
         return AccompanyDestinationEntity(
-                0,
-                accompanyId,
-                this.continent,
-                this.country,
-                this.city
-            )
+            0,
+            accompanyId,
+            this.continent,
+            this.country,
+            this.city
+        )
     }
 
-    fun toDetailEntity(accompanyId : Long) : AccompanyDetailEntity {
+    fun toDetailEntity(accompanyId: Long): AccompanyDetailEntity {
         return AccompanyDetailEntity(
             accompanyId,
             0,
@@ -103,14 +100,14 @@ class CreateAccompanyDTO(
         )
     }
 
-    fun toTagEntity(accompanyId : Long) : List<AccompanyTagEntity>? {
+    fun toTagEntity(accompanyId: Long): List<AccompanyTagEntity>? {
 
-        if(tags == null){
+        if (tags == null) {
             return null
         }
 
         val tagList = mutableListOf<AccompanyTagEntity>()
-        for(tagNm in tags){
+        for (tagNm in tags) {
             tagList.add(AccompanyTagEntity(0, accompanyId, tagNm))
         }
 
@@ -123,7 +120,7 @@ class CreateAccompanyDTO(
 class ModifyAccompanyDTO(
 
     @NotNull
-    val accompanyId : Long,
+    val accompanyId: Long,
 
     @NotNull
     val userId: Long,
@@ -137,9 +134,9 @@ class ModifyAccompanyDTO(
     @NotBlank(message = "대륙은 필수 값 입니다.")
     val continent: String,
 
-    val country : String? = null,
+    val country: String? = null,
 
-    val city : String? = null,
+    val city: String? = null,
 
     val startTripDate: LocalDate,
 
@@ -148,38 +145,38 @@ class ModifyAccompanyDTO(
     val bannerImageUrl: String? = null,
 
     @NotNull
-    val accompanyCnt : Long,
+    val accompanyCnt: Long,
 
-    val tags : List<String>?,
+    val tags: List<String>?,
 
     @NotBlank(message = "카카오 오픈 채팅 URL은 필수 값 입니다.")
-    val openKakaoUrl : String
+    val openKakaoUrl: String
 
-){
+) {
     fun toHistEntity(entity: AccompanyEntity): AccompanyHistEntity {
         return AccompanyHistEntity(
-                0,
-                entity.accompanyId,
-                entity.userId,
-                entity.title,
-                entity.content,
-                entity.accompanyStatusCd,
-                entity.startTripDate,
-                entity.endTripDate,
-                entity.bannerImageUrl,
-                entity.accompanyCnt,
-                ExecCd.UPDATE.execCd
+            0,
+            entity.accompanyId,
+            entity.userId,
+            entity.title,
+            entity.content,
+            entity.accompanyStatusCd,
+            entity.startTripDate,
+            entity.endTripDate,
+            entity.bannerImageUrl,
+            entity.accompanyCnt,
+            ExecCd.UPDATE.execCd
         )
     }
 
-    fun toTagEntity(accompanyId : Long) : List<AccompanyTagEntity>? {
+    fun toTagEntity(accompanyId: Long): List<AccompanyTagEntity>? {
 
-        if(tags == null){
+        if (tags == null) {
             return null
         }
 
         val tagList = mutableListOf<AccompanyTagEntity>()
-        for(tagNm in tags){
+        for (tagNm in tags) {
             tagList.add(AccompanyTagEntity(0, accompanyId, tagNm))
         }
 
@@ -187,30 +184,48 @@ class ModifyAccompanyDTO(
     }
 }
 
-data class GetDTO (
+data class GetDTO(
 
-    var accompanyId : Long,
+    var accompanyId: Long,
     var userId: Long,
     var title: String,
     var content: String,
     var continent: String,
-    var country : String? = null,
-    var city : String? = null,
+    var country: String? = null,
+    var city: String? = null,
     var startTripDate: LocalDateTime,
     var endTripDate: LocalDateTime,
     var bannerImageUrl: String? = null,
-    var accompanyCnt : Long,
-    var viewCnt : Long,
-    var likeCnt : Long,
-    var tags : List<String>? = null,
-    var openKakaoUrl : String
+    var accompanyCnt: Long,
+    var viewCnt: Long,
+    var likeCnt: Long,
+    var tags: List<String>? = null,
+    var openKakaoUrl: String
 
-){
-    constructor(accompanyId : Long, userId : Long, title: String, content : String,
-                continent : String, country : String?, city : String?,
-                startTripDate : LocalDateTime, endTripDate : LocalDateTime,
-                bannerImageUrl: String?, accompanyCnt: Long, viewCnt: Long, likeCnt: Long, openKakaoUrl: String) :
-            this(accompanyId, userId, title, content, continent, country, city, startTripDate, endTripDate, bannerImageUrl, accompanyCnt, viewCnt, likeCnt, null, openKakaoUrl)
+) {
+    constructor(
+        accompanyId: Long, userId: Long, title: String, content: String,
+        continent: String, country: String?, city: String?,
+        startTripDate: LocalDateTime, endTripDate: LocalDateTime,
+        bannerImageUrl: String?, accompanyCnt: Long, viewCnt: Long, likeCnt: Long, openKakaoUrl: String
+    ) :
+            this(
+                accompanyId,
+                userId,
+                title,
+                content,
+                continent,
+                country,
+                city,
+                startTripDate,
+                endTripDate,
+                bannerImageUrl,
+                accompanyCnt,
+                viewCnt,
+                likeCnt,
+                null,
+                openKakaoUrl
+            )
 }
 
 data class SearchAccompanyDTO(
@@ -223,13 +238,13 @@ data class SearchAccompanyDTO(
 
     var endTripDate: LocalDate,//동행 모집 마감일시
 
-    var pageIndex : Long,
+    var pageIndex: Long,
 
-    var pageSize : Long
+    var pageSize: Long
 
-){
-    fun getCurrentPage() : Long{
-        return (this.pageIndex -1) * this.pageSize
+) {
+    fun getCurrentPage(): Long {
+        return (this.pageIndex - 1) * this.pageSize
     }
 
 }
