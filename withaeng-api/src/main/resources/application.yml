@@ -4,6 +4,7 @@ spring:
   config:
     import:
       - classpath:/application-domain.yml
+      - classpath:/application-external.yml
 
 witheang:
   auth:
