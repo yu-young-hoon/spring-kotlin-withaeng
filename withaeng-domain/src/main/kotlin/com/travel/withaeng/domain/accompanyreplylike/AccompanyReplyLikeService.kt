@@ -1,6 +1,7 @@
 package com.travel.withaeng.domain.accompanyreplylike
 
-import com.travel.withaeng.common.exception.InvalidAccessException
+import com.travel.withaeng.common.exception.WithaengException
+import com.travel.withaeng.common.exception.WithaengExceptionType
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
@@ -19,7 +20,10 @@ class AccompanyReplyLikeService(
 
         val replyLikeEntity = accompanyReplyLikeRepository.findByReplyIdAndUserId(param.replyId, param.userId)
         if (replyLikeEntity != null) {
-            throw InvalidAccessException("이미 해당 댓글의 좋아요 등록이 되어 있습니다.")
+            throw WithaengException.of(
+                type = WithaengExceptionType.INVALID_ACCESS,
+                message = "이미 해당 댓글의 좋아요 등록이 되어 있습니다."
+            )
         }
 
         val accompanyReplyLikeEntity = param.toEntity()

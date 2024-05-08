@@ -1,7 +1,7 @@
 package com.travel.withaeng.domain.accompany
 
-import com.travel.withaeng.common.exception.InvalidAccessException
-import com.travel.withaeng.common.exception.NotExistsException
+import com.travel.withaeng.common.exception.WithaengException
+import com.travel.withaeng.common.exception.WithaengExceptionType
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalTime
@@ -47,7 +47,10 @@ class AccompanyService(
         if (accompanyEntity != null) {
 
             if (accompanyEntity.userId != param.userId) {
-                throw InvalidAccessException("등록자와 수정자가 달라 수정 요청을 거부 합니다.")
+                throw WithaengException.of(
+                    type = WithaengExceptionType.INVALID_ACCESS,
+                    message = "등록자와 수정자가 달라 수정 요청을 거부 합니다."
+                )
             }
 
             val accompanyHistEntity = param.toHistEntity(accompanyEntity)
@@ -95,7 +98,10 @@ class AccompanyService(
             return getAccompany
         }
 
-        throw NotExistsException("존재하지 않는 동행 게시글 조회 요청 입니다.")
+        throw WithaengException.of(
+            type = WithaengExceptionType.NOT_EXIST,
+            message = "존재하지 않는 동행 게시글 조회 요청 입니다."
+        )
     }
 
     fun getList(param: SearchAccompanyDTO): List<GetDTO> {

@@ -1,7 +1,7 @@
 package com.travel.withaeng.domain.accompanyreply
 
-import com.travel.withaeng.common.exception.InvalidAccessException
-import com.travel.withaeng.common.exception.NotExistsException
+import com.travel.withaeng.common.exception.WithaengException
+import com.travel.withaeng.common.exception.WithaengExceptionType
 import com.travel.withaeng.domain.accompanyreplylike.AccompanyReplyLikeService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -36,7 +36,10 @@ class AccompanyReplyService(
         if (accompanyReplyEntity != null) {
 
             if (accompanyReplyEntity.userId != param.userId) {
-                throw InvalidAccessException("등록자와 수정자가 달라 수정 요청을 거부 합니다.")
+                throw WithaengException.of(
+                    type = WithaengExceptionType.INVALID_ACCESS,
+                    message = "등록자와 수정자가 달라 수정 요청을 거부 합니다."
+                )
             }
 
             accompanyReplyEntity.let {
@@ -58,7 +61,10 @@ class AccompanyReplyService(
         if (accompanyReplyEntity != null) {
 
             if (accompanyReplyEntity.userId != param.userId) {
-                throw InvalidAccessException("등록자와 수정자가 달라 삭제 요청을 거부 합니다.")
+                throw WithaengException.of(
+                    type = WithaengExceptionType.INVALID_ACCESS,
+                    message = "등록자와 수정자가 달라 삭제 요청을 거부 합니다."
+                )
             }
 
             accompanyReplyRepository.delete(accompanyReplyEntity)
@@ -79,7 +85,10 @@ class AccompanyReplyService(
             return GetReplyDTO.toDto(accompanyReplyEntity, accompanyReplyLikeCnt)
         }
 
-        throw NotExistsException("존재하지 않는 동행 게시글 댓글 요청 입니다.")
+        throw WithaengException.of(
+            type = WithaengExceptionType.NOT_EXIST,
+            message = "존재하지 않는 동행 게시글 댓글 요청 입니다."
+        )
     }
 
     //TODO 댓글당 좋아요 누른 userId 목록을 추가로 조회하여 리턴은 추후 처리
