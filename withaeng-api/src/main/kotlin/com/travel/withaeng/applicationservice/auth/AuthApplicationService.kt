@@ -3,9 +3,11 @@ package com.travel.withaeng.applicationservice.auth
 import com.travel.withaeng.applicationservice.auth.dto.SignInServiceRequest
 import com.travel.withaeng.applicationservice.auth.dto.SignUpServiceRequest
 import com.travel.withaeng.applicationservice.auth.dto.UserResponse
+import com.travel.withaeng.applicationservice.auth.dto.ValidateEmailServiceRequest
 import com.travel.withaeng.common.exception.WithaengException
 import com.travel.withaeng.common.exception.WithaengExceptionType
 import com.travel.withaeng.domain.user.CreateUserDto
+import com.travel.withaeng.domain.user.UserDto
 import com.travel.withaeng.domain.user.UserRole
 import com.travel.withaeng.domain.user.UserService
 import com.travel.withaeng.domain.validateemail.ValidatingEmailService
@@ -29,12 +31,12 @@ class AuthApplicationService(
     fun signUp(request: SignUpServiceRequest): UserResponse {
         val userEmail = request.email
         val userDto = userService.findByEmailOrNull(request.email)
-        val isValidUser = userDto?.roles?.any { it == UserRole.USER }
         if (userDto != null) {
-            if (isValidUser == true) {
+            if (userDto.isValidUser()) {
                 throw WithaengException.of(WithaengExceptionType.ALREADY_EXIST, "이미 가입된 이메일입니다.")
             }
             userService.deleteByEmail(userEmail)
+            validatingEmailService.deleteAllByUserId(userDto.id)
         }
         val newUserDto = userService.createUser(request.toCreateUserDto())
         validatingEmailService.create(newUserDto.email, newUserDto.id, UUID.randomUUID().toString())
@@ -47,6 +49,26 @@ class AuthApplicationService(
             ?: throw WithaengException.of(WithaengExceptionType.NOT_EXIST, "이메일에 해당하는 유저를 찾을 수 없습니다.")
         checkValidUserPassword(request.password, userDto.password)
         return UserResponse(userDto.id, userDto.email, jwtAgent.provide(UserInfo.from(userDto)))
+    }
+
+    @Transactional
+    fun validateEmail(request: ValidateEmailServiceRequest) {
+        val requestedEmail = request.email
+        val userDto = userService.findByEmailOrNull(requestedEmail)
+            ?: throw WithaengException.of(WithaengExceptionType.NOT_EXIST, "이메일에 해당하는 유저를 찾을 수 없습니다.")
+        if (userDto.isValidUser()) {
+            throw WithaengException.of(WithaengExceptionType.INVALID_ACCESS, "이미 인증된 유저입니다.")
+        }
+        val validatingEmailDto = validatingEmailService.findByEmail(requestedEmail)
+        if (validatingEmailDto.userId != userDto.id || validatingEmailDto.code != request.code) {
+            throw WithaengException.of(WithaengExceptionType.INVALID_INPUT, "Code가 올바르지 않습니다.")
+        }
+        validatingEmailService.deleteById(validatingEmailDto.id)
+        userService.grantUserRole(userDto.id)
+    }
+
+    private fun UserDto.isValidUser(): Boolean {
+        return roles.any { it == UserRole.USER }
     }
 
     private fun checkValidUserPassword(source: String, encryptedPassword: String) {

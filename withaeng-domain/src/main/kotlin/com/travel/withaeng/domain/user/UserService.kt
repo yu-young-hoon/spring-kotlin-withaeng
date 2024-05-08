@@ -1,5 +1,8 @@
 package com.travel.withaeng.domain.user
 
+import com.travel.withaeng.common.exception.WithaengException
+import com.travel.withaeng.common.exception.WithaengExceptionType
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -21,6 +24,14 @@ class UserService(private val userRepository: UserRepository) {
 
     fun findByEmailOrNull(email: String): UserDto? {
         return userRepository.findByEmail(email)?.toDto()
+    }
+
+    @Transactional
+    fun grantUserRole(id: Long) {
+        val user = userRepository.findByIdOrNull(id)
+            ?: throw WithaengException.of(WithaengExceptionType.SYSTEM_FAIL)
+        val newUserRoles = user.roles.filter { it != UserRole.NON_USER } + listOf(UserRole.USER)
+        user.roles = newUserRoles.toSet()
     }
 
     @Transactional
