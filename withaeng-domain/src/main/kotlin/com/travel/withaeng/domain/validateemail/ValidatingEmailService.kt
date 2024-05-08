@@ -29,8 +29,26 @@ class ValidatingEmailService(
         return validatingEmailRepository.save(ValidatingEmail(email, userId, code)).toDto()
     }
 
+    fun findByEmail(email: String): ValidatingEmailDto {
+        return validatingEmailRepository.findByEmail(email)?.toDto()
+            ?: throw WithaengException.of(
+                WithaengExceptionType.NOT_EXIST,
+                "이메일에 해당하는 요청이 없습니다."
+            )
+    }
+
     fun findAllByStatusNot(status: ValidatingEmailStatus): List<ValidatingEmailDto> {
         return validatingEmailRepository.findAllByStatusNot(status).map { it.toDto() }
+    }
+
+    @Transactional
+    fun deleteById(id: Long) {
+        validatingEmailRepository.deleteById(id)
+    }
+
+    @Transactional
+    fun deleteAllByUserId(userId: Long) {
+        validatingEmailRepository.deleteAllByUserId(userId)
     }
 
     @Transactional

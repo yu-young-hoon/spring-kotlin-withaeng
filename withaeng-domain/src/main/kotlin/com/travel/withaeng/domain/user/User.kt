@@ -34,7 +34,7 @@ class User(
 
     @Convert(converter = UserRoleConverter::class)
     @Column(name = "roles")
-    val roles: Set<UserRole>,
+    var roles: Set<UserRole>,
 ) : BaseEntity() {
 
     companion object {

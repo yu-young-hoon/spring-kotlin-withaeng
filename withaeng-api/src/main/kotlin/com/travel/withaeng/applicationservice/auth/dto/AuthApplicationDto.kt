@@ -13,3 +13,8 @@ data class SignInServiceRequest(
     val email: String,
     val password: String
 )
+
+data class ValidateEmailServiceRequest(
+    val email: String,
+    val code: String
+)
