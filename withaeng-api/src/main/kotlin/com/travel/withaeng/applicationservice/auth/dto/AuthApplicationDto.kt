@@ -8,3 +8,8 @@ data class SignUpServiceRequest(
     val email: String,
     val password: String
 )
+
+data class SignInServiceRequest(
+    val email: String,
+    val password: String
+)
