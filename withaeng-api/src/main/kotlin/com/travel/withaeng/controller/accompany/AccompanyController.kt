@@ -1,51 +1,70 @@
 package com.travel.withaeng.controller.accompany
 
+import com.travel.withaeng.applicationservice.accompany.AccompanyApplicationService
+import com.travel.withaeng.applicationservice.accompany.dto.AccompanyResponse
 import com.travel.withaeng.common.ApiResponse
-import com.travel.withaeng.domain.accompany.AccompanyService
-import com.travel.withaeng.domain.accompany.CreateAccompanyDTO
-import com.travel.withaeng.domain.accompany.ModifyAccompanyDTO
-import com.travel.withaeng.domain.accompany.SearchAccompanyDTO
+import com.travel.withaeng.controller.accompany.dto.CreateAccompanyRequest
+import com.travel.withaeng.controller.accompany.dto.UpdateAccompanyRequest
+import com.travel.withaeng.controller.accompany.dto.toServiceRequest
+import com.travel.withaeng.security.authentication.UserInfo
+import com.travel.withaeng.security.resolver.GetAuth
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
+import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
+@Tag(name = "Accompany", description = "Accompany API")
 @RestController
 @RequestMapping("/api/v1/accompany")
-class AccompanyController(private val accompanyService: AccompanyService) {
+class AccompanyController(private val accompanyApplicationService: AccompanyApplicationService) {
 
-    @PostMapping("")
-    fun create(@RequestBody @Valid param: CreateAccompanyDTO): ResponseEntity<ApiResponse<Any>> {
-        return ResponseEntity.status(HttpStatus.CREATED)
-            .body(ApiResponse(true, accompanyService.createAccompany(param), null))
+    @Operation(
+        summary = "Create Accompany API",
+        description = "동행 게시글 생성 API",
+        security = [SecurityRequirement(name = "Authorization")]
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping
+    fun create(
+        @GetAuth userInfo: UserInfo,
+        @RequestBody @Valid request: CreateAccompanyRequest
+    ): ApiResponse<AccompanyResponse> {
+        return ApiResponse.success(accompanyApplicationService.create(request.toServiceRequest(userInfo.id)))
     }
 
+    @Operation(
+        summary = "Update Accompany API",
+        description = "동행 게시글 수정 API",
+        security = [SecurityRequirement(name = "Authorization")]
+    )
     @PutMapping("/{accompanyId}")
-    fun modify(@RequestBody @Valid param: ModifyAccompanyDTO): ResponseEntity<ApiResponse<Any>> {
-        return ResponseEntity.status(HttpStatus.OK)
-            .body(ApiResponse(true, accompanyService.modifyAccompany(param), null))
+    fun update(
+        @GetAuth userInfo: UserInfo,
+        @PathVariable accompanyId: Long,
+        @RequestBody @Valid param: UpdateAccompanyRequest
+    ): ApiResponse<AccompanyResponse> {
+        return ApiResponse.success(
+            accompanyApplicationService.update(
+                param.toServiceRequest(
+                    accompanyId = accompanyId,
+                    userId = userInfo.id
+                )
+            )
+        )
     }
 
+    @Operation(summary = "Retrieve Accompany API", description = "동행 게시글 단건 조회 API")
     @GetMapping("/{accompanyId}")
-    fun getOne(@PathVariable("accompanyId") accompanyId: Long): ResponseEntity<ApiResponse<Any>> {
-        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse(true, accompanyService.getOne(accompanyId), null))
+    fun retrieve(@PathVariable("accompanyId") accompanyId: Long): ApiResponse<AccompanyResponse> {
+        return ApiResponse.success(accompanyApplicationService.retrieve(accompanyId))
     }
 
-    @PutMapping("/{accompanyId}/incr/viewCnt")
-    fun incrViewCnt(@PathVariable("accompanyId") accompanyId: Long): ResponseEntity<ApiResponse<Any>> {
-        accompanyService.incrViewCnt(accompanyId)
-        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse(true, null, null))
-    }
-
-    @PutMapping("/{accompanyId}/decr/viewCnt")
-    fun decrViewCnt(@PathVariable("accompanyId") accompanyId: Long): ResponseEntity<ApiResponse<Any>> {
-        accompanyService.decrViewCnt(accompanyId)
-        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse(true, null, null))
-    }
-
-    @GetMapping("/getList")
-    fun getList(@RequestBody param: SearchAccompanyDTO): ResponseEntity<ApiResponse<Any>> {
-        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse(true, accompanyService.getList(param), null))
+    @Operation(summary = "Retrieve All Accompany API", description = "모든 동행 게시글 조회 API")
+    @GetMapping("/all")
+    fun retrieveAll(): ApiResponse<List<AccompanyResponse>> {
+        return ApiResponse.success(accompanyApplicationService.retrieveAll())
     }
 
 }
