@@ -1,8 +1,8 @@
 package com.travel.withaeng.domain.destination
 
-import com.travel.withaeng.common.cd.CityCd
-import com.travel.withaeng.common.cd.ContinentCd
-import com.travel.withaeng.common.cd.CountryCd
+import com.travel.withaeng.domain.accompany.City
+import com.travel.withaeng.domain.accompany.Continent
+import com.travel.withaeng.domain.accompany.Country
 import org.springframework.stereotype.Service
 
 @Service
@@ -12,20 +12,20 @@ class DestinationService {
 
         val continentList = mutableListOf<Continent>()
 
-        for (continentCd in ContinentCd.entries) {
+        for (continentCd in Continent.entries) {
 
             // Create a continent object
-            val continent = Continent(continentCd.continentCd, continentCd.continentNm)
+            val continent = Continent(continentCd.continentCode, continentCd.continentName)
             val countryList = mutableListOf<Country>()
 
-            for (countryCd in CountryCd.entries) {
-                if (continentCd.continentCd.equals(countryCd.continentCd)) {
-                    val country = Country(countryCd.countryCd, countryCd.countryNm)
+            for (countryCd in Country.entries) {
+                if (continentCd.continentCode.equals(countryCd.continentCode)) {
+                    val country = Country(countryCd.countryCode, countryCd.countryName)
 
                     val cityList = mutableListOf<City>()
-                    for (cityCd in CityCd.entries) {
-                        if (countryCd.countryCd.equals(cityCd.countryCd)) {
-                            val city = City(cityCd.cityCd, cityCd.cityNm)
+                    for (cityCd in City.entries) {
+                        if (countryCd.countryCode.equals(cityCd.countryCode)) {
+                            val city = City(cityCd.cityCode, cityCd.cityName)
                             cityList.add(city)
                         }
                     }

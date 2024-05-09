@@ -1,226 +1,62 @@
 package com.travel.withaeng.domain.accompany
 
-import com.fasterxml.jackson.annotation.JsonProperty
-import com.travel.withaeng.common.cd.AccompanyStatusCd
-import com.travel.withaeng.common.cd.ExecCd
-import jakarta.validation.constraints.NotBlank
-import org.jetbrains.annotations.NotNull
 import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
 
-class CreateAccompanyDTO(
-
-    @NotNull
-    @JsonProperty("userId")
+data class CreateAccompanyDto(
     val userId: Long,
-
-    @NotBlank(message = "제목은 필수 값 입니다.")
-    @JsonProperty("title")
     val title: String,
-
-    @NotBlank(message = "내용은 필수 값 입니다.")
-    @JsonProperty("content")
     val content: String,
-
-    @NotBlank(message = "대륙은 필수 값 입니다.")
-    val continent: String,
-
-    val country: String? = null,
-
-    val city: String? = null,
-
+    val destination: AccompanyDestination,
     val startTripDate: LocalDate,
-
     val endTripDate: LocalDate,
-
     val bannerImageUrl: String? = null,
-
-    @field:NotNull
-    val accompanyCnt: Long,
-
-    val tags: List<String>?,
-
-    @NotBlank(message = "카카오 오픈 채팅 URL은 필수 값 입니다.")
+    val memberCount: Long,
+    val tagIds: Set<Long> = emptySet(),
     val openKakaoUrl: String
+)
 
-) {
-    fun toEntity(): AccompanyEntity {
-        return AccompanyEntity(
-            0,
-            this.userId,
-            this.title,
-            this.content,
-            AccompanyStatusCd.ING.statusCd,
-            this.startTripDate.atTime(LocalTime.MIN),
-            this.endTripDate.atTime(LocalTime.MAX),
-            this.bannerImageUrl,
-            this.accompanyCnt
-        )
-    }
-
-    fun toHistEntity(entity: AccompanyEntity): AccompanyHistEntity {
-        return AccompanyHistEntity(
-            0,
-            entity.accompanyId,
-            entity.userId,
-            entity.title,
-            entity.content,
-            entity.accompanyStatusCd,
-            entity.startTripDate,
-            entity.endTripDate,
-            entity.bannerImageUrl,
-            entity.accompanyCnt,
-            ExecCd.CREATE.execCd
-        )
-    }
-
-    fun toDestinationEntity(accompanyId: Long): AccompanyDestinationEntity {
-        return AccompanyDestinationEntity(
-            0,
-            accompanyId,
-            this.continent,
-            this.country,
-            this.city
-        )
-    }
-
-    fun toDetailEntity(accompanyId: Long): AccompanyDetailEntity {
-        return AccompanyDetailEntity(
-            accompanyId,
-            0,
-            0,
-            this.openKakaoUrl
-        )
-    }
-
-    fun toTagEntity(accompanyId: Long): List<AccompanyTagEntity>? {
-
-        if (tags == null) {
-            return null
-        }
-
-        val tagList = mutableListOf<AccompanyTagEntity>()
-        for (tagNm in tags) {
-            tagList.add(AccompanyTagEntity(0, accompanyId, tagNm))
-        }
-
-        return tagList
-    }
-}
-
-class ModifyAccompanyDTO(
-
-    @NotNull
+data class UpdateAccompanyDto(
     val accompanyId: Long,
-
-    @NotNull
-    val userId: Long,
-
-    @NotBlank(message = "제목은 필수 값 입니다.")
-    val title: String,
-
-    @NotBlank(message = "내용은 필수 값 입니다.")
-    val content: String,
-
-    @NotBlank(message = "대륙은 필수 값 입니다.")
-    val continent: String,
-
-    val country: String? = null,
-
-    val city: String? = null,
-
-    val startTripDate: LocalDate,
-
-    val endTripDate: LocalDate,
-
+    val title: String? = null,
+    val content: String? = null,
+    val destination: AccompanyDestination? = null,
+    val startTripDate: LocalDate? = null,
+    val endTripDate: LocalDate? = null,
     val bannerImageUrl: String? = null,
+    val memberCount: Long? = null,
+    val tagIds: Set<Long>? = null,
+    val openKakaoUrl: String? = null
+)
 
-    @NotNull
-    val accompanyCnt: Long,
-
-    val tags: List<String>?,
-
-    @NotBlank(message = "카카오 오픈 채팅 URL은 필수 값 입니다.")
+data class AccompanyDto(
+    val id: Long,
+    val userId: Long,
+    val title: String,
+    val content: String,
+    val destination: AccompanyDestination,
+    val startTripDate: LocalDate,
+    val endTripDate: LocalDate,
+    val bannerImageUrl: String? = null,
+    val memberCount: Long,
+    val viewCount: Long,
     val openKakaoUrl: String
+)
 
-) {
-    fun toHistEntity(entity: AccompanyEntity): AccompanyHistEntity {
-        return AccompanyHistEntity(
-            0,
-            entity.accompanyId,
-            entity.userId,
-            entity.title,
-            entity.content,
-            entity.accompanyStatusCd,
-            entity.startTripDate,
-            entity.endTripDate,
-            entity.bannerImageUrl,
-            entity.accompanyCnt,
-            ExecCd.UPDATE.execCd
-        )
-    }
+fun Accompany.toDto(): AccompanyDto = AccompanyDto(
+    id = id,
+    userId = userId,
+    title = title,
+    content = content,
+    destination = accompanyDestination,
+    startTripDate = startTripDate,
+    endTripDate = endTripDate,
+    bannerImageUrl = bannerImageUrl,
+    memberCount = memberCount,
+    viewCount = viewCount,
+    openKakaoUrl = openKakaoUrl
+)
 
-    fun toTagEntity(accompanyId: Long): List<AccompanyTagEntity>? {
-
-        if (tags == null) {
-            return null
-        }
-
-        val tagList = mutableListOf<AccompanyTagEntity>()
-        for (tagNm in tags) {
-            tagList.add(AccompanyTagEntity(0, accompanyId, tagNm))
-        }
-
-        return tagList
-    }
-}
-
-data class GetDTO(
-
-    var accompanyId: Long,
-    var userId: Long,
-    var title: String,
-    var content: String,
-    var continent: String,
-    var country: String? = null,
-    var city: String? = null,
-    var startTripDate: LocalDateTime,
-    var endTripDate: LocalDateTime,
-    var bannerImageUrl: String? = null,
-    var accompanyCnt: Long,
-    var viewCnt: Long,
-    var likeCnt: Long,
-    var tags: List<String>? = null,
-    var openKakaoUrl: String
-
-) {
-    constructor(
-        accompanyId: Long, userId: Long, title: String, content: String,
-        continent: String, country: String?, city: String?,
-        startTripDate: LocalDateTime, endTripDate: LocalDateTime,
-        bannerImageUrl: String?, accompanyCnt: Long, viewCnt: Long, likeCnt: Long, openKakaoUrl: String
-    ) :
-            this(
-                accompanyId,
-                userId,
-                title,
-                content,
-                continent,
-                country,
-                city,
-                startTripDate,
-                endTripDate,
-                bannerImageUrl,
-                accompanyCnt,
-                viewCnt,
-                likeCnt,
-                null,
-                openKakaoUrl
-            )
-}
-
-data class SearchAccompanyDTO(
+data class SearchAccompanyDto(
 
     var viewCntOrder: Boolean,//조회수 높은 순서
 

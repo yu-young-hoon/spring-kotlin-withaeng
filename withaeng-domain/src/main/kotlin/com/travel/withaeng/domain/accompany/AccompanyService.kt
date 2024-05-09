@@ -2,125 +2,62 @@ package com.travel.withaeng.domain.accompany
 
 import com.travel.withaeng.common.exception.WithaengException
 import com.travel.withaeng.common.exception.WithaengExceptionType
+import com.travel.withaeng.domain.tag.TagRepository
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.time.LocalTime
 
 @Service
 @Transactional(readOnly = true)
 class AccompanyService(
-
     private val accompanyRepository: AccompanyRepository,
-    private val accompanyHistRepository: AccompanyHistRepository,
-    private val accompanyDestinationRepository: AccompanyDestinationRepository,
-    private val accompanyDetailRepository: AccompanyDetailRepository,
-    private val accompanyTagRepository: AccompanyTagRepository
-
+    private val tagRepository: TagRepository
 ) {
 
     @Transactional
-    fun createAccompany(param: CreateAccompanyDTO): GetDTO {
-        val accompanyEntity = param.toEntity()
+    fun create(params: CreateAccompanyDto): AccompanyDto {
+        val actualTagIds = filterValidTagIds(params.tagIds)
+        val actualParams = params.copy(tagIds = actualTagIds)
+        val accompanyEntity = Accompany.create(actualParams)
         accompanyRepository.save(accompanyEntity)
-
-        val accompanyHistEntity = param.toHistEntity(accompanyEntity)
-        val accompanyDestinationEntity = param.toDestinationEntity(accompanyEntity.accompanyId)
-        val accompanyDetailEntity = param.toDetailEntity(accompanyEntity.accompanyId)
-        val accompanyTagEntityList = param.toTagEntity(accompanyEntity.accompanyId)
-
-        accompanyHistRepository.save(accompanyHistEntity)
-        accompanyDestinationRepository.save(accompanyDestinationEntity)
-        accompanyDetailRepository.save(accompanyDetailEntity)
-
-        if (accompanyTagEntityList != null) {
-            accompanyTagRepository.saveAll(accompanyTagEntityList)
-        }
-
-        return getOne(accompanyEntity.accompanyId)
+        return accompanyEntity.toDto()
     }
 
     @Transactional
-    fun modifyAccompany(param: ModifyAccompanyDTO): GetDTO {
+    fun update(params: UpdateAccompanyDto): AccompanyDto {
+        val accompany = accompanyRepository.findByIdOrNull(params.accompanyId) ?: throw WithaengException.of(
+            type = WithaengExceptionType.NOT_EXIST,
+            message = NOT_EXIST_MESSAGE
+        )
+        params.title?.let { accompany.title = it }
+        params.content?.let { accompany.content = it }
+        params.destination?.let { accompany.accompanyDestination = it }
+        params.startTripDate?.let { accompany.startTripDate = it }
+        params.endTripDate?.let { accompany.endTripDate = it }
+        params.bannerImageUrl?.let { accompany.bannerImageUrl = it }
+        params.memberCount?.let { accompany.memberCount = it }
+        params.tagIds?.let { accompany.tagIds = filterValidTagIds(it) }
+        params.openKakaoUrl?.let { accompany.openKakaoUrl = it }
 
-        val accompanyEntity = accompanyRepository.findByAccompanyId(param.accompanyId)
-
-        if (accompanyEntity != null) {
-
-            if (accompanyEntity.userId != param.userId) {
-                throw WithaengException.of(
-                    type = WithaengExceptionType.INVALID_ACCESS,
-                    message = "등록자와 수정자가 달라 수정 요청을 거부 합니다."
-                )
-            }
-
-            val accompanyHistEntity = param.toHistEntity(accompanyEntity)
-            val accompanyDestinationEntity = accompanyDestinationRepository.findByAccompanyId(param.accompanyId)
-            val accompanyDetailEntity = accompanyDetailRepository.findByAccompanyId(param.accompanyId)
-            val accompanyTagEntityList = param.toTagEntity(accompanyEntity.accompanyId)
-
-            accompanyEntity.let {
-                it.title = param.title
-                it.content = param.content
-                it.startTripDate = param.startTripDate.atTime(LocalTime.MIN)
-                it.endTripDate = param.endTripDate.atTime(LocalTime.MAX)
-                it.bannerImageUrl = param.bannerImageUrl
-                it.accompanyCnt = param.accompanyCnt
-            }
-
-            accompanyDetailEntity.let {
-                it.openKakaoUrl = param.openKakaoUrl
-            }
-
-            accompanyDestinationEntity.let {
-                it.continent = param.continent
-                it.country = param.country
-                it.city = param.city
-            }
-
-            accompanyHistRepository.save(accompanyHistEntity)
-            accompanyTagRepository.deleteByAccompanyId(accompanyEntity.accompanyId)
-            if (accompanyTagEntityList != null) {
-                accompanyTagRepository.saveAll(accompanyTagEntityList)
-            }
-
-        }
-
-        return getOne(param.accompanyId)
+        return accompany.toDto()
     }
 
-    fun getOne(param: Long): GetDTO {
-
-        val getAccompany = accompanyRepository.getAccompany(param)
-
-        if (getAccompany != null) {
-            val tagList: List<String>? = accompanyTagRepository.findByAccompanyId(param)?.map(AccompanyTagEntity::tagNm)
-            getAccompany.tags = tagList
-            return getAccompany
-        }
-
-        throw WithaengException.of(
+    fun findById(id: Long): AccompanyDto {
+        return accompanyRepository.findByIdOrNull(id)?.toDto() ?: throw WithaengException.of(
             type = WithaengExceptionType.NOT_EXIST,
-            message = "존재하지 않는 동행 게시글 조회 요청 입니다."
+            message = NOT_EXIST_MESSAGE
         )
     }
 
-    fun getList(param: SearchAccompanyDTO): List<GetDTO> {
-        return accompanyRepository.getAccompanyList(param)
+    fun findAll(): List<AccompanyDto> {
+        return accompanyRepository.findAll().map { it.toDto() }
     }
 
-    @Transactional
-    fun incrViewCnt(param: Long) {
-        val accompanyDetailEntity = accompanyDetailRepository.findByAccompanyId(param)
-        accompanyDetailEntity.let {
-            it.viewCnt++
-        }
+    private fun filterValidTagIds(tagIds: Iterable<Long>): Set<Long> {
+        return tagRepository.findAllById(tagIds).map { it.id }.toSet()
     }
 
-    @Transactional
-    fun decrViewCnt(param: Long) {
-        val accompanyDetailEntity = accompanyDetailRepository.findByAccompanyId(param)
-        accompanyDetailEntity.let {
-            it.viewCnt--
-        }
+    companion object {
+        private const val NOT_EXIST_MESSAGE = "해당하는 동행을 찾을 수 없습니다."
     }
 }

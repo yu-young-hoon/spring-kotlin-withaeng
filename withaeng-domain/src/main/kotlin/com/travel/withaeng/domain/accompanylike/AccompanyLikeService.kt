@@ -1,18 +1,13 @@
 package com.travel.withaeng.domain.accompanylike
 
-import com.travel.withaeng.domain.accompany.AccompanyDetailRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.time.LocalDateTime
 
 @Service
 @Transactional(readOnly = true)
 class AccompanyLikeService(
-
     private val accompanyLikeRepository: AccompanyLikeRepository,
-    private val accompanyLikeHistRepository: AccompanyLikeHistRepository,
-    private val accompanyDetailRepository: AccompanyDetailRepository
-
+    private val accompanyLikeHistRepository: AccompanyLikeHistRepository
 ) {
 
     @Transactional
@@ -24,12 +19,11 @@ class AccompanyLikeService(
         val accompanyLikeHistEntity = param.toHistEntity(accompanyLikeEntity)
         accompanyLikeHistRepository.save(accompanyLikeHistEntity)
 
-        val accompanyDetailEntity = accompanyDetailRepository.findByAccompanyId(param.accompanyId)
-        accompanyDetailEntity.let {
-            it.likeCnt++
-        }
-
         return param
+    }
+
+    fun countByAccompanyId(accompanyId: Long): Long {
+        return accompanyLikeRepository.countByAccompanyId(accompanyId)
     }
 
     //TODO delete 성능이 안나올 경우 boolean 형으로 좋아요 제어
@@ -40,13 +34,7 @@ class AccompanyLikeService(
         accompanyLikeRepository.delete(accompanyLikeEntity)
 
         val accompanyLikeHistEntity = param.toHistEntity(accompanyLikeEntity)
-        accompanyLikeHistEntity.deletedAt = LocalDateTime.now()
         accompanyLikeHistRepository.save(accompanyLikeHistEntity)
-
-        val accompanyDetailEntity = accompanyDetailRepository.findByAccompanyId(param.accompanyId)
-        accompanyDetailEntity.let {
-            it.likeCnt--
-        }
 
         return param
     }
