@@ -1,29 +1,35 @@
 package com.travel.withaeng.controller.accompanylike
 
+import com.travel.withaeng.applicationservice.accompanylike.AccompanyLikeApplicationService
 import com.travel.withaeng.common.ApiResponse
-import com.travel.withaeng.domain.accompanylike.AccompanyLikeService
-import com.travel.withaeng.domain.accompanylike.CreateAccompanyLikeDTO
-import com.travel.withaeng.domain.accompanylike.DeleteAccompanyLikeDTO
-import jakarta.validation.Valid
+import com.travel.withaeng.security.authentication.UserInfo
+import com.travel.withaeng.security.resolver.GetAuth
 import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/v1/accompany/{accompanyId}/like")
-class AccompanyLikeController(private val accompanyLikeService: AccompanyLikeService) {
+@RequestMapping("/api/v1/accompany")
+class AccompanyLikeController(
+    private val accompanyLikeApplicationService: AccompanyLikeApplicationService
+) {
 
-    @PostMapping("")
-    fun create(@RequestBody @Valid param: CreateAccompanyLikeDTO): ResponseEntity<ApiResponse<Any>> {
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-            ApiResponse(true, accompanyLikeService.createAccompanyLike(param), null)
-        )
+    @PostMapping("/{accompanyId}/like")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun like(
+        @GetAuth userInfo: UserInfo,
+        @PathVariable("accompanyId") accompanyId: Long
+    ): ApiResponse<Unit> {
+        accompanyLikeApplicationService.like(userInfo.id, accompanyId)
+        return ApiResponse.success()
     }
 
-    @DeleteMapping("")
-    fun delete(@RequestBody @Valid param: DeleteAccompanyLikeDTO): ResponseEntity<Any> {
-        return ResponseEntity.status(HttpStatus.OK)
-            .body(ApiResponse(true, accompanyLikeService.deleteAccompanyLike(param), null))
+    @DeleteMapping("/{accompanyId}/like")
+    fun dislike(
+        @GetAuth userInfo: UserInfo,
+        @PathVariable("accompanyId") accompanyId: Long
+    ): ApiResponse<Unit> {
+        accompanyLikeApplicationService.dislike(userInfo.id, accompanyId)
+        return ApiResponse.success()
     }
 
 }

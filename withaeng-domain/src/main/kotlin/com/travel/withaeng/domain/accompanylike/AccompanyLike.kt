@@ -15,4 +15,11 @@ class AccompanyLike(
     @Column(name = "user_id", nullable = false)
     val userId: Long
 
-) : BaseEntity()
+) : BaseEntity() {
+
+    companion object {
+        fun create(userId: Long, accompanyId: Long): AccompanyLike {
+            return AccompanyLike(accompanyId = accompanyId, userId = userId)
+        }
+    }
+}
