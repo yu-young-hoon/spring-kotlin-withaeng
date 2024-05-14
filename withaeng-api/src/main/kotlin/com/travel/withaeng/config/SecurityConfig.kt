@@ -10,6 +10,7 @@ import com.travel.withaeng.security.jwt.JwtFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer
@@ -39,9 +40,7 @@ class SecurityConfig(private val jwtAgent: JwtAgent, private val objectMapper: O
             .httpBasic { it.disable() }
             .formLogin { it.disable() }
             .authorizeHttpRequests {
-                it.requestMatchers(AntPathRequestMatcher("/**"))
-                    .hasAnyRole(UserRole.USER.getActualRoleName(), UserRole.ADMIN.getActualRoleName())
-                    .anyRequest().permitAll()
+                it.anyRequest().hasAnyRole(UserRole.USER.getActualRoleName(), UserRole.ADMIN.getActualRoleName())
             }
             .addFilterBefore(JwtFilter(jwtAgent, objectMapper), UsernamePasswordAuthenticationFilter::class.java)
             .exceptionHandling {
@@ -55,6 +54,7 @@ class SecurityConfig(private val jwtAgent: JwtAgent, private val objectMapper: O
     fun webSecurityCustomizer(): WebSecurityCustomizer {
         return WebSecurityCustomizer {
             it.ignoring().requestMatchers(*getWhiteListForSecurityConfig().toTypedArray())
+                .requestMatchers(AntPathRequestMatcher("/api/v1/**", HttpMethod.GET.name()))
         }
     }
 
@@ -69,7 +69,7 @@ class SecurityConfig(private val jwtAgent: JwtAgent, private val objectMapper: O
         }
 
         return UrlBasedCorsConfigurationSource().apply {
-            registerCorsConfiguration("/v1/**", configuration)
+            registerCorsConfiguration("api/v1/**", configuration)
         }
     }
 

@@ -3,7 +3,6 @@ package com.travel.withaeng.security.jwt
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.travel.withaeng.common.ApiResponse
 import com.travel.withaeng.common.Constants.Authentication.BEARER_TYPE
-import com.travel.withaeng.common.WhiteList.getWhiteListForAuthenticationFilter
 import com.travel.withaeng.common.exception.WithaengException
 import com.travel.withaeng.common.exception.WithaengExceptionType
 import com.travel.withaeng.security.authentication.JwtAuthentication
@@ -49,17 +48,16 @@ class JwtFilter(
     }
 
     private fun setAuthenticationFromToken(request: HttpServletRequest) {
-        if (!isNotCheckEndpoint(request)) {
-            val authorization =
-                request.getAuthorization()
-                    ?: throw BadCredentialsException(WithaengExceptionType.AUTHENTICATION_FAILURE.message)
-            log.debug("Parsing token in header: $authorization - Request path: ${request.requestURI}")
-            getToken(authorization)?.let { token ->
-                jwtAgent.extractUserInfoFromToken(token)?.let { userInfo ->
-                    SecurityContextHolder.getContext().authentication = JwtAuthentication(userInfo)
-                }
-            } ?: throw WithaengException.of(WithaengExceptionType.AUTHENTICATION_FAILURE)
-        }
+        val authorization = request.getAuthorization()
+            ?: throw BadCredentialsException(WithaengExceptionType.AUTHENTICATION_FAILURE.message)
+        log.debug("Parsing token in header: $authorization - Request path: ${request.requestURI}")
+        getToken(authorization)?.let { token ->
+            jwtAgent.extractUserInfoFromToken(token)?.let { userInfo ->
+                log.debug("userInfo: $userInfo")
+                SecurityContextHolder.getContext().authentication = JwtAuthentication(userInfo)
+            }
+        } ?: throw WithaengException.of(WithaengExceptionType.AUTHENTICATION_FAILURE)
+
     }
 
     private fun getToken(authorization: String): String? {
@@ -69,10 +67,6 @@ class JwtFilter(
     }
 
     private fun HttpServletRequest.getAuthorization(): String? = getHeader(HttpHeaders.AUTHORIZATION)
-
-    private fun isNotCheckEndpoint(request: HttpServletRequest): Boolean {
-        return getWhiteListForAuthenticationFilter().any { request.requestURI.startsWith(it) }
-    }
 
     companion object {
         private const val AUTH_PROVIDER_SPLIT_DELIMITER: String = " "
