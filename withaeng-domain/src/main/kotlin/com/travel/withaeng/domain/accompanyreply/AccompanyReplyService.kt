@@ -2,135 +2,75 @@ package com.travel.withaeng.domain.accompanyreply
 
 import com.travel.withaeng.common.exception.WithaengException
 import com.travel.withaeng.common.exception.WithaengExceptionType
-import com.travel.withaeng.domain.accompanyreplylike.AccompanyReplyLikeService
+import com.travel.withaeng.domain.accompany.AccompanyRepository
+import com.travel.withaeng.domain.user.UserRepository
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 @Transactional(readOnly = true)
 class AccompanyReplyService(
-
-    private val accompanyReplyRepository: AccompanyReplyRepository,
-    private val accompanyReplyHistRepository: AccompanyReplyHistRepository,
-    private val accompanyReplyLikeService: AccompanyReplyLikeService
-
+    private val userRepository: UserRepository,
+    private val accompanyRepository: AccompanyRepository,
+    private val accompanyReplyRepository: AccompanyReplyRepository
 ) {
 
     @Transactional
-    fun createAccompanyReply(param: CreateAccompanyReplyDTO): GetReplyDTO {
-        val accompanyReplyEntity = param.toEntity()
-        accompanyReplyRepository.save(accompanyReplyEntity)
-
-        val accompanyReplyHistEntity = param.toHistEntity(accompanyReplyEntity)
-
-        accompanyReplyHistRepository.save(accompanyReplyHistEntity)
-
-        return getOne(accompanyReplyEntity.replyId)
-    }
-
-    @Transactional
-    fun modifyAccompanyReply(param: ModifyAccompanyReplyDTO): GetReplyDTO {
-
-        val accompanyReplyEntity = accompanyReplyRepository.findByReplyId(param.replyId)
-
-        if (accompanyReplyEntity != null) {
-
-            if (accompanyReplyEntity.userId != param.userId) {
-                throw WithaengException.of(
-                    type = WithaengExceptionType.INVALID_ACCESS,
-                    message = "등록자와 수정자가 달라 수정 요청을 거부 합니다."
-                )
-            }
-
-            accompanyReplyEntity.let {
-                it.content = param.content
-            }
-
-            val accompanyReplyHistEntity = param.toHistEntity(accompanyReplyEntity)
-            accompanyReplyHistRepository.save(accompanyReplyHistEntity)
-        }
-
-        return getOne(param.replyId)
-    }
-
-    @Transactional
-    fun deleteAccompanyReply(param: DeleteAccompanyReplyDTO): DeleteAccompanyReplyDTO {
-
-        val accompanyReplyEntity = accompanyReplyRepository.findByReplyId(param.replyId)
-
-        if (accompanyReplyEntity != null) {
-
-            if (accompanyReplyEntity.userId != param.userId) {
-                throw WithaengException.of(
-                    type = WithaengExceptionType.INVALID_ACCESS,
-                    message = "등록자와 수정자가 달라 삭제 요청을 거부 합니다."
-                )
-            }
-
-            accompanyReplyRepository.delete(accompanyReplyEntity)
-
-            val accompanyReplyHistEntity = param.toHistEntity(accompanyReplyEntity)
-            accompanyReplyHistRepository.save(accompanyReplyHistEntity)
-        }
-
-        return param
-    }
-
-    fun getOne(param: Long): GetReplyDTO {
-
-        val accompanyReplyEntity = accompanyReplyRepository.findByReplyId(param)
-        val accompanyReplyLikeCnt = accompanyReplyLikeService.getAccompanyReplyLikeCnt(param)
-
-        if (accompanyReplyEntity != null) {
-            return GetReplyDTO.toDto(accompanyReplyEntity, accompanyReplyLikeCnt)
-        }
-
-        throw WithaengException.of(
+    fun create(accompanyId: Long, userId: Long, content: String, parentId: Long? = null): AccompanyReplyDto {
+        userRepository.findByIdOrNull(userId) ?: throw WithaengException.of(
             type = WithaengExceptionType.NOT_EXIST,
-            message = "존재하지 않는 동행 게시글 댓글 요청 입니다."
+            message = "해당하는 유저를 찾을 수 없습니다."
         )
-    }
-
-    //TODO 댓글당 좋아요 누른 userId 목록을 추가로 조회하여 리턴은 추후 처리
-    fun getList(param: Long): List<GetReplyDTO>? {
-
-        val accompanyReplyList = accompanyReplyRepository.getAccompanyReplyList(param)
-
-        if (accompanyReplyList != null) {
-
-            val replyIdList: List<Long> =
-                accompanyReplyList.map { accompanyReplyEntity -> accompanyReplyEntity.replyId }.toList()
-            val accompanyReplyLikeList = accompanyReplyLikeService.getAccompanyReplyLikeList(replyIdList)
-
-            for (reply in accompanyReplyList) {
-                for (like in accompanyReplyLikeList) {
-                    if (reply.replyId == like.replyId) {
-                        reply.likeCnt = like.likeCnt
-                    }
-                }
-            }
-
-            val parentList = accompanyReplyList.stream().filter { e ->
-                e.parentId.equals(0L)
-            }.toList()
-
-            val sortList =
-                accompanyReplyList.sortedWith(compareBy({ it.parentId }, { it.depth }, { it.replyOrder })).toList()
-            val resultList = mutableListOf<GetReplyDTO>()
-
-            parentList.stream().forEach { e ->
-                resultList.add(e)
-                sortList.forEach { a ->
-                    if (e.replyId.equals(a.parentId)) {
-                        resultList.add(a)
-                    }
-                }
-            }
-
-            return resultList
+        accompanyRepository.findByIdOrNull(accompanyId) ?: throw WithaengException.of(
+            type = WithaengExceptionType.NOT_EXIST,
+            message = "해당하는 동행을 찾을 수 없습니다."
+        )
+        if (parentId != null) {
+            accompanyReplyRepository.findByIdOrNull(parentId) ?: throw WithaengException.of(
+                type = WithaengExceptionType.NOT_EXIST,
+                message = "해당하는 댓글을 찾을 수 없습니다."
+            )
         }
-
-        return null
+        val accompanyReply = AccompanyReply.create(
+            accompanyId = accompanyId,
+            userId = userId,
+            content = content,
+            parentId = parentId
+        )
+        accompanyReplyRepository.save(accompanyReply)
+        return accompanyReply.toDto()
     }
 
+    fun findById(replyId: Long): AccompanyReplyDto {
+        val accompanyReply = accompanyReplyRepository.findByIdOrNull(replyId) ?: throw WithaengException.of(
+            type = WithaengExceptionType.NOT_EXIST,
+            message = "해당하는 댓글을 찾을 수 없습니다."
+        )
+        return accompanyReply.toDto()
+    }
+
+    fun findAllByAccompanyId(accompanyId: Long): List<AccompanyReplyDto> {
+        return accompanyReplyRepository.findAllByAccompanyId(accompanyId)
+            .map { it.toDto() }
+    }
+
+    @Transactional
+    fun update(replyId: Long, content: String): AccompanyReplyDto {
+        val accompanyReply = accompanyReplyRepository.findByIdOrNull(replyId) ?: throw WithaengException.of(
+            type = WithaengExceptionType.NOT_EXIST,
+            message = "해당하는 댓글을 찾을 수 없습니다."
+        )
+        accompanyReply.content = content
+        return accompanyReply.toDto()
+    }
+
+    @Transactional
+    fun delete(replyId: Long) {
+        val accompanyReply = accompanyReplyRepository.findByIdOrNull(replyId) ?: throw WithaengException.of(
+            type = WithaengExceptionType.NOT_EXIST,
+            message = "해당하는 댓글을 찾을 수 없습니다."
+        )
+        accompanyReplyRepository.delete(accompanyReply)
+    }
 }

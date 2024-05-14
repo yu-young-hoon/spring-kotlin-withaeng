@@ -9,30 +9,17 @@ import java.time.LocalDateTime
 @Service
 @Transactional(readOnly = true)
 class AccompanyReplyLikeService(
-
     private val accompanyReplyLikeRepository: AccompanyReplyLikeRepository,
     private val accompanyReplyLikeHistRepository: AccompanyReplyLikeHistRepository
-
 ) {
 
     @Transactional
-    fun createAccompanyReplyLike(param: CreateAccompanyReplyLikeDTO): CreateAccompanyReplyLikeDTO {
+    fun likeAccompanyReply(userId: Long, accompanyReplyId: Long) {
 
-        val replyLikeEntity = accompanyReplyLikeRepository.findByReplyIdAndUserId(param.replyId, param.userId)
-        if (replyLikeEntity != null) {
-            throw WithaengException.of(
-                type = WithaengExceptionType.INVALID_ACCESS,
-                message = "이미 해당 댓글의 좋아요 등록이 되어 있습니다."
-            )
-        }
+    }
 
-        val accompanyReplyLikeEntity = param.toEntity()
-        accompanyReplyLikeRepository.save(accompanyReplyLikeEntity)
-
-        val accompanyReplyLikeHistEntity = param.toHistEntity(accompanyReplyLikeEntity)
-        accompanyReplyLikeHistRepository.save(accompanyReplyLikeHistEntity)
-
-        return param
+    fun countAccompanyReplyLikeCount(accompanyReplyId: Long): Long {
+        return accompanyReplyLikeRepository.countByReplyId(accompanyReplyId)
     }
 
     //TODO delete 성능이 안나올 경우 boolean 형으로 좋아요 제어
@@ -47,13 +34,5 @@ class AccompanyReplyLikeService(
         accompanyReplyLikeHistRepository.save(accompanyReplyLikeHistEntity)
 
         return param
-    }
-
-    fun getAccompanyReplyLikeCnt(param: Long): Long {
-        return accompanyReplyLikeRepository.countByReplyId(param)
-    }
-
-    fun getAccompanyReplyLikeList(param: List<Long>): List<GetReplyLikeDTO> {
-        return accompanyReplyLikeRepository.getAccompanyReplyLikeList(param)
     }
 }

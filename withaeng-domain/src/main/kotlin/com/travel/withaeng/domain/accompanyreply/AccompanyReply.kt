@@ -14,14 +14,8 @@ class AccompanyReply(
     @Column(name = "accompany_id", nullable = false)
     val accompanyId: Long,
 
-    @Column(name = "parent_id", nullable = false)
-    val parentId: Long,
-
-    @Column(name = "depth", nullable = false)
-    val depth: Long,
-
-    @Column(name = "reply_order", nullable = false)
-    val replyOrder: Long,
+    @Column(name = "parent_id", nullable = true)
+    val parentId: Long? = null,
 
     @Column(name = "user_id", nullable = false)
     val userId: Long,
@@ -29,4 +23,15 @@ class AccompanyReply(
     @Column(name = "content", nullable = false)
     var content: String
 
-) : BaseEntity()
+) : BaseEntity() {
+    companion object {
+        fun create(accompanyId: Long, userId: Long, content: String, parentId: Long? = null): AccompanyReply {
+            return AccompanyReply(
+                accompanyId = accompanyId,
+                userId = userId,
+                content = content,
+                parentId = parentId
+            )
+        }
+    }
+}
