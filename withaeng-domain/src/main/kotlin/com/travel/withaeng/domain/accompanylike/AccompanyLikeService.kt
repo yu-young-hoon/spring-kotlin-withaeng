@@ -17,7 +17,7 @@ class AccompanyLikeService(
 ) {
 
     @Transactional
-    fun createAccompanyLike(userId: Long, accompanyId: Long): AccompanyLikeDto {
+    fun createAccompanyLike(userId: Long, accompanyId: Long) {
         userRepository.findByIdOrNull(userId) ?: throw WithaengException.of(
             type = WithaengExceptionType.NOT_EXIST,
             message = "해당하는 유저를 찾을 수 없습니다."
@@ -27,12 +27,9 @@ class AccompanyLikeService(
             message = "해당하는 동행을 찾을 수 없습니다."
         )
         val prevAccompanyLike = accompanyLikeRepository.findByUserIdAndAccompanyId(userId, accompanyId)
-        if (prevAccompanyLike != null) {
-            return prevAccompanyLike.toDto()
-        }
+        if (prevAccompanyLike != null) return
         val accompanyLike = AccompanyLike.create(userId = userId, accompanyId = accompanyId)
         accompanyLikeRepository.save(accompanyLike)
-        return accompanyLike.toDto()
     }
 
     fun countByAccompanyId(accompanyId: Long): Long {

@@ -1,27 +1,39 @@
 package com.travel.withaeng.controller.accompanyreplylike
 
+import com.travel.withaeng.applicationservice.accompanyreplylike.AccompanyReplyLikeApplicationService
 import com.travel.withaeng.common.ApiResponse
-import com.travel.withaeng.domain.accompanyreplylike.AccompanyReplyLikeService
-import com.travel.withaeng.domain.accompanyreplylike.CreateAccompanyReplyLikeDTO
-import com.travel.withaeng.domain.accompanyreplylike.DeleteAccompanyReplyLikeDTO
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
+import com.travel.withaeng.security.authentication.UserInfo
+import com.travel.withaeng.security.resolver.GetAuth
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/v1/accompany/{accompanyId}/reply/{replyId}/like")
-class AccompanyReplyLikeController(private val accompanyReplyLikeService: AccompanyReplyLikeService) {
+@RequestMapping("/api/v1/accompany")
+class AccompanyReplyLikeController(
+    private val accompanyReplyLikeApplicationService: AccompanyReplyLikeApplicationService
+) {
 
-    @PostMapping("")
-    fun create(@RequestBody param: CreateAccompanyReplyLikeDTO): ResponseEntity<ApiResponse<Any>> {
-        return ResponseEntity.status(HttpStatus.CREATED)
-            .body(ApiResponse(true, accompanyReplyLikeService.createAccompanyReplyLike(param), null))
+    @PostMapping("/{accompanyId}/reply/{replyId}/like")
+    fun create(
+        @GetAuth userInfo: UserInfo,
+        @PathVariable("replyId") replyId: Long
+    ): ApiResponse<Unit> {
+        accompanyReplyLikeApplicationService.like(
+            userId = userInfo.id,
+            accompanyReplyId = replyId
+        )
+        return ApiResponse.success()
     }
 
-    @DeleteMapping("")
-    fun delete(@RequestBody param: DeleteAccompanyReplyLikeDTO): ResponseEntity<ApiResponse<Any>> {
-        return ResponseEntity.status(HttpStatus.OK)
-            .body(ApiResponse(true, accompanyReplyLikeService.deleteAccompanyReplyLike(param), null))
+    @DeleteMapping("/{accompanyId}/reply/{replyId}/dislike")
+    fun delete(
+        @GetAuth userInfo: UserInfo,
+        @PathVariable("replyId") replyId: Long
+    ): ApiResponse<Unit> {
+        accompanyReplyLikeApplicationService.dislike(
+            userId = userInfo.id,
+            accompanyReplyId = replyId
+        )
+        return ApiResponse.success()
     }
 
 }
