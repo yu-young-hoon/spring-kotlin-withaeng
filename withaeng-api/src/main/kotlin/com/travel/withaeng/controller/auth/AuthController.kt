@@ -11,7 +11,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.*
 
-@Tag(name = "Auth", description = "Auth API")
+@Tag(name = "Auth", description = "인증 API")
 @RestController
 @RequestMapping("api/v1/auth")
 class AuthController(private val authApplicationService: AuthApplicationService) {

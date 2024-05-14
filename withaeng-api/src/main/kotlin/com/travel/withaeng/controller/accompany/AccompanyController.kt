@@ -15,7 +15,7 @@ import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
-@Tag(name = "Accompany", description = "Accompany API")
+@Tag(name = "Accompany", description = "동행 API")
 @RestController
 @RequestMapping("/api/v1/accompany")
 class AccompanyController(private val accompanyApplicationService: AccompanyApplicationService) {
@@ -32,6 +32,18 @@ class AccompanyController(private val accompanyApplicationService: AccompanyAppl
         @RequestBody @Valid request: CreateAccompanyRequest
     ): ApiResponse<AccompanyResponse> {
         return ApiResponse.success(accompanyApplicationService.create(request.toServiceRequest(userInfo.id)))
+    }
+
+    @Operation(summary = "Retrieve Accompany API", description = "동행 게시글 단건 조회 API")
+    @GetMapping("/{accompanyId}")
+    fun retrieve(@PathVariable("accompanyId") accompanyId: Long): ApiResponse<AccompanyResponse> {
+        return ApiResponse.success(accompanyApplicationService.retrieve(accompanyId))
+    }
+
+    @Operation(summary = "Retrieve All Accompany API", description = "모든 동행 게시글 조회 API")
+    @GetMapping("/all")
+    fun retrieveAll(): ApiResponse<List<AccompanyResponse>> {
+        return ApiResponse.success(accompanyApplicationService.retrieveAll())
     }
 
     @Operation(
@@ -54,17 +66,4 @@ class AccompanyController(private val accompanyApplicationService: AccompanyAppl
             )
         )
     }
-
-    @Operation(summary = "Retrieve Accompany API", description = "동행 게시글 단건 조회 API")
-    @GetMapping("/{accompanyId}")
-    fun retrieve(@PathVariable("accompanyId") accompanyId: Long): ApiResponse<AccompanyResponse> {
-        return ApiResponse.success(accompanyApplicationService.retrieve(accompanyId))
-    }
-
-    @Operation(summary = "Retrieve All Accompany API", description = "모든 동행 게시글 조회 API")
-    @GetMapping("/all")
-    fun retrieveAll(): ApiResponse<List<AccompanyResponse>> {
-        return ApiResponse.success(accompanyApplicationService.retrieveAll())
-    }
-
 }

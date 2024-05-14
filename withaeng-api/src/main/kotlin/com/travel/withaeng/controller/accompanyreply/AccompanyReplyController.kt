@@ -8,13 +8,22 @@ import com.travel.withaeng.controller.accompanyreply.dto.UpdateAccompanyReplyReq
 import com.travel.withaeng.controller.accompanyreply.dto.toServiceRequest
 import com.travel.withaeng.security.authentication.UserInfo
 import com.travel.withaeng.security.resolver.GetAuth
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
+@Tag(name = "Accompany Reply", description = "동행 댓글 API")
 @RestController
 @RequestMapping("/api/v1/accompany")
 class AccompanyReplyController(private val accompanyReplyApplicationService: AccompanyReplyApplicationService) {
 
+    @Operation(
+        summary = "Create Accompany Reply API",
+        description = "동행 댓글 생성 API",
+        security = [SecurityRequirement(name = "Authorization")]
+    )
     @PostMapping("/{accompanyId}/reply")
     @ResponseStatus(HttpStatus.CREATED)
     fun create(
@@ -32,6 +41,11 @@ class AccompanyReplyController(private val accompanyReplyApplicationService: Acc
         )
     }
 
+    @Operation(
+        summary = "Reply Accompany Reply API",
+        description = "동행 댓글의 댓글 생성 API",
+        security = [SecurityRequirement(name = "Authorization")]
+    )
     @PostMapping("/{accompanyId}/reply/{replyId}")
     @ResponseStatus(HttpStatus.CREATED)
     fun reply(
@@ -51,6 +65,19 @@ class AccompanyReplyController(private val accompanyReplyApplicationService: Acc
         )
     }
 
+    @Operation(summary = "Retrieve All Accompany Replies API", description = "동행 댓글 조회 API")
+    @GetMapping("/{accompanyId}/reply/all")
+    fun findAll(@PathVariable(name = "accompanyId") accompanyId: Long): ApiResponse<List<AccompanyReplyResponse>> {
+        return ApiResponse.success(
+            accompanyReplyApplicationService.findAll(accompanyId = accompanyId)
+        )
+    }
+
+    @Operation(
+        summary = "Update Accompany Reply API",
+        description = "동행 댓글 수정 API",
+        security = [SecurityRequirement(name = "Authorization")]
+    )
     @PutMapping("/{accompanyId}/reply/{replyId}")
     fun update(
         @GetAuth userInfo: UserInfo,
@@ -69,6 +96,11 @@ class AccompanyReplyController(private val accompanyReplyApplicationService: Acc
         )
     }
 
+    @Operation(
+        summary = "Delete Accompany Reply API",
+        description = "동행 댓글 삭제 API",
+        security = [SecurityRequirement(name = "Authorization")]
+    )
     @DeleteMapping("/{accompanyId}/reply/{replyId}")
     fun delete(
         @GetAuth userInfo: UserInfo,
@@ -78,12 +110,4 @@ class AccompanyReplyController(private val accompanyReplyApplicationService: Acc
             accompanyReplyApplicationService.delete(userId = userInfo.id, accompanyReplyId = replyId)
         )
     }
-
-    @GetMapping("/{accompanyId}/reply/all")
-    fun findAll(@PathVariable(name = "accompanyId") accompanyId: Long): ApiResponse<List<AccompanyReplyResponse>> {
-        return ApiResponse.success(
-            accompanyReplyApplicationService.findAll(accompanyId = accompanyId)
-        )
-    }
-
 }
