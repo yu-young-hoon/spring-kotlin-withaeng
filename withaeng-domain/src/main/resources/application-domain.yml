@@ -1,16 +1,14 @@
 spring:
   profiles:
-    default: local
-
+    default: dev
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ENC(lFITsL+l7aOSMUY3hRT3aR4X0GV+yqIJfYMyXaMajbZZJSW+Lv5MTrbP5Cwa8XAUxGpH7A9GxRNAZtrDhf6V4yXkD6gf3RUYWsPp77Ieguo=)
-    username: ENC(s1UggVxVWnWC0WqrTpmXaLw+QCpZmkuj2kvSQp+zt2vwKLbRH6WDAZKYUR75DqsR)
-    password: ENC(HT2z+x9LrfoHTmTTCYLkx7cO0ru9Gcbh+YGnP/0MWC1BpBwQtPfWue+zQx5RPQg8)
-
+    url: ENC(hrN+eQ4p84E3NW0vTIIRfhlAvKoNxPvYFvCAN2O9CyD7UZpSDS2dI9fEsBaHp6gftj+l4UOIBo5BHRIo2BQiC403lDFKj8I5ySiIxdvhY0Pp7fheX5J9DvJD5elcnAthagf+7EFdQVuQ0xdSODL7LceQs5DCSwESYThyL9HLPVM=)
+    username: ENC(FTbbdqVBbcTrUysSwbf/BwFbE0HhgdyXT+Z0uC0xZfLyuftv/9ceA4wQdOp70vMT)
+    password: ENC(7+z+f1IVvS1HcBCtH8hYpUMbEM6mcHVBw93co3jNIhp8EuXicXkee/MlqY1DkJq2)
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
     properties:
       hibernate:
         show_sql: false
