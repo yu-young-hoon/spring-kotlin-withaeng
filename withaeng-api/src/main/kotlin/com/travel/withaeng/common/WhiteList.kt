@@ -9,5 +9,7 @@ object WhiteList {
         "/error/**",
         // Auth endpoints
         "/api/v1/auth/**",
+        // Test endpoints
+        "/api/v1/test/**"
     )
 }
