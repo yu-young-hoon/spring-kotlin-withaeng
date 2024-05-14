@@ -22,6 +22,13 @@ class UserService(private val userRepository: UserRepository) {
         ).toDto()
     }
 
+    fun findById(id: Long): UserDto {
+        return userRepository.findByIdOrNull(id)?.toDto() ?: throw WithaengException.of(
+            type = WithaengExceptionType.NOT_EXIST,
+            message = "해당하는 유저를 찾을 수 없습니다."
+        )
+    }
+
     fun findByEmailOrNull(email: String): UserDto? {
         return userRepository.findByEmail(email)?.toDto()
     }
