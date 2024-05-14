@@ -32,8 +32,8 @@ class ValidatingEmailService(
     fun findByEmail(email: String): ValidatingEmailDto {
         return validatingEmailRepository.findByEmail(email)?.toDto()
             ?: throw WithaengException.of(
-                WithaengExceptionType.NOT_EXIST,
-                "이메일에 해당하는 요청이 없습니다."
+                type = WithaengExceptionType.NOT_EXIST,
+                message = "이메일에 해당하는 요청이 없습니다."
             )
     }
 

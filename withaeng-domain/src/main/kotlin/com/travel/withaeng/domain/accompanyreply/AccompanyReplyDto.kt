@@ -1,17 +1,17 @@
 package com.travel.withaeng.domain.accompanyreply
 
 data class AccompanyReplyDto(
-    val accompanyId: Long,
+    val id: Long,
     val userId: Long,
-    val content: String,
-    val depth: Long,
-    val groupId: Long
+    val accompanyId: Long,
+    val parentId: Long? = null,
+    val content: String
 )
 
 fun AccompanyReply.toDto(): AccompanyReplyDto = AccompanyReplyDto(
-    accompanyId = accompanyId,
+    id = id,
     userId = userId,
-    content = content,
-    depth = depth,
-    groupId = groupId
+    accompanyId = accompanyId,
+    parentId = parentId,
+    content = content
 )

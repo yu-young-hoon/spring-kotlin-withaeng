@@ -6,7 +6,7 @@ import jakarta.persistence.*
 @Table(name = "validating_emails")
 @Entity
 class ValidatingEmail(
-    @Column(name = "email", nullable =  false)
+    @Column(name = "email", nullable = false)
     val email: String,
 
     @Column(name = "user_id", nullable = false)
@@ -18,4 +18,4 @@ class ValidatingEmail(
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     val status: ValidatingEmailStatus = ValidatingEmailStatus.YET
-): BaseEntity()
+) : BaseEntity()

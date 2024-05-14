@@ -33,7 +33,10 @@ class AuthApplicationService(
         val userDto = userService.findByEmailOrNull(request.email)
         if (userDto != null) {
             if (userDto.isValidUser()) {
-                throw WithaengException.of(WithaengExceptionType.ALREADY_EXIST, "이미 가입된 이메일입니다.")
+                throw WithaengException.of(
+                    type = WithaengExceptionType.ALREADY_EXIST,
+                    message = "이미 가입된 이메일입니다."
+                )
             }
             userService.deleteByEmail(userEmail)
             validatingEmailService.deleteAllByUserId(userDto.id)
@@ -46,7 +49,10 @@ class AuthApplicationService(
     @Transactional
     fun signIn(request: SignInServiceRequest): UserResponse {
         val userDto = userService.findByEmailOrNull(request.email)
-            ?: throw WithaengException.of(WithaengExceptionType.NOT_EXIST, "이메일에 해당하는 유저를 찾을 수 없습니다.")
+            ?: throw WithaengException.of(
+                type = WithaengExceptionType.NOT_EXIST,
+                message = "이메일에 해당하는 유저를 찾을 수 없습니다."
+            )
         checkValidUserPassword(request.password, userDto.password)
         return UserResponse(userDto.id, userDto.email, jwtAgent.provide(UserInfo.from(userDto)))
     }
@@ -55,9 +61,15 @@ class AuthApplicationService(
     fun validateEmail(request: ValidateEmailServiceRequest) {
         val requestedEmail = request.email
         val userDto = userService.findByEmailOrNull(requestedEmail)
-            ?: throw WithaengException.of(WithaengExceptionType.NOT_EXIST, "이메일에 해당하는 유저를 찾을 수 없습니다.")
+            ?: throw WithaengException.of(
+                type = WithaengExceptionType.NOT_EXIST,
+                message = "이메일에 해당하는 유저를 찾을 수 없습니다."
+            )
         if (userDto.isValidUser()) {
-            throw WithaengException.of(WithaengExceptionType.INVALID_ACCESS, "이미 인증된 유저입니다.")
+            throw WithaengException.of(
+                type = WithaengExceptionType.INVALID_ACCESS,
+                message = "이미 인증된 유저입니다."
+            )
         }
         val validatingEmailDto = validatingEmailService.findByEmail(requestedEmail)
         if (validatingEmailDto.userId != userDto.id || validatingEmailDto.code != request.code) {
