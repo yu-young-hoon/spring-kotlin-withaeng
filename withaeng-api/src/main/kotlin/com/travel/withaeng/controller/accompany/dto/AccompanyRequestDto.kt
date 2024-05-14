@@ -35,7 +35,7 @@ data class CreateAccompanyRequest(
     val memberCount: Long,
 
     @Schema(description = "동행 게시글에 부착할 태그 아이디 리스트")
-    val tagIds: List<Long>,
+    val tagIds: List<Long>? = null,
 
     @Schema(description = "동행 게시글에 게시된 오픈 카카오톡 URL")
     val openKakaoUrl: String

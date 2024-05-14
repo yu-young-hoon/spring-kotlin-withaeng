@@ -11,7 +11,7 @@ data class CreateAccompanyDto(
     val endTripDate: LocalDate,
     val bannerImageUrl: String? = null,
     val memberCount: Long,
-    val tagIds: Set<Long> = emptySet(),
+    val tagIds: Set<Long>? = emptySet(),
     val openKakaoUrl: String
 )
 

@@ -65,7 +65,7 @@ class Accompany(
                 memberCount = params.memberCount,
                 openKakaoUrl = params.openKakaoUrl,
                 accompanyDestination = params.destination,
-                tagIds = params.tagIds
+                tagIds = params.tagIds ?: setOf()
             )
         }
 

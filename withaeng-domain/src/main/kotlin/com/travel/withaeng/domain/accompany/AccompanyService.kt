@@ -53,7 +53,8 @@ class AccompanyService(
         return accompanyRepository.findAll().map { it.toDto() }
     }
 
-    private fun filterValidTagIds(tagIds: Iterable<Long>): Set<Long> {
+    private fun filterValidTagIds(tagIds: Iterable<Long>?): Set<Long> {
+        if (tagIds == null) return setOf()
         return tagRepository.findAllById(tagIds).map { it.id }.toSet()
     }
 
