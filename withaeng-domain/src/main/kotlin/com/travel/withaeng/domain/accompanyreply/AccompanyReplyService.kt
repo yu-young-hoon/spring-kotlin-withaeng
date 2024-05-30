@@ -4,6 +4,8 @@ import com.travel.withaeng.common.exception.WithaengException
 import com.travel.withaeng.common.exception.WithaengExceptionType
 import com.travel.withaeng.domain.accompany.AccompanyRepository
 import com.travel.withaeng.domain.user.UserRepository
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -50,9 +52,8 @@ class AccompanyReplyService(
         return accompanyReply.toDto()
     }
 
-    fun findAllByAccompanyId(accompanyId: Long): List<AccompanyReplyDto> {
-        return accompanyReplyRepository.findAllByAccompanyId(accompanyId)
-            .map { it.toDto() }
+    fun search(accompanyId: Long, pageable: Pageable): Page<AccompanyReplyDto> {
+        return accompanyReplyRepository.search(accompanyId, pageable)
     }
 
     @Transactional
