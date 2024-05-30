@@ -1,6 +1,8 @@
 package com.travel.withaeng.domain.accompanyreply
 
-data class AccompanyReplyDto(
+import com.querydsl.core.annotations.QueryProjection
+
+data class AccompanyReplyDto @QueryProjection constructor(
     val id: Long,
     val userId: Long,
     val accompanyId: Long,

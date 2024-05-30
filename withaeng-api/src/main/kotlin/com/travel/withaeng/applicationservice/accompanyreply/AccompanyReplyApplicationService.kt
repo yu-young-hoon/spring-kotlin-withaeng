@@ -1,13 +1,13 @@
 package com.travel.withaeng.applicationservice.accompanyreply
 
-import com.travel.withaeng.applicationservice.accompanyreply.dto.AccompanyReplyResponse
-import com.travel.withaeng.applicationservice.accompanyreply.dto.CreateAccompanyReplyServiceRequest
-import com.travel.withaeng.applicationservice.accompanyreply.dto.UpdateAccompanyReplyServiceRequest
-import com.travel.withaeng.applicationservice.accompanyreply.dto.toResponse
+import com.travel.withaeng.applicationservice.accompanyreply.dto.*
+import com.travel.withaeng.applicationservice.common.PagingResponse
+import com.travel.withaeng.applicationservice.common.toPaging
 import com.travel.withaeng.common.exception.WithaengException
 import com.travel.withaeng.common.exception.WithaengExceptionType
 import com.travel.withaeng.domain.accompanyreply.AccompanyReplyService
 import com.travel.withaeng.domain.accompanyreplylike.AccompanyReplyLikeService
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -34,13 +34,15 @@ class AccompanyReplyApplicationService(
         return accompanyReplyDto.toResponse(likeCount)
     }
 
-    fun findAll(accompanyId: Long): List<AccompanyReplyResponse> {
-        val accompanyReplyDtoList = accompanyReplyService.findAllByAccompanyId(accompanyId)
+    fun search(accompanyId: Long, pageable: Pageable): PagingResponse<List<AccompanyReplyResponse>> {
+        val accompanyReplyPage = accompanyReplyService.search(accompanyId, pageable)
+        val contents = accompanyReplyPage.content
         // TODO: Fix getting like count logic for using bulk from single
-        return accompanyReplyDtoList.map { replyDto ->
+        val accompanyReplyResponseList = contents.map { replyDto ->
             val likeCount = accompanyReplyLikeService.countAccompanyReplyLikeCount(replyDto.id)
             replyDto.toResponse(likeCount)
         }
+        return PagingAccompanyReplyResponse(accompanyReplyResponseList, accompanyReplyPage.toPaging())
     }
 
     @Transactional
