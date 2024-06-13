@@ -26,42 +26,42 @@ class User(
     val isMale: Boolean,
 
     @Column(name = "profile_image_url", nullable = true)
-    val profileImageUrl: String? = null,
+    var profileImageUrl: String? = null,
 
     @Column(name = "bio", nullable = true)
-    val bio: String? = null,
+    var bio: String? = null,
 
     @Enumerated(EnumType.STRING)
     @Column(name = "mbti", nullable = true)
-    val mbti: UserMbti? = null,
+    var mbti: UserMbti? = null,
 
     @Enumerated(EnumType.STRING)
     @Column(name = "prefer_travel_type", nullable = true)
-    val preferTravelType: UserPreferTravelType? = null,
+    var preferTravelType: UserPreferTravelType? = null,
 
     @Convert(converter = UserPreferTravelThemeConverter::class)
     @Column(name = "prefer_travel_theme", nullable = false)
-    val preferTravelThemes: List<UserPreferTravelTheme> = emptyList(),
+    var preferTravelThemes: Set<UserPreferTravelTheme> = emptySet(),
 
     @Enumerated(EnumType.STRING)
     @Column(name = "consume_style", nullable = true)
-    val consumeStyle: UserConsumeStyle? = null,
+    var consumeStyle: UserConsumeStyle? = null,
 
     @Convert(converter = UserFoodRestrictionConverter::class)
     @Column(name = "food_restriction", nullable = false)
-    val foodRestrictions: List<UserFoodRestriction> = emptyList(),
+    var foodRestrictions: Set<UserFoodRestriction> = emptySet(),
 
     @Enumerated(EnumType.STRING)
     @Column(name = "prefer_accompany_gender", nullable = true)
-    val preferAccompanyGender: UserPreferAccompanyGender? = null,
+    var preferAccompanyGender: UserPreferAccompanyGender? = null,
 
     @Enumerated(EnumType.STRING)
     @Column(name = "smoking_type", nullable = true)
-    val smockingType: UserSmokingType? = null,
+    var smokingType: UserSmokingType? = null,
 
     @Enumerated(EnumType.STRING)
     @Column(name = "drinking_type", nullable = true)
-    val drinkingType: UserDrinkingType? = null,
+    var drinkingType: UserDrinkingType? = null,
 
     @Convert(converter = UserRoleConverter::class)
     @Column(name = "roles")
