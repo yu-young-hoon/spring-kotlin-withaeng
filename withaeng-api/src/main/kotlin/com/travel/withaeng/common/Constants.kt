@@ -8,6 +8,6 @@ object Constants {
 
     object Url {
         const val BASE_URL = "localhost:3030/"
-        const val VALIDATING_EMAIL_URL = BASE_URL + "validate-email/"
+        const val VALIDATING_EMAIL_URL = BASE_URL + "validate-email"
     }
 }

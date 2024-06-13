@@ -27,8 +27,10 @@ class SendEmailScheduler(
         val now = LocalDateTime.now()
         log.info("Start sending emails at {}", now)
         val willSendMails = validatingEmailService.findAllByStatusNot(ValidatingEmailStatus.DONE)
-        willSendMails.forEach {
-            mailSender.sendValidatingEmail(VALIDATING_EMAIL_URL, it.email)
+        willSendMails.forEach { emailDto ->
+            val to = emailDto.email
+            val validatingEmailUrl = "$VALIDATING_EMAIL_URL?code=${emailDto.code}&email=${to}"
+            mailSender.sendValidatingEmail(validatingEmailUrl, to)
         }
         if (willSendMails.isNotEmpty()) {
             validatingEmailService.updateStatusByIds(willSendMails.map { it.id }.toSet(), ValidatingEmailStatus.DONE)
