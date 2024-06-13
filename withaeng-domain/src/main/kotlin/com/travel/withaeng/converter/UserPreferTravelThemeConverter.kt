@@ -9,7 +9,8 @@ class UserPreferTravelThemeConverter: AttributeConverter<Set<UserPreferTravelThe
     }
 
     override fun convertToEntityAttribute(data: String): Set<UserPreferTravelTheme> {
-        return data.split(DELIMITER).map { UserPreferTravelTheme.valueOf(it.trim()) }.toSet()
+        return if (data.isBlank()) return emptySet()
+        else data.split(DELIMITER).map { UserPreferTravelTheme.valueOf(it.trim()) }.toSet()
     }
 
     companion object {

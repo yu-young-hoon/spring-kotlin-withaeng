@@ -9,7 +9,8 @@ class UserFoodRestrictionConverter : AttributeConverter<Set<UserFoodRestriction>
     }
 
     override fun convertToEntityAttribute(data: String): Set<UserFoodRestriction> {
-        return data.split(DELIMITER).map { UserFoodRestriction.valueOf(it.trim()) }.toSet()
+        return if (data.isBlank()) emptySet()
+        else data.split(DELIMITER).map { UserFoodRestriction.valueOf(it.trim()) }.toSet()
     }
 
     companion object {

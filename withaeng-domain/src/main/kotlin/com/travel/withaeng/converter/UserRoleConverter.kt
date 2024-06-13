@@ -9,7 +9,8 @@ class UserRoleConverter : AttributeConverter<Set<UserRole>, String> {
     }
 
     override fun convertToEntityAttribute(data: String): Set<UserRole> {
-        return data.split(DELIMITER).map { UserRole.valueOf(it.trim()) }.toSet()
+        return if (data.isBlank()) return emptySet()
+        else data.split(DELIMITER).map { UserRole.valueOf(it.trim()) }.toSet()
     }
 
     companion object {
