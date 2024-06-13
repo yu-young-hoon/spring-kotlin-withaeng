@@ -7,9 +7,9 @@ import com.travel.withaeng.applicationservice.auth.dto.ValidateEmailServiceReque
 import com.travel.withaeng.common.exception.WithaengException
 import com.travel.withaeng.common.exception.WithaengExceptionType
 import com.travel.withaeng.domain.user.CreateUserDto
-import com.travel.withaeng.domain.user.UserDto
 import com.travel.withaeng.domain.user.UserRole
 import com.travel.withaeng.domain.user.UserService
+import com.travel.withaeng.domain.user.UserSimpleDto
 import com.travel.withaeng.domain.validateemail.ValidatingEmailService
 import com.travel.withaeng.security.authentication.UserInfo
 import com.travel.withaeng.security.jwt.JwtAgent
@@ -41,7 +41,7 @@ class AuthApplicationService(
             userService.deleteByEmail(userEmail)
             validatingEmailService.deleteAllByUserId(userDto.id)
         }
-        val newUserDto = userService.createUser(request.toCreateUserDto())
+        val newUserDto = userService.create(request.toCreateUserDto())
         validatingEmailService.create(newUserDto.email, newUserDto.id, UUID.randomUUID().toString())
         return UserResponse(newUserDto.id, newUserDto.email, jwtAgent.provide(UserInfo.from(newUserDto)))
     }
@@ -79,7 +79,7 @@ class AuthApplicationService(
         userService.grantUserRole(userDto.id)
     }
 
-    private fun UserDto.isValidUser(): Boolean {
+    private fun UserSimpleDto.isValidUser(): Boolean {
         return roles.any { it == UserRole.USER }
     }
 

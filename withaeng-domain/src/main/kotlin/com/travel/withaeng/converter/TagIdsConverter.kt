@@ -8,9 +8,8 @@ class TagIdsConverter : AttributeConverter<Set<Long>, String> {
     }
 
     override fun convertToEntityAttribute(data: String): Set<Long> {
-        if (data.isBlank()) return setOf()
-        else return data.split(DELIMITER).map { it.toLong() }.toSet()
-
+        return if (data.isBlank()) setOf()
+        else data.split(DELIMITER).map { it.toLong() }.toSet()
     }
 
     companion object {
