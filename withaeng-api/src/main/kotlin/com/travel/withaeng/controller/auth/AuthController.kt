@@ -3,10 +3,7 @@ package com.travel.withaeng.controller.auth
 import com.travel.withaeng.applicationservice.auth.AuthApplicationService
 import com.travel.withaeng.applicationservice.auth.dto.UserResponse
 import com.travel.withaeng.common.ApiResponse
-import com.travel.withaeng.controller.auth.dto.SignInRequest
-import com.travel.withaeng.controller.auth.dto.SignUpRequest
-import com.travel.withaeng.controller.auth.dto.ValidateEmailRequest
-import com.travel.withaeng.controller.auth.dto.toServiceRequest
+import com.travel.withaeng.controller.auth.dto.*
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.*
@@ -36,6 +33,20 @@ class AuthController(private val authApplicationService: AuthApplicationService)
     @PutMapping("/validate-email")
     fun validateEmail(@RequestBody request: ValidateEmailRequest): ApiResponse<Unit> {
         authApplicationService.validateEmail(request.toServiceRequest())
+        return ApiResponse.success()
+    }
+
+    @Operation(summary = "Send Mail For Changing Password API", description = "비밀번호 변경을 위한 이메일 전송")
+    @PostMapping("/send-email-for-change-password")
+    fun sendEmailForChangingPassword(@RequestBody request: SendEmailForChangePasswordRequest): ApiResponse<Unit> {
+        authApplicationService.sendEmailForChangeEmail(request.toServiceRequest())
+        return ApiResponse.success()
+    }
+
+    @Operation(summary = "Change Password API", description = "비밀번호 변경 API")
+    @PutMapping("/change-password")
+    fun changePassword(@RequestBody request: ChangePasswordRequest): ApiResponse<Unit> {
+        authApplicationService.changePassword(request.toServiceRequest())
         return ApiResponse.success()
     }
 }

@@ -1,9 +1,6 @@
 package com.travel.withaeng.applicationservice.auth
 
-import com.travel.withaeng.applicationservice.auth.dto.SignInServiceRequest
-import com.travel.withaeng.applicationservice.auth.dto.SignUpServiceRequest
-import com.travel.withaeng.applicationservice.auth.dto.UserResponse
-import com.travel.withaeng.applicationservice.auth.dto.ValidateEmailServiceRequest
+import com.travel.withaeng.applicationservice.auth.dto.*
 import com.travel.withaeng.common.exception.WithaengException
 import com.travel.withaeng.common.exception.WithaengExceptionType
 import com.travel.withaeng.domain.user.CreateUserDto
@@ -77,6 +74,29 @@ class AuthApplicationService(
         }
         validatingEmailService.deleteById(validatingEmailDto.id)
         userService.grantUserRole(userDto.id)
+    }
+
+    @Transactional
+    fun sendEmailForChangeEmail(request: SendEmailForChangePasswordServiceRequest) {
+        val userDto = userService.findByEmailOrNull(request.email) ?: throw WithaengException.of(
+            type = WithaengExceptionType.NOT_EXIST,
+            message = "이메일에 해당하는 유저를 찾을 수 없습니다."
+        )
+        validatingEmailService.create(userDto.email, userDto.id, UUID.randomUUID().toString())
+    }
+
+    @Transactional
+    fun changePassword(request: ChangePasswordServiceRequest) {
+        val userDto = userService.findByEmailOrNull(request.email) ?: throw WithaengException.of(
+            type = WithaengExceptionType.NOT_EXIST,
+            message = "이메일에 해당하는 유저를 찾을 수 없습니다."
+        )
+        val validatingEmailDto = validatingEmailService.findByEmail(request.email)
+        if (validatingEmailDto.userId != userDto.id || validatingEmailDto.code != request.code) {
+            throw WithaengException.of(WithaengExceptionType.INVALID_INPUT, "Code가 올바르지 않습니다.")
+        }
+        validatingEmailService.deleteById(validatingEmailDto.id)
+        userService.updatePassword(userDto.id, passwordEncoder.encode(request.password))
     }
 
     private fun UserSimpleDto.isValidUser(): Boolean {

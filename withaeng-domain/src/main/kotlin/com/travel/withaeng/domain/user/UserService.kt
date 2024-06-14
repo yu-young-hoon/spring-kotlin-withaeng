@@ -45,6 +45,13 @@ class UserService(private val userRepository: UserRepository) {
     }
 
     @Transactional
+    fun updatePassword(userId: Long, password: String): UserSimpleDto {
+        val user = userRepository.findByIdOrNull(userId).getOrThrow()
+        user.password = password
+        return user.toSimpleDto()
+    }
+
+    @Transactional
     fun grantUserRole(id: Long) {
         val user = userRepository.findByIdOrNull(id)
             ?: throw WithaengException.of(WithaengExceptionType.SYSTEM_FAIL)
