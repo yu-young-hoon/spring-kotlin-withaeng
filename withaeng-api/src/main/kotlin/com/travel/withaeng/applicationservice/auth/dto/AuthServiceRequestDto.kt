@@ -18,3 +18,13 @@ data class ValidateEmailServiceRequest(
     val email: String,
     val code: String
 )
+
+data class SendEmailForChangePasswordServiceRequest(
+    val email: String
+)
+
+data class ChangePasswordServiceRequest(
+    val email: String,
+    val code: String,
+    val password: String
+)

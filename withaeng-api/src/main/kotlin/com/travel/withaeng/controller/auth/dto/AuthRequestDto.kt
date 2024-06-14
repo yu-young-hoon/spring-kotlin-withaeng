@@ -1,8 +1,6 @@
 package com.travel.withaeng.controller.auth.dto
 
-import com.travel.withaeng.applicationservice.auth.dto.SignInServiceRequest
-import com.travel.withaeng.applicationservice.auth.dto.SignUpServiceRequest
-import com.travel.withaeng.applicationservice.auth.dto.ValidateEmailServiceRequest
+import com.travel.withaeng.applicationservice.auth.dto.*
 import io.swagger.v3.oas.annotations.media.Schema
 import java.time.LocalDate
 
@@ -54,4 +52,32 @@ data class ValidateEmailRequest(
 fun ValidateEmailRequest.toServiceRequest(): ValidateEmailServiceRequest = ValidateEmailServiceRequest(
     email = email,
     code = code
+)
+
+
+@Schema(description = "[Request] 비밀번호 재설정을 위한 이메일 전송")
+data class SendEmailForChangePasswordRequest(
+    @Schema(description = "이메일 인증 할 이메일")
+    val email: String
+)
+
+fun SendEmailForChangePasswordRequest.toServiceRequest(): SendEmailForChangePasswordServiceRequest =
+    SendEmailForChangePasswordServiceRequest(email)
+
+@Schema(description = "[Request] 비밀번호 재설정")
+data class ChangePasswordRequest(
+    @Schema(description = "이메일 인증 한 이메일")
+    val email: String,
+
+    @Schema(description = "이메일 인증으로 받은 코드 (UUID 형태)")
+    val code: String,
+
+    @Schema(description = "새로운 패스워드")
+    val password: String
+)
+
+fun ChangePasswordRequest.toServiceRequest(): ChangePasswordServiceRequest = ChangePasswordServiceRequest(
+    email = email,
+    code = code,
+    password = password
 )
