@@ -8,6 +8,7 @@ import com.travel.withaeng.domain.user.UserRole
 import com.travel.withaeng.domain.user.UserService
 import com.travel.withaeng.domain.user.UserSimpleDto
 import com.travel.withaeng.domain.validateemail.ValidatingEmailService
+import com.travel.withaeng.domain.validateemail.ValidatingEmailType
 import com.travel.withaeng.security.authentication.UserInfo
 import com.travel.withaeng.security.jwt.JwtAgent
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -39,7 +40,12 @@ class AuthApplicationService(
             validatingEmailService.deleteAllByUserId(userDto.id)
         }
         val newUserDto = userService.create(request.toCreateUserDto())
-        validatingEmailService.create(newUserDto.email, newUserDto.id, UUID.randomUUID().toString())
+        validatingEmailService.create(
+            email = newUserDto.email,
+            userId = newUserDto.id,
+            code = UUID.randomUUID().toString(),
+            type = ValidatingEmailType.VALIDATE_EMAIL
+        )
         return UserResponse(newUserDto.id, newUserDto.email, jwtAgent.provide(UserInfo.from(newUserDto)))
     }
 
@@ -82,7 +88,12 @@ class AuthApplicationService(
             type = WithaengExceptionType.NOT_EXIST,
             message = "이메일에 해당하는 유저를 찾을 수 없습니다."
         )
-        validatingEmailService.create(userDto.email, userDto.id, UUID.randomUUID().toString())
+        validatingEmailService.create(
+            email = userDto.email,
+            userId = userDto.id,
+            code = UUID.randomUUID().toString(),
+            type = ValidatingEmailType.CHANGE_PASSWORD
+        )
     }
 
     @Transactional

@@ -16,6 +16,10 @@ class ValidatingEmail(
     val code: String,
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false)
+    val type: ValidatingEmailType = ValidatingEmailType.VALIDATE_EMAIL,
+
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    val status: ValidatingEmailStatus = ValidatingEmailStatus.YET
+    val status: ValidatingEmailStatus = ValidatingEmailStatus.YET,
 ) : BaseEntity()

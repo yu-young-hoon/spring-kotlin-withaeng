@@ -11,7 +11,7 @@ interface ValidatingEmailRepository : JpaRepository<ValidatingEmail, Long> {
 
     @Modifying
     @Query("UPDATE ValidatingEmail v SET v.status = :status WHERE v.id in :ids")
-    fun updateStatusByIds(ids: Set<Long>, status: ValidatingEmailStatus)
+    fun updateStatusByIds(ids: Set<Long>, status: ValidatingEmailStatus): Int
 
     fun deleteAllByUserId(userId: Long)
 }
