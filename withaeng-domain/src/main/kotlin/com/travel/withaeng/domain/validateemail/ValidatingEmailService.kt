@@ -47,6 +47,11 @@ class ValidatingEmailService(
     }
 
     @Transactional
+    fun deleteAllById(ids: Set<Long>) {
+        validatingEmailRepository.deleteAllById(ids)
+    }
+
+    @Transactional
     fun deleteAllByUserId(userId: Long) {
         validatingEmailRepository.deleteAllByUserId(userId)
     }

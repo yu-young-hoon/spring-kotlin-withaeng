@@ -68,11 +68,11 @@ class AuthApplicationService(
                 message = "이미 인증된 유저입니다."
             )
         }
-        val validatingEmailDto = validatingEmailService.findByEmail(requestedEmail)
-        if (validatingEmailDto.userId != userDto.id || validatingEmailDto.code != request.code) {
-            throw WithaengException.of(WithaengExceptionType.INVALID_INPUT, "Code가 올바르지 않습니다.")
-        }
-        validatingEmailService.deleteById(validatingEmailDto.id)
+        validateEmailCode(
+            email = requestedEmail,
+            userId = userDto.id,
+            code = request.code
+        )
         userService.grantUserRole(userDto.id)
     }
 
@@ -87,16 +87,25 @@ class AuthApplicationService(
 
     @Transactional
     fun changePassword(request: ChangePasswordServiceRequest) {
-        val userDto = userService.findByEmailOrNull(request.email) ?: throw WithaengException.of(
+        val email = request.email
+        val userDto = userService.findByEmailOrNull(email) ?: throw WithaengException.of(
             type = WithaengExceptionType.NOT_EXIST,
             message = "이메일에 해당하는 유저를 찾을 수 없습니다."
         )
-        val validatingEmailDto = validatingEmailService.findByEmail(request.email)
-        if (validatingEmailDto.userId != userDto.id || validatingEmailDto.code != request.code) {
+        validateEmailCode(
+            email = email,
+            userId = userDto.id,
+            code = request.code
+        )
+        userService.updatePassword(userDto.id, passwordEncoder.encode(request.password))
+    }
+
+    private fun validateEmailCode(email: String, userId: Long, code: String) {
+        val validatingEmailDto = validatingEmailService.findByEmail(email)
+        if (validatingEmailDto.userId != userId || validatingEmailDto.code != code) {
             throw WithaengException.of(WithaengExceptionType.INVALID_INPUT, "Code가 올바르지 않습니다.")
         }
         validatingEmailService.deleteById(validatingEmailDto.id)
-        userService.updatePassword(userDto.id, passwordEncoder.encode(request.password))
     }
 
     private fun UserSimpleDto.isValidUser(): Boolean {
