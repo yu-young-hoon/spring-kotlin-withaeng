@@ -15,7 +15,7 @@ class ValidatingEmailService(
 ) {
 
     @Transactional
-    fun create(email: String, userId: Long, code: String): ValidatingEmailDto {
+    fun create(email: String, userId: Long, code: String, type: ValidatingEmailType): ValidatingEmailDto {
         userRepository.findByIdOrNull(userId) ?: throw WithaengException.of(
             type = WithaengExceptionType.NOT_EXIST,
             message = "$userId 에 해당하는 사용자를 찾을 수 없습니다."
@@ -26,7 +26,14 @@ class ValidatingEmailService(
                 message = "이메일 인증을 진행하는데 올바르지 않은 입력입니다."
             )
         }
-        return validatingEmailRepository.save(ValidatingEmail(email, userId, code)).toDto()
+        return validatingEmailRepository.save(
+            ValidatingEmail(
+                email = email,
+                userId = userId,
+                code = code,
+                type = type
+            )
+        ).toDto()
     }
 
     fun findByEmail(email: String): ValidatingEmailDto {
@@ -57,7 +64,7 @@ class ValidatingEmailService(
     }
 
     @Transactional
-    fun updateStatusByIds(ids: Set<Long>, status: ValidatingEmailStatus) {
-        validatingEmailRepository.updateStatusByIds(ids, status)
+    fun updateStatusByIds(ids: Set<Long>, status: ValidatingEmailStatus): Int {
+        return validatingEmailRepository.updateStatusByIds(ids, status)
     }
 }

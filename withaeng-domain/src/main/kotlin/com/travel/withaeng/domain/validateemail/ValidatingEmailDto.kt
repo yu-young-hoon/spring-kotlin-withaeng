@@ -8,6 +8,7 @@ data class ValidatingEmailDto(
     val userId: Long,
     val code: String,
     val status: ValidatingEmailStatus,
+    val type: ValidatingEmailType,
     val createdAt: LocalDateTime
 )
 
@@ -17,5 +18,6 @@ fun ValidatingEmail.toDto(): ValidatingEmailDto = ValidatingEmailDto(
     userId = userId,
     code = code,
     status = status,
+    type = type,
     createdAt = createdAt
 )
