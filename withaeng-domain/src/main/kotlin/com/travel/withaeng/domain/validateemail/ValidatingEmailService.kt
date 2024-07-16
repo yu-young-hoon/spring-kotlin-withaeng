@@ -64,6 +64,11 @@ class ValidatingEmailService(
     }
 
     @Transactional
+    fun deleteAllByUserIdAndEmailType(userId: Long, emailType: ValidatingEmailType) {
+        validatingEmailRepository.deleteAllByUserIdAndType(userId, emailType)
+    }
+
+    @Transactional
     fun updateStatusByIds(ids: Set<Long>, status: ValidatingEmailStatus): Int {
         return validatingEmailRepository.updateStatusByIds(ids, status)
     }

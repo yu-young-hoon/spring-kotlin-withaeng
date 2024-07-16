@@ -1,6 +1,11 @@
 package com.travel.withaeng.controller.auth.dto
 
-import com.travel.withaeng.applicationservice.auth.dto.*
+import com.travel.withaeng.applicationservice.auth.dto.ChangePasswordServiceRequest
+import com.travel.withaeng.applicationservice.auth.dto.ResendEmailServiceRequest
+import com.travel.withaeng.applicationservice.auth.dto.SendEmailForChangePasswordServiceRequest
+import com.travel.withaeng.applicationservice.auth.dto.SignInServiceRequest
+import com.travel.withaeng.applicationservice.auth.dto.SignUpServiceRequest
+import com.travel.withaeng.applicationservice.auth.dto.ValidateEmailServiceRequest
 import io.swagger.v3.oas.annotations.media.Schema
 import java.time.LocalDate
 
@@ -38,6 +43,16 @@ data class SignInRequest(
 fun SignInRequest.toServiceRequest(): SignInServiceRequest = SignInServiceRequest(
     email = email,
     password = password
+)
+
+@Schema(description = "[Request] 이메일 재전송")
+data class ResendEmailRequest(
+    @Schema(description = "재전송 할 이메일")
+    val email: String
+)
+
+fun ResendEmailRequest.toServiceRequest(): ResendEmailServiceRequest = ResendEmailServiceRequest(
+    email = email
 )
 
 @Schema(description = "[Request] 이메일 인증")

@@ -20,7 +20,7 @@ class DeleteValidatingEmailScheduler(
     @Scheduled(cron = "0 * * * * *")
     @Async("asyncSchedulerExecutor")
     @Transactional
-    fun sendEmail() {
+    fun deleteEmails() {
         val now = LocalDateTime.now()
         log.info("Start deleting validating emails at {}", now)
         val willDeleteEmails = validatingEmailService.findAllByStatusNot(ValidatingEmailStatus.YET)

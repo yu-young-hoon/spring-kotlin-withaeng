@@ -14,4 +14,6 @@ interface ValidatingEmailRepository : JpaRepository<ValidatingEmail, Long> {
     fun updateStatusByIds(ids: Set<Long>, status: ValidatingEmailStatus): Int
 
     fun deleteAllByUserId(userId: Long)
+
+    fun deleteAllByUserIdAndType(id: Long, status: ValidatingEmailType)
 }
