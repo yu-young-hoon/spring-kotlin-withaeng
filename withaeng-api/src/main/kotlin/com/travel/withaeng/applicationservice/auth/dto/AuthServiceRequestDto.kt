@@ -14,6 +14,10 @@ data class SignInServiceRequest(
     val password: String
 )
 
+data class ResendEmailServiceRequest(
+    val email: String
+)
+
 data class ValidateEmailServiceRequest(
     val email: String,
     val code: String

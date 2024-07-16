@@ -1,6 +1,12 @@
 package com.travel.withaeng.applicationservice.auth
 
-import com.travel.withaeng.applicationservice.auth.dto.*
+import com.travel.withaeng.applicationservice.auth.dto.ChangePasswordServiceRequest
+import com.travel.withaeng.applicationservice.auth.dto.ResendEmailServiceRequest
+import com.travel.withaeng.applicationservice.auth.dto.SendEmailForChangePasswordServiceRequest
+import com.travel.withaeng.applicationservice.auth.dto.SignInServiceRequest
+import com.travel.withaeng.applicationservice.auth.dto.SignUpServiceRequest
+import com.travel.withaeng.applicationservice.auth.dto.UserResponse
+import com.travel.withaeng.applicationservice.auth.dto.ValidateEmailServiceRequest
 import com.travel.withaeng.common.exception.WithaengException
 import com.travel.withaeng.common.exception.WithaengExceptionType
 import com.travel.withaeng.domain.user.CreateUserDto
@@ -14,7 +20,7 @@ import com.travel.withaeng.security.jwt.JwtAgent
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.util.*
+import java.util.UUID
 
 @Service
 @Transactional(readOnly = true)
@@ -61,6 +67,27 @@ class AuthApplicationService(
     }
 
     @Transactional
+    fun resendEmail(request: ResendEmailServiceRequest) {
+        val userDto = userService.findByEmailOrNull(request.email) ?: throw WithaengException.of(
+            type = WithaengExceptionType.NOT_EXIST,
+            message = "이메일에 해당하는 유저를 찾을 수 없습니다."
+        )
+        if (userDto.isValidUser()) {
+            throw WithaengException.of(
+                type = WithaengExceptionType.INVALID_ACCESS,
+                message = "이미 인증된 유저입니다."
+            )
+        }
+        validatingEmailService.deleteAllByUserIdAndEmailType(userDto.id, ValidatingEmailType.VALIDATE_EMAIL)
+        validatingEmailService.create(
+            email = userDto.email,
+            userId = userDto.id,
+            code = UUID.randomUUID().toString(),
+            type = ValidatingEmailType.VALIDATE_EMAIL
+        )
+    }
+
+    @Transactional
     fun validateEmail(request: ValidateEmailServiceRequest) {
         val requestedEmail = request.email
         val userDto = userService.findByEmailOrNull(requestedEmail)
@@ -83,11 +110,12 @@ class AuthApplicationService(
     }
 
     @Transactional
-    fun sendEmailForChangeEmail(request: SendEmailForChangePasswordServiceRequest) {
+    fun sendEmailForChangingPassword(request: SendEmailForChangePasswordServiceRequest) {
         val userDto = userService.findByEmailOrNull(request.email) ?: throw WithaengException.of(
             type = WithaengExceptionType.NOT_EXIST,
             message = "이메일에 해당하는 유저를 찾을 수 없습니다."
         )
+        validatingEmailService.deleteAllByUserIdAndEmailType(userDto.id, ValidatingEmailType.CHANGE_PASSWORD)
         validatingEmailService.create(
             email = userDto.email,
             userId = userDto.id,
