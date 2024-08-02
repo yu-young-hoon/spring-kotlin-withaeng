@@ -1,6 +1,14 @@
 package com.travel.withaeng.applicationservice.user.dto
 
-import com.travel.withaeng.domain.user.*
+import com.travel.withaeng.domain.user.AddDetailsUserDto
+import com.travel.withaeng.domain.user.UserConsumeStyle
+import com.travel.withaeng.domain.user.UserDrinkingType
+import com.travel.withaeng.domain.user.UserFoodRestriction
+import com.travel.withaeng.domain.user.UserMbti
+import com.travel.withaeng.domain.user.UserPreferAccompanyGender
+import com.travel.withaeng.domain.user.UserPreferTravelTheme
+import com.travel.withaeng.domain.user.UserPreferTravelType
+import com.travel.withaeng.domain.user.UserSmokingType
 
 data class AddUserDetailsServerRequest (
     val userId: Long,

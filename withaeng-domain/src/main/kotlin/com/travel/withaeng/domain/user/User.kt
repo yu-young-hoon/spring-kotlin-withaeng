@@ -16,8 +16,8 @@ class User(
     @Column(name = "password", nullable = false)
     var password: String,
 
-    @Column(name = "nickname", nullable = true)
-    val nickname: String? = null,
+    @Column(name = "nickname", nullable = false)
+    var nickname: String,
 
     @Column(name = "birth", nullable = false)
     val birth: LocalDate,
@@ -72,12 +72,14 @@ class User(
 
         fun create(
             email: String,
+            nickname: String,
             password: String,
             birth: LocalDate,
             isMale: Boolean
         ): User {
             return User(
                 email = email,
+                nickname = nickname,
                 password = password,
                 birth = birth,
                 isMale = isMale,

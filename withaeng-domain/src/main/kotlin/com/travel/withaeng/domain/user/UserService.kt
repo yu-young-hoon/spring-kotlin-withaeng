@@ -15,6 +15,7 @@ class UserService(private val userRepository: UserRepository) {
         return userRepository.save(
             User.create(
                 email = createUserDto.email,
+                nickname = createUserDto.nickname,
                 password = createUserDto.password,
                 birth = createUserDto.birth,
                 isMale = createUserDto.isMale
@@ -33,6 +34,7 @@ class UserService(private val userRepository: UserRepository) {
     @Transactional
     fun addDetails(userId: Long, addDetailsUserDto: AddDetailsUserDto): UserDetailsDto {
         val user = userRepository.findByIdOrNull(userId).getOrThrow()
+        addDetailsUserDto.nickname?.let { user.nickname = it }
         addDetailsUserDto.mbti?.let { user.mbti = it }
         addDetailsUserDto.preferTravelType?.let { user.preferTravelType = it }
         addDetailsUserDto.preferTravelThemes?.let { user.preferTravelThemes = it.toSet() }

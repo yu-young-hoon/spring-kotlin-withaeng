@@ -45,7 +45,7 @@ class AuthApplicationService(
             userService.deleteByEmail(userEmail)
             validatingEmailService.deleteAllByUserId(userDto.id)
         }
-        val newUserDto = userService.create(request.toCreateUserDto())
+        val newUserDto = userService.create(request.toCreateUserDto(UserNicknameUtils.createTemporaryNickname()))
         validatingEmailService.create(
             email = newUserDto.email,
             userId = newUserDto.id,
@@ -157,8 +157,9 @@ class AuthApplicationService(
         }
     }
 
-    private fun SignUpServiceRequest.toCreateUserDto(): CreateUserDto = CreateUserDto(
+    private fun SignUpServiceRequest.toCreateUserDto(temporaryNickname: String): CreateUserDto = CreateUserDto(
         email = email,
+        nickname = temporaryNickname,
         password = passwordEncoder.encode(password),
         birth = birth,
         isMale = isMale
