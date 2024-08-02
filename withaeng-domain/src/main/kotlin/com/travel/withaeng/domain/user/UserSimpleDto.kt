@@ -6,7 +6,7 @@ data class UserSimpleDto(
     val id: Long,
     val email: String,
     val password: String,
-    val nickname: String? = null,
+    val nickname: String,
     val birth: LocalDate,
     val isMale: Boolean,
     val profileImageUrl: String? = null,

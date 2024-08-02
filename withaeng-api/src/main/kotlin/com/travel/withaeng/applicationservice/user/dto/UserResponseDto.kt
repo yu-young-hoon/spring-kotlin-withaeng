@@ -8,6 +8,7 @@ import com.travel.withaeng.domain.user.UserMbti
 import com.travel.withaeng.domain.user.UserPreferAccompanyGender
 import com.travel.withaeng.domain.user.UserPreferTravelTheme
 import com.travel.withaeng.domain.user.UserPreferTravelType
+import com.travel.withaeng.domain.user.UserSimpleDto
 import com.travel.withaeng.domain.user.UserSmokingType
 import java.time.LocalDate
 
@@ -47,3 +48,14 @@ data class UserDetailsResponse(
     }
 }
 
+data class UserSimpleResponse(
+    val id: Long,
+    val email: String,
+    val nickname: String
+)
+
+fun UserSimpleDto.toSimpleResponse(): UserSimpleResponse = UserSimpleResponse(
+    id = id,
+    email = email,
+    nickname = nickname
+)
