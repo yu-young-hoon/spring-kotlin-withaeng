@@ -62,7 +62,7 @@ class AccompanyReplyService(
             type = WithaengExceptionType.NOT_EXIST,
             message = "해당하는 댓글을 찾을 수 없습니다."
         )
-        accompanyReply.content = content
+        accompanyReply.updateAccompanyReply(content)
         return accompanyReply.toDto()
     }
 
@@ -73,5 +73,25 @@ class AccompanyReplyService(
             message = "해당하는 댓글을 찾을 수 없습니다."
         )
         accompanyReplyRepository.delete(accompanyReply)
+    }
+
+    @Transactional
+    fun updateSubReply(replyId: Long, parentId: Long, content: String, ): AccompanyReplyDto {
+        val accompanySubReply = accompanyReplyRepository.findByIdOrNull(replyId) ?: throw WithaengException.of(
+            type = WithaengExceptionType.NOT_EXIST,
+            message = "해당하는 댓글을 찾을 수 없습니다."
+        )
+        validateSubReply(accompanySubReply, parentId)
+        accompanySubReply.updateAccompanyReply(content)
+        return accompanySubReply.toDto()
+    }
+
+    private fun validateSubReply(accompanyReply: AccompanyReply, parentId: Long) {
+        if (accompanyReply.parentId != parentId) {
+            throw WithaengException.of(
+                type = WithaengExceptionType.INVALID_INPUT,
+                message = "해당 댓글에 대한 대댓글이 아닙니다."
+            )
+        }
     }
 }

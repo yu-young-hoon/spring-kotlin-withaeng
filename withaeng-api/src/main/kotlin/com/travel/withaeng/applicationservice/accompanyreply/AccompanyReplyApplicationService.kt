@@ -1,10 +1,6 @@
 package com.travel.withaeng.applicationservice.accompanyreply
 
-import com.travel.withaeng.applicationservice.accompanyreply.dto.AccompanyReplyResponse
-import com.travel.withaeng.applicationservice.accompanyreply.dto.CreateAccompanyReplyServiceRequest
-import com.travel.withaeng.applicationservice.accompanyreply.dto.PagingAccompanyReplyResponse
-import com.travel.withaeng.applicationservice.accompanyreply.dto.UpdateAccompanyReplyServiceRequest
-import com.travel.withaeng.applicationservice.accompanyreply.dto.toResponse
+import com.travel.withaeng.applicationservice.accompanyreply.dto.*
 import com.travel.withaeng.applicationservice.common.PagingResponse
 import com.travel.withaeng.applicationservice.common.toPaging
 import com.travel.withaeng.common.exception.WithaengException
@@ -40,7 +36,7 @@ class AccompanyReplyApplicationService(
         val contents = accompanyReplyPage.content
         // TODO: Fix getting like count & user logic for using bulk from single
         val accompanyReplyResponseList = contents.map { replyDto ->
-            val likeCount = accompanyReplyLikeService.countAccompanyReplyLikeCount(replyDto.id)
+            val likeCount = countAccompanyReplyLikeCount(replyDto.id)
             val userSimpleDto = userService.findById(replyDto.userId)
             replyDto.toResponse(userSimpleDto, likeCount)
         }
@@ -50,13 +46,8 @@ class AccompanyReplyApplicationService(
     @Transactional
     fun update(request: UpdateAccompanyReplyServiceRequest): AccompanyReplyResponse {
         val accompanyReplyDto = accompanyReplyService.findById(request.accompanyReplyId)
-        if (accompanyReplyDto.userId != request.userId) {
-            throw WithaengException.of(
-                type = WithaengExceptionType.ACCESS_DENIED,
-                message = "댓글 작성자가 아닌 사용자가 수정할 수 없습니다."
-            )
-        }
         val userSimpleDto = userService.findById(request.userId)
+        validateCreator(accompanyReplyDto.userId, request.userId)
         val updated = accompanyReplyService.update(accompanyReplyDto.id, request.content)
         val likeCount = accompanyReplyLikeService.countAccompanyReplyLikeCount(accompanyReplyDto.id)
         return updated.toResponse(userSimpleDto, likeCount)
@@ -65,12 +56,30 @@ class AccompanyReplyApplicationService(
     @Transactional
     fun delete(userId: Long, accompanyReplyId: Long) {
         val accompanyReplyDto = accompanyReplyService.findById(accompanyReplyId)
-        if (accompanyReplyDto.userId != userId) {
+        validateCreator(accompanyReplyDto.userId, userId)
+        accompanyReplyService.delete(accompanyReplyDto.id)
+    }
+
+    @Transactional
+    fun updateSubReply(request: UpdateAccompanyReplyServiceRequest): AccompanyReplyResponse {
+        val accompanyReplyDto = accompanyReplyService.findById(request.accompanyReplyId)
+        validateCreator(accompanyReplyDto.userId, request.userId)
+        val updated =
+            accompanyReplyService.updateSubReply(accompanyReplyDto.id, accompanyReplyDto.parentId!!, request.content)
+        val likeCount = countAccompanyReplyLikeCount(accompanyReplyDto.id)
+        val userSimpleDto = userService.findById(request.userId)
+        return updated.toResponse(userSimpleDto, likeCount)
+    }
+
+    private fun countAccompanyReplyLikeCount(replyId: Long) =
+        accompanyReplyLikeService.countAccompanyReplyLikeCount(replyId)
+
+    private fun validateCreator(requestUserId: Long, createUserId: Long) {
+        if (requestUserId != createUserId) {
             throw WithaengException.of(
                 type = WithaengExceptionType.ACCESS_DENIED,
-                message = "댓글 작성자가 아닌 사용자가 삭제할 수 없습니다."
+                message = "댓글 작성자가 아닌 사용자가 수정할 수 없습니다."
             )
         }
-        accompanyReplyService.delete(accompanyReplyDto.id)
     }
 }

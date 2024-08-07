@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.*
 @Tag(name = "Accompany Reply", description = "동행 댓글 API")
 @RestController
 @RequestMapping("/api/v1/accompany")
-class AccompanyReplyController(private val accompanyReplyApplicationService: AccompanyReplyApplicationService) {
+class AccompanyReplyController(
+    private val accompanyReplyApplicationService: AccompanyReplyApplicationService
+) {
 
     @Operation(
         summary = "Create Accompany Reply API",
@@ -37,30 +39,6 @@ class AccompanyReplyController(private val accompanyReplyApplicationService: Acc
                 request.toServiceRequest(
                     userId = userInfo.id,
                     accompanyId = accompanyId
-                )
-            )
-        )
-    }
-
-    @Operation(
-        summary = "Reply Accompany Reply API",
-        description = "동행 댓글의 댓글 생성 API",
-        security = [SecurityRequirement(name = "Authorization")]
-    )
-    @PostMapping("/{accompanyId}/reply/{replyId}")
-    @ResponseStatus(HttpStatus.CREATED)
-    fun reply(
-        @GetAuth userInfo: UserInfo,
-        @PathVariable("accompanyId") accompanyId: Long,
-        @PathVariable("replyId") replyId: Long,
-        @RequestBody request: CreateAccompanyReplyRequest
-    ): ApiResponse<AccompanyReplyResponse> {
-        return ApiResponse.success(
-            accompanyReplyApplicationService.create(
-                request.toServiceRequest(
-                    userId = userInfo.id,
-                    accompanyId = accompanyId,
-                    parentId = replyId
                 )
             )
         )
@@ -114,4 +92,54 @@ class AccompanyReplyController(private val accompanyReplyApplicationService: Acc
             accompanyReplyApplicationService.delete(userId = userInfo.id, accompanyReplyId = replyId)
         )
     }
+
+    @Operation(
+        summary = "Create Accompany Sub Reply API",
+        description = "동행 댓글의 댓글 생성 API",
+        security = [SecurityRequirement(name = "Authorization")]
+    )
+    @PostMapping("/{accompanyId}/reply/{replyId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun createSubReply(
+        @GetAuth userInfo: UserInfo,
+        @PathVariable("accompanyId") accompanyId: Long,
+        @PathVariable("replyId") replyId: Long,
+        @RequestBody request: CreateAccompanyReplyRequest
+    ): ApiResponse<AccompanyReplyResponse> {
+        return ApiResponse.success(
+            accompanyReplyApplicationService.create(
+                request.toServiceRequest(
+                    userId = userInfo.id,
+                    accompanyId = accompanyId,
+                    parentId = replyId
+                )
+            )
+        )
+    }
+
+    @Operation(
+        summary = "Update Accompany Sub Reply API",
+        description = "동행 댓글의 댓글 수정 API",
+        security = [SecurityRequirement(name = "Authorization")]
+    )
+    @PutMapping("/{accompanyId}/reply/{replyId}/{subReplyId}")
+    fun updateSubReply(
+        @GetAuth userInfo: UserInfo,
+        @PathVariable("accompanyId") accompanyId: Long,
+        @PathVariable("replyId") replyId: Long,
+        @PathVariable("subReplyId") subReplyId: Long,
+        @RequestBody request: UpdateAccompanyReplyRequest
+    ): ApiResponse<AccompanyReplyResponse> {
+        return ApiResponse.success(
+            accompanyReplyApplicationService.updateSubReply(
+                request.toServiceRequest(
+                    userId = userInfo.id,
+                    accompanyId = accompanyId,
+                    accompanyReplyId = subReplyId,
+                    parentId = replyId,
+                )
+            )
+        )
+    }
+
 }

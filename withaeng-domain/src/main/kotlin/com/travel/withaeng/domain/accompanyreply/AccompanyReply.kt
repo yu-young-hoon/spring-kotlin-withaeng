@@ -34,4 +34,10 @@ class AccompanyReply(
             )
         }
     }
+
+    fun updateAccompanyReply(
+        newContent: String
+    ) {
+        this.content = newContent
+    }
 }
