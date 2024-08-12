@@ -18,7 +18,8 @@ class AccompanyReplyRepositoryImpl(
                     accompanyReply.userId,
                     accompanyReply.accompanyId,
                     accompanyReply.parentId,
-                    accompanyReply.content
+                    accompanyReply.content,
+                    accompanyReply.createdAt
                 )
             )
             .from(accompanyReply)
