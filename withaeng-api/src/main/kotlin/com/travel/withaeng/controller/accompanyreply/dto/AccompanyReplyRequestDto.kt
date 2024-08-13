@@ -31,10 +31,12 @@ data class UpdateAccompanyReplyRequest(
 fun UpdateAccompanyReplyRequest.toServiceRequest(
     userId: Long,
     accompanyId: Long,
-    accompanyReplyId: Long
+    accompanyReplyId: Long,
+    parentId: Long? = null
 ): UpdateAccompanyReplyServiceRequest = UpdateAccompanyReplyServiceRequest(
     accompanyReplyId = accompanyReplyId,
     userId = userId,
     accompanyId = accompanyId,
-    content = content
+    content = content,
+    parentId = parentId,
 )

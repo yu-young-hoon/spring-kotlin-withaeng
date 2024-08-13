@@ -11,5 +11,6 @@ data class UpdateAccompanyReplyServiceRequest(
     val accompanyReplyId: Long,
     val userId: Long,
     val accompanyId: Long,
-    val content: String
+    val content: String,
+    val parentId: Long? = null
 )
