@@ -23,6 +23,7 @@ class AccompanyReply(
     var content: String,
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
     var status: AccompanyReplyStatus,
 
     ) : BaseEntity() {
