@@ -89,7 +89,10 @@ class AccompanyReplyController(
         @PathVariable("replyId") replyId: Long
     ): ApiResponse<Unit> {
         return ApiResponse.success(
-            accompanyReplyApplicationService.delete(userId = userInfo.id, accompanyReplyId = replyId)
+            accompanyReplyApplicationService.delete(
+                userId = userInfo.id,
+                accompanyReplyId = replyId
+            )
         )
     }
 
@@ -138,6 +141,27 @@ class AccompanyReplyController(
                     accompanyReplyId = subReplyId,
                     parentId = replyId,
                 )
+            )
+        )
+    }
+
+    @Operation(
+        summary = "Update Accompany Sub Reply API",
+        description = "동행 댓글의 댓글 삭제 API",
+        security = [SecurityRequirement(name = "Authorization")]
+    )
+    @DeleteMapping("/{accompanyId}/reply/{replyId}/{subReplyId}")
+    fun deleteSubReply(
+        @GetAuth userInfo: UserInfo,
+        @PathVariable("accompanyId") accompanyId: Long,
+        @PathVariable("replyId") replyId: Long,
+        @PathVariable("subReplyId") subReplyId: Long,
+    ): ApiResponse<Unit> {
+        return ApiResponse.success(
+            accompanyReplyApplicationService.delete(
+                userId = userInfo.id,
+                accompanyReplyId = subReplyId,
+                parentId = replyId,
             )
         )
     }
