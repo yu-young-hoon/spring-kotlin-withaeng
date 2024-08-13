@@ -38,7 +38,7 @@ class AccompanyReply(
         }
     }
 
-    fun updateAccompanyReply(
+    fun update(
         newContent: String
     ) {
         this.content = newContent
