@@ -131,7 +131,7 @@ class AccompanyReplyController(
         @RequestBody request: UpdateAccompanyReplyRequest
     ): ApiResponse<AccompanyReplyResponse> {
         return ApiResponse.success(
-            accompanyReplyApplicationService.updateSubReply(
+            accompanyReplyApplicationService.update(
                 request.toServiceRequest(
                     userId = userInfo.id,
                     accompanyId = accompanyId,

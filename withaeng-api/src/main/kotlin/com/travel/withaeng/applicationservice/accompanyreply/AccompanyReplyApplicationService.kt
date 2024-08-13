@@ -5,6 +5,7 @@ import com.travel.withaeng.applicationservice.common.PagingResponse
 import com.travel.withaeng.applicationservice.common.toPaging
 import com.travel.withaeng.common.exception.WithaengException
 import com.travel.withaeng.common.exception.WithaengExceptionType
+import com.travel.withaeng.domain.accompanyreply.AccompanyReplyDto
 import com.travel.withaeng.domain.accompanyreply.AccompanyReplyService
 import com.travel.withaeng.domain.accompanyreplylike.AccompanyReplyLikeService
 import com.travel.withaeng.domain.user.UserService
@@ -36,7 +37,7 @@ class AccompanyReplyApplicationService(
         val contents = accompanyReplyPage.content
         // TODO: Fix getting like count & user logic for using bulk from single
         val accompanyReplyResponseList = contents.map { replyDto ->
-            val likeCount = countAccompanyReplyLikeCount(replyDto.id)
+            val likeCount = accompanyReplyLikeService.countAccompanyReplyLikeCount(replyDto.id)
             val userSimpleDto = userService.findById(replyDto.userId)
             replyDto.toResponse(userSimpleDto, likeCount)
         }
@@ -47,8 +48,11 @@ class AccompanyReplyApplicationService(
     fun update(request: UpdateAccompanyReplyServiceRequest): AccompanyReplyResponse {
         val accompanyReplyDto = accompanyReplyService.findById(request.accompanyReplyId)
         val userSimpleDto = userService.findById(request.userId)
-        validateCreator(accompanyReplyDto.userId, request.userId)
-        val updated = accompanyReplyService.update(accompanyReplyDto.id, request.content)
+        validateUpdate(request, accompanyReplyDto)
+        val updated = accompanyReplyService.update(
+            replyId = accompanyReplyDto.id,
+            content = request.content,
+        )
         val likeCount = accompanyReplyLikeService.countAccompanyReplyLikeCount(accompanyReplyDto.id)
         return updated.toResponse(userSimpleDto, likeCount)
     }
@@ -60,26 +64,38 @@ class AccompanyReplyApplicationService(
         accompanyReplyService.delete(accompanyReplyDto.id)
     }
 
-    @Transactional
-    fun updateSubReply(request: UpdateAccompanyReplyServiceRequest): AccompanyReplyResponse {
-        val accompanyReplyDto = accompanyReplyService.findById(request.accompanyReplyId)
+    private fun validateUpdate(request: UpdateAccompanyReplyServiceRequest, accompanyReplyDto: AccompanyReplyDto) {
         validateCreator(accompanyReplyDto.userId, request.userId)
-        val updated =
-            accompanyReplyService.updateSubReply(accompanyReplyDto.id, accompanyReplyDto.parentId!!, request.content)
-        val likeCount = countAccompanyReplyLikeCount(accompanyReplyDto.id)
-        val userSimpleDto = userService.findById(request.userId)
-        return updated.toResponse(userSimpleDto, likeCount)
+        validateSubReply(accompanyReplyDto.parentId, request.parentId)
+        if (request.parentId != null) {
+            validateParentId(request.parentId, accompanyReplyDto.parentId)
+        }
     }
 
-    private fun countAccompanyReplyLikeCount(replyId: Long) =
-        accompanyReplyLikeService.countAccompanyReplyLikeCount(replyId)
-
-    private fun validateCreator(requestUserId: Long, createUserId: Long) {
-        if (requestUserId != createUserId) {
+    private fun validateCreator(createUserId: Long, requestUserId: Long) {
+        if (createUserId != requestUserId) {
             throw WithaengException.of(
                 type = WithaengExceptionType.ACCESS_DENIED,
-                message = "댓글 작성자가 아닌 사용자가 수정할 수 없습니다."
             )
         }
     }
+
+    private fun validateSubReply(parentId: Long?, requestParentId: Long?) {
+        if (requestParentId == null && parentId != null) {
+            throw WithaengException.of(
+                type = WithaengExceptionType.INVALID_INPUT,
+                message = "댓글이 아닙니다."
+            )
+        }
+    }
+
+    private fun validateParentId(parentId: Long, requestParentId: Long?) {
+        if (parentId != requestParentId) {
+            throw WithaengException.of(
+                type = WithaengExceptionType.INVALID_INPUT,
+                message = "해당 댓글에 대한 대댓글이 아닙니다."
+            )
+        }
+    }
+
 }
