@@ -62,7 +62,7 @@ class AccompanyReplyService(
             type = WithaengExceptionType.NOT_EXIST,
             message = "해당하는 댓글을 찾을 수 없습니다."
         )
-        accompanyReply.updateAccompanyReply(content)
+        accompanyReply.update(content)
         return accompanyReply.toDto()
     }
 
@@ -72,7 +72,7 @@ class AccompanyReplyService(
             type = WithaengExceptionType.NOT_EXIST,
             message = "해당하는 댓글을 찾을 수 없습니다."
         )
-        accompanyReplyRepository.delete(accompanyReply)
+        accompanyReply.delete()
     }
 
 }

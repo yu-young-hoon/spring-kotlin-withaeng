@@ -7,6 +7,7 @@ import com.travel.withaeng.common.exception.WithaengException
 import com.travel.withaeng.common.exception.WithaengExceptionType
 import com.travel.withaeng.domain.accompanyreply.AccompanyReplyDto
 import com.travel.withaeng.domain.accompanyreply.AccompanyReplyService
+import com.travel.withaeng.domain.accompanyreply.AccompanyReplyStatus
 import com.travel.withaeng.domain.accompanyreplylike.AccompanyReplyLikeService
 import com.travel.withaeng.domain.user.UserService
 import org.springframework.data.domain.Pageable
@@ -58,10 +59,28 @@ class AccompanyReplyApplicationService(
     }
 
     @Transactional
-    fun delete(userId: Long, accompanyReplyId: Long) {
+    fun delete(userId: Long, accompanyReplyId: Long, parentId: Long? = null) {
         val accompanyReplyDto = accompanyReplyService.findById(accompanyReplyId)
-        validateCreator(accompanyReplyDto.userId, userId)
+        validateDelete(userId, parentId, accompanyReplyDto)
         accompanyReplyService.delete(accompanyReplyDto.id)
+    }
+
+    private fun validateDelete(requestUserId: Long, requestParentId: Long?, accompanyReplyDto: AccompanyReplyDto) {
+        validateCreator(accompanyReplyDto.userId, requestUserId)
+        validateDeletionStatus(accompanyReplyDto.status)
+        validateSubReply(accompanyReplyDto.parentId, requestParentId)
+        if (requestParentId != null) {
+            validateParentId(requestParentId, accompanyReplyDto.parentId)
+        }
+    }
+
+    private fun validateDeletionStatus(status: AccompanyReplyStatus) {
+        if (status == AccompanyReplyStatus.DELETED) {
+            throw WithaengException.of(
+                type = WithaengExceptionType.INVALID_INPUT,
+                message = "삭제된 댓글 입니다."
+            )
+        }
     }
 
     private fun validateUpdate(request: UpdateAccompanyReplyServiceRequest, accompanyReplyDto: AccompanyReplyDto) {
@@ -81,7 +100,7 @@ class AccompanyReplyApplicationService(
     }
 
     private fun validateSubReply(parentId: Long?, requestParentId: Long?) {
-        if (requestParentId == null && parentId != null) {
+        if (parentId != null && requestParentId == null) {
             throw WithaengException.of(
                 type = WithaengExceptionType.INVALID_INPUT,
                 message = "댓글이 아닙니다."

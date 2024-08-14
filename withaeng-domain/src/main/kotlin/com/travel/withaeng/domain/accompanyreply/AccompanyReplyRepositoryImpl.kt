@@ -19,7 +19,8 @@ class AccompanyReplyRepositoryImpl(
                     accompanyReply.accompanyId,
                     accompanyReply.parentId,
                     accompanyReply.content,
-                    accompanyReply.createdAt
+                    accompanyReply.createdAt,
+                    accompanyReply.status,
                 )
             )
             .from(accompanyReply)

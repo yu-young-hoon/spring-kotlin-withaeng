@@ -9,7 +9,8 @@ data class AccompanyReplyDto @QueryProjection constructor(
     val accompanyId: Long,
     val parentId: Long? = null,
     val content: String,
-    val createdAt: LocalDateTime
+    val createdAt: LocalDateTime,
+    val status: AccompanyReplyStatus,
 )
 
 fun AccompanyReply.toDto(): AccompanyReplyDto = AccompanyReplyDto(
@@ -18,5 +19,6 @@ fun AccompanyReply.toDto(): AccompanyReplyDto = AccompanyReplyDto(
     accompanyId = accompanyId,
     parentId = parentId,
     content = content,
-    createdAt = createdAt
+    createdAt = createdAt,
+    status = status,
 )
