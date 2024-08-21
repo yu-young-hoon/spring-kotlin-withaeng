@@ -39,7 +39,7 @@ data class CreateAccompanyRequest(
     val memberCount: Long,
 
     @Schema(description = "동행 게시글에 부착할 태그 아이디 리스트")
-    val tagIds: List<Long>? = null,
+    val tagIds: Set<Long>? = emptySet(),
 
     @Schema(description = "동행 게시글에 게시된 오픈 카카오톡 URL")
     val openKakaoUrl: String,
@@ -106,10 +106,21 @@ data class UpdateAccompanyRequest(
     val memberCount: Long? = null,
 
     @Schema(description = "동행 게시글에 부착할 태그 아이디 리스트")
-    val tagIds: List<Long>? = null,
+    val tagIds: Set<Long>? = null,
 
     @Schema(description = "동행 게시글에 게시된 오픈 카카오톡 URL")
-    val openKakaoUrl: String? = null
+    val openKakaoUrl: String? = null,
+
+    @Schema(description = "동행 시작 연령(누구나 가능의 경우 0)")
+    @JsonDeserialize(using = AccompanyAgeDeserializer::class)
+    val startAccompanyAge: AccompanyAge? = null,
+
+    @Schema(description = "동행 시작 연령(누구나 가능의 경우 99)")
+    @JsonDeserialize(using = AccompanyAgeDeserializer::class)
+    val endAccompanyAge: AccompanyAge? = null,
+
+    @Schema(description = "동행 선호 성별")
+    val preferGender: UserPreferAccompanyGender? = null,
 )
 
 fun UpdateAccompanyRequest.toServiceRequest(
@@ -128,5 +139,8 @@ fun UpdateAccompanyRequest.toServiceRequest(
     bannerImageUrl = bannerImageUrl,
     memberCount = memberCount,
     tagIds = tagIds,
-    openKakaoUrl = openKakaoUrl
+    openKakaoUrl = openKakaoUrl,
+    startAccompanyAge = startAccompanyAge,
+    endAccompanyAge = endAccompanyAge,
+    preferGender = preferGender,
 )

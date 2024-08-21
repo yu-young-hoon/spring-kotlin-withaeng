@@ -29,7 +29,10 @@ data class UpdateAccompanyDto(
     val bannerImageUrl: String? = null,
     val memberCount: Long? = null,
     val tagIds: Set<Long>? = null,
-    val openKakaoUrl: String? = null
+    val openKakaoUrl: String? = null,
+    val startAccompanyAge: AccompanyAge? = null,
+    val endAccompanyAge: AccompanyAge? = null,
+    val preferGender: UserPreferAccompanyGender? = null,
 )
 
 data class AccompanyDto(
@@ -47,6 +50,7 @@ data class AccompanyDto(
     val startAccompanyAge: AccompanyAge,
     val endAccompanyAge: AccompanyAge,
     val preferGender: UserPreferAccompanyGender,
+    val tagIds: Set<Long>? = null,
 )
 
 fun Accompany.toDto(): AccompanyDto = AccompanyDto(
@@ -63,26 +67,19 @@ fun Accompany.toDto(): AccompanyDto = AccompanyDto(
     openKakaoUrl = openKakaoUrl,
     startAccompanyAge = AccompanyAge.fromValue(startAccompanyAge),
     endAccompanyAge = AccompanyAge.fromValue(endAccompanyAge),
-    preferGender = preferGender
+    preferGender = preferGender,
+    tagIds = tagIds,
 )
 
 data class SearchAccompanyDto(
-
-    var viewCntOrder: Boolean,//조회수 높은 순서
-
-    var likeCntOrder: Boolean,//좋아요 높은 순서
-
-    var startTripDate: LocalDate,//동행 모집 시작일시
-
-    var endTripDate: LocalDate,//동행 모집 마감일시
-
+    var viewCntOrder: Boolean,    // 조회수 높은 순서
+    var likeCntOrder: Boolean,    // 좋아요 높은 순서
+    var startTripDate: LocalDate, // 동행 모집 시작일시
+    var endTripDate: LocalDate,   // 동행 모집 마감일시
     var pageIndex: Long,
-
     var pageSize: Long
-
 ) {
     fun getCurrentPage(): Long {
         return (this.pageIndex - 1) * this.pageSize
     }
-
 }

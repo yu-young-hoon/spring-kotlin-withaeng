@@ -29,15 +29,21 @@ class AccompanyService(
             type = WithaengExceptionType.NOT_EXIST,
             message = NOT_EXIST_MESSAGE
         )
-        params.title?.let { accompany.title = it }
-        params.content?.let { accompany.content = it }
-        params.destination?.let { accompany.accompanyDestination = it }
-        params.startTripDate?.let { accompany.startTripDate = it }
-        params.endTripDate?.let { accompany.endTripDate = it }
-        params.bannerImageUrl?.let { accompany.bannerImageUrl = it }
-        params.memberCount?.let { accompany.memberCount = it }
-        params.tagIds?.let { accompany.tagIds = filterValidTagIds(it) }
-        params.openKakaoUrl?.let { accompany.openKakaoUrl = it }
+
+        accompany.update(
+            title = params.title,
+            content = params.content,
+            startTripDate = params.startTripDate,
+            endTripDate = params.endTripDate,
+            bannerImageUrl = params.bannerImageUrl,
+            memberCount = params.memberCount,
+            openKakaoUrl = params.openKakaoUrl,
+            accompanyDestination = params.destination,
+            startAccompanyAge = params.startAccompanyAge?.value,
+            endAccompanyAge = params.endAccompanyAge?.value,
+            preferGender = params.preferGender,
+            tagIds = params.tagIds,
+        )
 
         return accompany.toDto()
     }
@@ -53,8 +59,8 @@ class AccompanyService(
         return accompanyRepository.findAll().map { it.toDto() }
     }
 
-    private fun filterValidTagIds(tagIds: Iterable<Long>?): Set<Long> {
-        if (tagIds == null) return setOf()
+    private fun filterValidTagIds(tagIds: Set<Long>?): Set<Long> {
+        if (tagIds == null) return emptySet()
         return tagRepository.findAllById(tagIds).map { it.id }.toSet()
     }
 

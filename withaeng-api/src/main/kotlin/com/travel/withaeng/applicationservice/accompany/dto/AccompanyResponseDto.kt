@@ -17,7 +17,7 @@ data class AccompanyResponse(
     val memberCount: Long,
     val viewCount: Long,
     val likeCount: Long,
-    val tagIds: List<Long>? = null,
+    val tagIds: Set<Long>? = null,
     val openKakaoUrl: String? = null,
     val startAccompanyAge: Int,
     val endAccompanyAge: Int,
@@ -40,4 +40,5 @@ fun AccompanyDto.toAccompanyResponse(likeCount: Long): AccompanyResponse = Accom
     startAccompanyAge = startAccompanyAge.value,
     endAccompanyAge = endAccompanyAge.value,
     preferGender = preferGender,
+    tagIds = tagIds,
 )
