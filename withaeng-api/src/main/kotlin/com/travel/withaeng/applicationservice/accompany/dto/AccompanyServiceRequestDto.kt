@@ -1,6 +1,7 @@
 package com.travel.withaeng.applicationservice.accompany.dto
 
 import com.travel.withaeng.domain.accompany.*
+import com.travel.withaeng.domain.user.UserPreferAccompanyGender
 import java.time.LocalDate
 
 data class CreateAccompanyServiceRequest(
@@ -18,6 +19,7 @@ data class CreateAccompanyServiceRequest(
     val openKakaoUrl: String,
     val startAccompanyAge: AccompanyAge,
     val endAccompanyAge: AccompanyAge,
+    val preferGender: UserPreferAccompanyGender,
 )
 
 fun CreateAccompanyServiceRequest.toDomainDto(): CreateAccompanyDto = CreateAccompanyDto(
@@ -37,6 +39,7 @@ fun CreateAccompanyServiceRequest.toDomainDto(): CreateAccompanyDto = CreateAcco
     openKakaoUrl = openKakaoUrl,
     startAccompanyAge = startAccompanyAge,
     endAccompanyAge = endAccompanyAge,
+    preferGender = preferGender,
 )
 
 data class UpdateAccompanyServiceRequest(

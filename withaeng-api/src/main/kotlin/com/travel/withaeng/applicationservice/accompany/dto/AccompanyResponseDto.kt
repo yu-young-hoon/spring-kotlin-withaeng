@@ -2,6 +2,7 @@ package com.travel.withaeng.applicationservice.accompany.dto
 
 import com.travel.withaeng.domain.accompany.AccompanyDestination
 import com.travel.withaeng.domain.accompany.AccompanyDto
+import com.travel.withaeng.domain.user.UserPreferAccompanyGender
 import java.time.LocalDate
 
 data class AccompanyResponse(
@@ -20,6 +21,7 @@ data class AccompanyResponse(
     val openKakaoUrl: String? = null,
     val startAccompanyAge: Int,
     val endAccompanyAge: Int,
+    val preferGender: UserPreferAccompanyGender,
 )
 
 fun AccompanyDto.toAccompanyResponse(likeCount: Long): AccompanyResponse = AccompanyResponse(
@@ -37,4 +39,5 @@ fun AccompanyDto.toAccompanyResponse(likeCount: Long): AccompanyResponse = Accom
     openKakaoUrl = openKakaoUrl,
     startAccompanyAge = startAccompanyAge.value,
     endAccompanyAge = endAccompanyAge.value,
+    preferGender = preferGender,
 )

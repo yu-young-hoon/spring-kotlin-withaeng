@@ -1,5 +1,6 @@
 package com.travel.withaeng.domain.accompany
 
+import com.travel.withaeng.domain.user.UserPreferAccompanyGender
 import java.time.LocalDate
 
 data class CreateAccompanyDto(
@@ -15,6 +16,7 @@ data class CreateAccompanyDto(
     val openKakaoUrl: String,
     val startAccompanyAge: AccompanyAge,
     val endAccompanyAge: AccompanyAge,
+    val preferGender: UserPreferAccompanyGender,
 )
 
 data class UpdateAccompanyDto(
@@ -44,6 +46,7 @@ data class AccompanyDto(
     val openKakaoUrl: String,
     val startAccompanyAge: AccompanyAge,
     val endAccompanyAge: AccompanyAge,
+    val preferGender: UserPreferAccompanyGender,
 )
 
 fun Accompany.toDto(): AccompanyDto = AccompanyDto(
@@ -60,6 +63,7 @@ fun Accompany.toDto(): AccompanyDto = AccompanyDto(
     openKakaoUrl = openKakaoUrl,
     startAccompanyAge = AccompanyAge.fromValue(startAccompanyAge),
     endAccompanyAge = AccompanyAge.fromValue(endAccompanyAge),
+    preferGender = preferGender
 )
 
 data class SearchAccompanyDto(
