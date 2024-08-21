@@ -57,6 +57,14 @@ class Accompany(
     @Comment("동행 장소 정보")
     var accompanyDestination: AccompanyDestination,
 
+    @Column(name = "start_accompany_age", nullable = false)
+    @Comment("동행 시작 연령")
+    var startAccompanyAge: Int,
+
+    @Column(name = "end_accompany_age", nullable = false)
+    @Comment("동행 종료 연령")
+    var endAccompanyAge: Int,
+
     @Convert(converter = TagIdsConverter::class)
     @Column(name = "tag_ids", nullable = false)
     @Comment("태그 목록")
@@ -77,6 +85,8 @@ class Accompany(
                 memberCount = params.memberCount,
                 openKakaoUrl = params.openKakaoUrl,
                 accompanyDestination = params.destination,
+                startAccompanyAge = params.startAccompanyAge.value,
+                endAccompanyAge = params.endAccompanyAge.value,
                 tagIds = params.tagIds ?: setOf()
             )
         }

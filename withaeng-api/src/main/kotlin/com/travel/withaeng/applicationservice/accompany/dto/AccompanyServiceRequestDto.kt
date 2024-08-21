@@ -15,7 +15,9 @@ data class CreateAccompanyServiceRequest(
     val bannerImageUrl: String? = null,
     val memberCount: Long,
     val tagIds: List<Long>? = null,
-    val openKakaoUrl: String
+    val openKakaoUrl: String,
+    val startAccompanyAge: AccompanyAge,
+    val endAccompanyAge: AccompanyAge,
 )
 
 fun CreateAccompanyServiceRequest.toDomainDto(): CreateAccompanyDto = CreateAccompanyDto(
@@ -32,7 +34,9 @@ fun CreateAccompanyServiceRequest.toDomainDto(): CreateAccompanyDto = CreateAcco
     bannerImageUrl = bannerImageUrl,
     memberCount = memberCount,
     tagIds = tagIds?.toSet(),
-    openKakaoUrl = openKakaoUrl
+    openKakaoUrl = openKakaoUrl,
+    startAccompanyAge = startAccompanyAge,
+    endAccompanyAge = endAccompanyAge,
 )
 
 data class UpdateAccompanyServiceRequest(
@@ -65,7 +69,7 @@ fun UpdateAccompanyServiceRequest.toDomainDto(): UpdateAccompanyDto {
         accompanyId = accompanyId,
         title = title,
         content = content,
-        destination =destination,
+        destination = destination,
         startTripDate = startTripDate,
         endTripDate = endTripDate,
         bannerImageUrl = bannerImageUrl,
