@@ -2,6 +2,7 @@ package com.travel.withaeng.domain.accompany
 
 import com.travel.withaeng.converter.TagIdsConverter
 import com.travel.withaeng.domain.BaseEntity
+import com.travel.withaeng.domain.user.UserPreferAccompanyGender
 import jakarta.persistence.*
 import org.hibernate.annotations.Comment
 import org.hibernate.annotations.DynamicUpdate
@@ -65,6 +66,10 @@ class Accompany(
     @Comment("동행 종료 연령")
     var endAccompanyAge: Int,
 
+    @Column(name = "prefer_gender", nullable = false)
+    @Comment("동행 선호 성별")
+    var preferGender: UserPreferAccompanyGender,
+
     @Convert(converter = TagIdsConverter::class)
     @Column(name = "tag_ids", nullable = false)
     @Comment("태그 목록")
@@ -72,8 +77,35 @@ class Accompany(
 
 ) : BaseEntity() {
 
-    companion object {
+    fun update(
+        title: String?,
+        content: String?,
+        startTripDate: LocalDate?,
+        endTripDate: LocalDate?,
+        bannerImageUrl: String?,
+        memberCount: Long?,
+        openKakaoUrl: String?,
+        accompanyDestination: AccompanyDestination?,
+        startAccompanyAge: Int?,
+        endAccompanyAge: Int?,
+        preferGender: UserPreferAccompanyGender?,
+        tagIds: Set<Long>?
+    ) {
+        this.title = title ?: this.title
+        this.content = content ?: this.content
+        this.startTripDate = startTripDate ?: this.startTripDate
+        this.endTripDate = endTripDate ?: this.endTripDate
+        this.bannerImageUrl = bannerImageUrl ?: this.bannerImageUrl
+        this.memberCount = memberCount ?: this.memberCount
+        this.openKakaoUrl = openKakaoUrl ?: this.openKakaoUrl
+        this.accompanyDestination = accompanyDestination ?: this.accompanyDestination
+        this.startAccompanyAge = startAccompanyAge ?: this.startAccompanyAge
+        this.endAccompanyAge = endAccompanyAge ?: this.endAccompanyAge
+        this.preferGender = preferGender ?: this.preferGender
+        this.tagIds = tagIds ?: this.tagIds
+    }
 
+    companion object {
         fun create(params: CreateAccompanyDto): Accompany {
             return Accompany(
                 userId = params.userId,
@@ -87,9 +119,9 @@ class Accompany(
                 accompanyDestination = params.destination,
                 startAccompanyAge = params.startAccompanyAge.value,
                 endAccompanyAge = params.endAccompanyAge.value,
+                preferGender = params.preferGender,
                 tagIds = params.tagIds ?: setOf()
             )
         }
-
     }
 }

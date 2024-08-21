@@ -1,6 +1,7 @@
 package com.travel.withaeng.applicationservice.accompany.dto
 
 import com.travel.withaeng.domain.accompany.*
+import com.travel.withaeng.domain.user.UserPreferAccompanyGender
 import java.time.LocalDate
 
 data class CreateAccompanyServiceRequest(
@@ -14,10 +15,11 @@ data class CreateAccompanyServiceRequest(
     val endTripDate: LocalDate,
     val bannerImageUrl: String? = null,
     val memberCount: Long,
-    val tagIds: List<Long>? = null,
+    val tagIds: Set<Long>? = emptySet(),
     val openKakaoUrl: String,
     val startAccompanyAge: AccompanyAge,
     val endAccompanyAge: AccompanyAge,
+    val preferGender: UserPreferAccompanyGender,
 )
 
 fun CreateAccompanyServiceRequest.toDomainDto(): CreateAccompanyDto = CreateAccompanyDto(
@@ -37,6 +39,7 @@ fun CreateAccompanyServiceRequest.toDomainDto(): CreateAccompanyDto = CreateAcco
     openKakaoUrl = openKakaoUrl,
     startAccompanyAge = startAccompanyAge,
     endAccompanyAge = endAccompanyAge,
+    preferGender = preferGender,
 )
 
 data class UpdateAccompanyServiceRequest(
@@ -51,8 +54,11 @@ data class UpdateAccompanyServiceRequest(
     val endTripDate: LocalDate? = null,
     val bannerImageUrl: String? = null,
     val memberCount: Long? = null,
-    val tagIds: List<Long>? = null,
-    val openKakaoUrl: String? = null
+    val tagIds: Set<Long>? = null,
+    val openKakaoUrl: String? = null,
+    val startAccompanyAge: AccompanyAge? = null,
+    val endAccompanyAge: AccompanyAge? = null,
+    val preferGender: UserPreferAccompanyGender? = null,
 )
 
 fun UpdateAccompanyServiceRequest.toDomainDto(): UpdateAccompanyDto {
@@ -75,7 +81,10 @@ fun UpdateAccompanyServiceRequest.toDomainDto(): UpdateAccompanyDto {
         bannerImageUrl = bannerImageUrl,
         memberCount = memberCount,
         tagIds = tagIds?.toSet(),
-        openKakaoUrl = openKakaoUrl
+        openKakaoUrl = openKakaoUrl,
+        startAccompanyAge = startAccompanyAge,
+        endAccompanyAge = endAccompanyAge,
+        preferGender = preferGender,
     )
 }
 

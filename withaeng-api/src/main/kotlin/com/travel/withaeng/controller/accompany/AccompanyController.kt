@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.*
 @Tag(name = "Accompany", description = "동행 API")
 @RestController
 @RequestMapping("/api/v1/accompany")
-class AccompanyController(private val accompanyApplicationService: AccompanyApplicationService) {
+class AccompanyController(
+    private val accompanyApplicationService: AccompanyApplicationService
+) {
 
     @Operation(
         summary = "Create Accompany API",
