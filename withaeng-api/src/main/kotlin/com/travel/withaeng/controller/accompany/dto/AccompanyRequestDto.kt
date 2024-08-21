@@ -1,7 +1,10 @@
 package com.travel.withaeng.controller.accompany.dto
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.travel.withaeng.applicationservice.accompany.dto.CreateAccompanyServiceRequest
 import com.travel.withaeng.applicationservice.accompany.dto.UpdateAccompanyServiceRequest
+import com.travel.withaeng.domain.accompany.AccompanyAge
+import com.travel.withaeng.domain.accompany.AccompanyAgeDeserializer
 import io.swagger.v3.oas.annotations.media.Schema
 import java.time.LocalDate
 
@@ -38,7 +41,15 @@ data class CreateAccompanyRequest(
     val tagIds: List<Long>? = null,
 
     @Schema(description = "동행 게시글에 게시된 오픈 카카오톡 URL")
-    val openKakaoUrl: String
+    val openKakaoUrl: String,
+
+    @Schema(description = "동행 시작 연령(누구나 가능의 경우 0)")
+    @JsonDeserialize(using = AccompanyAgeDeserializer::class)
+    val startAccompanyAge: AccompanyAge,
+
+    @Schema(description = "동행 시작 연령(누구나 가능의 경우 99)")
+    @JsonDeserialize(using = AccompanyAgeDeserializer::class)
+    val endAccompanyAge: AccompanyAge,
 )
 
 @Schema(description = "[Request] 동행 게시글 수정")
@@ -56,7 +67,9 @@ fun CreateAccompanyRequest.toServiceRequest(
     bannerImageUrl = bannerImageUrl,
     memberCount = memberCount,
     tagIds = tagIds,
-    openKakaoUrl = openKakaoUrl
+    openKakaoUrl = openKakaoUrl,
+    startAccompanyAge = startAccompanyAge,
+    endAccompanyAge = endAccompanyAge,
 )
 
 data class UpdateAccompanyRequest(

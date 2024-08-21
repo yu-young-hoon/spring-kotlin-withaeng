@@ -1,11 +1,13 @@
 package com.travel.withaeng.common
 
+import com.fasterxml.jackson.databind.JsonMappingException
 import com.travel.withaeng.common.exception.WithaengException
 import com.travel.withaeng.common.exception.WithaengExceptionType
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.validation.BindException
 import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.MethodArgumentNotValidException
@@ -66,6 +68,21 @@ class ControllerExceptionAdvice {
         logger.error("MethodArgumentNotValidException handler", e)
         val errorMessage = e.allErrors.joinToString(" ,")
         return errorResponse(WithaengExceptionType.ARGUMENT_NOT_VALID, errorMessage)
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException::class)
+    protected fun handleHttpMessageNotReadableException(e: HttpMessageNotReadableException): ResponseEntity<ApiResponse<Any>> {
+        logger.error("HttpMessageNotReadableException handler", e)
+
+        if (e.cause is JsonMappingException) {
+            val jsonMappingException = e.cause as JsonMappingException
+            val fieldName = jsonMappingException.path.getOrNull(0)?.fieldName
+            return errorResponse(
+                WithaengExceptionType.INVALID_JSON_FIELD,
+                "${fieldName} 필드 값이 잘못되었습니다."
+            )
+        }
+        return errorResponse(WithaengExceptionType.JSON_PARSE_ERROR, "잘못된 데이터가 요청되었습니다.")
     }
 
     private fun WithaengException.toApiErrorResponse() = ApiErrorResponse(

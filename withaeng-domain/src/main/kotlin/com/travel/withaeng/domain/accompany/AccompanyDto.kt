@@ -12,7 +12,9 @@ data class CreateAccompanyDto(
     val bannerImageUrl: String? = null,
     val memberCount: Long,
     val tagIds: Set<Long>? = emptySet(),
-    val openKakaoUrl: String
+    val openKakaoUrl: String,
+    val startAccompanyAge: AccompanyAge,
+    val endAccompanyAge: AccompanyAge,
 )
 
 data class UpdateAccompanyDto(
@@ -39,7 +41,9 @@ data class AccompanyDto(
     val bannerImageUrl: String? = null,
     val memberCount: Long,
     val viewCount: Long,
-    val openKakaoUrl: String
+    val openKakaoUrl: String,
+    val startAccompanyAge: AccompanyAge,
+    val endAccompanyAge: AccompanyAge,
 )
 
 fun Accompany.toDto(): AccompanyDto = AccompanyDto(
@@ -53,7 +57,9 @@ fun Accompany.toDto(): AccompanyDto = AccompanyDto(
     bannerImageUrl = bannerImageUrl,
     memberCount = memberCount,
     viewCount = viewCount,
-    openKakaoUrl = openKakaoUrl
+    openKakaoUrl = openKakaoUrl,
+    startAccompanyAge = AccompanyAge.fromValue(startAccompanyAge),
+    endAccompanyAge = AccompanyAge.fromValue(endAccompanyAge),
 )
 
 data class SearchAccompanyDto(
