@@ -53,7 +53,12 @@ class AccompanyReplyService(
     }
 
     fun search(accompanyId: Long, pageable: Pageable): Page<AccompanyReplyDto> {
-        return accompanyReplyRepository.search(accompanyId, pageable)
+        return accompanyReplyRepository.search(accompanyId, pageable).map {
+            it.takeIf { it.status == AccompanyReplyStatus.DELETED }?.copy(
+                content = null,
+                createdAt = null,
+            ) ?: it
+        }
     }
 
     @Transactional

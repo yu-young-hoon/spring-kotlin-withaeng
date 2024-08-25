@@ -5,6 +5,7 @@ import com.travel.withaeng.applicationservice.common.PagingResponse
 import com.travel.withaeng.applicationservice.user.dto.UserSimpleResponse
 import com.travel.withaeng.applicationservice.user.dto.toSimpleResponse
 import com.travel.withaeng.domain.accompanyreply.AccompanyReplyDto
+import com.travel.withaeng.domain.accompanyreply.AccompanyReplyStatus
 import com.travel.withaeng.domain.user.UserSimpleDto
 import java.time.LocalDateTime
 
@@ -13,9 +14,10 @@ data class AccompanyReplyResponse(
     val author: UserSimpleResponse,
     val accompanyId: Long,
     val parentId: Long? = null,
-    val content: String,
+    val content: String?,
     val likeCount: Long = 0L,
-    val createdAt: LocalDateTime
+    val createdAt: LocalDateTime?,
+    val status: AccompanyReplyStatus,
 )
 
 class PagingAccompanyReplyResponse(
@@ -35,6 +37,7 @@ fun AccompanyReplyDto.toResponse(userSimpleDto: UserSimpleDto, likeCount: Long =
         author = userSimpleDto.toSimpleResponse(),
         content = content,
         likeCount = likeCount,
-        createdAt = createdAt
+        createdAt = createdAt,
+        status = status,
     )
 }
