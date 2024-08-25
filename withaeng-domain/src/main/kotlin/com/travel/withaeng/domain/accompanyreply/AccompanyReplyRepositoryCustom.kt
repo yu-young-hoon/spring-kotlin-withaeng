@@ -4,5 +4,5 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 
 interface AccompanyReplyRepositoryCustom {
-    fun search(accompanyId: Long, pageable: Pageable): Page<AccompanyReplyDto>
+    fun findAccompanyReplyList(accompanyId: Long, pageable: Pageable): Page<FindAccompanyReplyDto>
 }

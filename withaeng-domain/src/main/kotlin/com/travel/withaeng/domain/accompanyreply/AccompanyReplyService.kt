@@ -52,8 +52,8 @@ class AccompanyReplyService(
         return accompanyReply.toDto()
     }
 
-    fun search(accompanyId: Long, pageable: Pageable): Page<AccompanyReplyDto> {
-        return accompanyReplyRepository.search(accompanyId, pageable).map {
+    fun getList(accompanyId: Long, pageable: Pageable): Page<FindAccompanyReplyDto> {
+        return accompanyReplyRepository.findAccompanyReplyList(accompanyId, pageable).map {
             it.takeIf { it.status == AccompanyReplyStatus.DELETED }?.copy(
                 content = null,
                 createdAt = null,
