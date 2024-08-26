@@ -17,9 +17,9 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 @Transactional(readOnly = true)
 class AccompanyReplyApplicationService(
-    val userService: UserService,
-    val accompanyReplyService: AccompanyReplyService,
-    val accompanyReplyLikeService: AccompanyReplyLikeService
+    private val userService: UserService,
+    private val accompanyReplyService: AccompanyReplyService,
+    private val accompanyReplyLikeService: AccompanyReplyLikeService,
 ) {
 
     @Transactional
@@ -33,16 +33,13 @@ class AccompanyReplyApplicationService(
         ).toResponse(userSimpleDto)
     }
 
-    fun search(accompanyId: Long, pageable: Pageable): PagingResponse<List<AccompanyReplyResponse>> {
-        val accompanyReplyPage = accompanyReplyService.search(accompanyId, pageable)
-        val contents = accompanyReplyPage.content
-        // TODO: Fix getting like count & user logic for using bulk from single
-        val accompanyReplyResponseList = contents.map { replyDto ->
-            val likeCount = accompanyReplyLikeService.countAccompanyReplyLikeCount(replyDto.id)
-            val userSimpleDto = userService.findById(replyDto.userId)
-            replyDto.toResponse(userSimpleDto, likeCount)
-        }
-        return PagingAccompanyReplyResponse(accompanyReplyResponseList, accompanyReplyPage.toPaging())
+    fun getList(accompanyId: Long, pageable: Pageable): PagingResponse<List<FindAccompanyReplyResponse>> {
+        val accompanyReplyPage = accompanyReplyService.getList(accompanyId, pageable)
+        val accompanyReplyResponseList = accompanyReplyPage
+            .map { it.toResponse() }
+            .toList()
+
+        return PagingResponse(accompanyReplyResponseList, accompanyReplyPage.toPaging())
     }
 
     @Transactional

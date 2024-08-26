@@ -2,7 +2,9 @@ package com.travel.withaeng.controller.accompanyreply
 
 import com.travel.withaeng.applicationservice.accompanyreply.AccompanyReplyApplicationService
 import com.travel.withaeng.applicationservice.accompanyreply.dto.AccompanyReplyResponse
+import com.travel.withaeng.applicationservice.accompanyreply.dto.FindAccompanyReplyResponse
 import com.travel.withaeng.common.ApiResponse
+import com.travel.withaeng.common.PageInfoRequest
 import com.travel.withaeng.controller.accompanyreply.dto.CreateAccompanyReplyRequest
 import com.travel.withaeng.controller.accompanyreply.dto.UpdateAccompanyReplyRequest
 import com.travel.withaeng.controller.accompanyreply.dto.toServiceRequest
@@ -11,7 +13,6 @@ import com.travel.withaeng.security.resolver.GetAuth
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
@@ -48,10 +49,13 @@ class AccompanyReplyController(
     @GetMapping("/{accompanyId}/reply/search")
     fun search(
         @PathVariable(name = "accompanyId") accompanyId: Long,
-        pageable: Pageable
-    ): ApiResponse<List<AccompanyReplyResponse>> {
+        @ModelAttribute pageInfoRequest: PageInfoRequest,
+    ): ApiResponse<List<FindAccompanyReplyResponse>> {
         return ApiResponse.success(
-            accompanyReplyApplicationService.search(accompanyId = accompanyId, pageable = pageable)
+            accompanyReplyApplicationService.getList(
+                accompanyId,
+                pageInfoRequest.toPageRequest()
+            )
         )
     }
 

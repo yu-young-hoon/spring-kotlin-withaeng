@@ -21,7 +21,7 @@ data class ApiResponse<T>(
         }
 
         fun <T> success(data: PagingResponse<T>): ApiResponse<T> {
-            return ApiResponse(success = true, data = data.getContent(), paging = data.getPaging())
+            return ApiResponse(success = true, data = data.content, paging = data.paging)
         }
 
         fun fail(
