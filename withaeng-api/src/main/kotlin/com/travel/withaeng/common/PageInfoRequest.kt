@@ -27,7 +27,8 @@ data class PageInfoRequest(
     private fun initSize(size: Int?): Int {
         val defaultSize = 5
         val minimumSize = 1
-        return size?.takeIf { it >= minimumSize } ?: defaultSize
+        val maxSize = 20
+        return size?.takeIf { it in minimumSize..maxSize } ?: defaultSize
     }
 
 }
