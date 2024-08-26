@@ -17,9 +17,9 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 @Transactional(readOnly = true)
 class AccompanyReplyApplicationService(
-    val userService: UserService,
-    val accompanyReplyService: AccompanyReplyService,
-    val accompanyReplyLikeService: AccompanyReplyLikeService
+    private val userService: UserService,
+    private val accompanyReplyService: AccompanyReplyService,
+    private val accompanyReplyLikeService: AccompanyReplyLikeService,
 ) {
 
     @Transactional

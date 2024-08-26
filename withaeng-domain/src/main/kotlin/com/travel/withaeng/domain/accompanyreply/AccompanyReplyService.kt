@@ -20,19 +20,9 @@ class AccompanyReplyService(
 
     @Transactional
     fun create(accompanyId: Long, userId: Long, content: String, parentId: Long? = null): AccompanyReplyDto {
-        userRepository.findByIdOrNull(userId) ?: throw WithaengException.of(
-            type = WithaengExceptionType.NOT_EXIST,
-            message = "해당하는 유저를 찾을 수 없습니다."
-        )
-        accompanyRepository.findByIdOrNull(accompanyId) ?: throw WithaengException.of(
-            type = WithaengExceptionType.NOT_EXIST,
-            message = "해당하는 동행을 찾을 수 없습니다."
-        )
+        validateCreateAccompanyReply(accompanyId, userId)
         if (parentId != null) {
-            accompanyReplyRepository.findByIdOrNull(parentId) ?: throw WithaengException.of(
-                type = WithaengExceptionType.NOT_EXIST,
-                message = "해당하는 댓글을 찾을 수 없습니다."
-            )
+            validateNotExistsParentId(parentId)
         }
         val accompanyReply = AccompanyReply.create(
             accompanyId = accompanyId,
@@ -78,6 +68,38 @@ class AccompanyReplyService(
             message = "해당하는 댓글을 찾을 수 없습니다."
         )
         accompanyReply.delete()
+    }
+
+    private fun validateCreateAccompanyReply(accompanyId: Long, userId: Long) {
+        validateExistsUser(userId)
+        validateExistsAccompany(accompanyId)
+    }
+
+    private fun validateExistsAccompany(accompanyId: Long) {
+        if (!accompanyRepository.existsById(accompanyId)) {
+            throw WithaengException.of(
+                type = WithaengExceptionType.NOT_EXIST,
+                message = "해당하는 동행을 찾을 수 없습니다."
+            )
+        }
+    }
+
+    private fun validateExistsUser(userId: Long) {
+        if (!userRepository.existsById(userId)) {
+            throw WithaengException.of(
+                type = WithaengExceptionType.NOT_EXIST,
+                message = "해당하는 유저를 찾을 수 없습니다."
+            )
+        }
+    }
+
+    private fun validateNotExistsParentId(parentId: Long) {
+        if (accompanyReplyRepository.existsById(parentId)) {
+            throw WithaengException.of(
+                type = WithaengExceptionType.NOT_EXIST,
+                message = "해당하는 댓글을 찾을 수 없습니다."
+            )
+        }
     }
 
 }
