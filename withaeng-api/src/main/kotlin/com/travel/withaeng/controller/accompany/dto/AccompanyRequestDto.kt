@@ -84,43 +84,14 @@ data class UpdateAccompanyRequest(
     @Schema(description = "동행 게시글 내용")
     val content: String? = null,
 
-    @Schema(description = "동행 목적지의 대륙")
-    val continent: String? = null,
-
-    @Schema(description = "동행 목적지의 나라")
-    val country: String? = null,
-
-    @Schema(description = "동행 목적지의 도시")
-    val city: String? = null,
-
-    @Schema(description = "동행 시작 날짜 (1999-01-01)")
-    val startTripDate: LocalDate? = null,
-
-    @Schema(description = "동행 종료 날짜 (1999-01-01)")
-    val endTripDate: LocalDate? = null,
-
     @Schema(description = "동행 게시글 배너 이미지 URL")
     val bannerImageUrl: String? = null,
-
-    @Schema(description = "동행 멤버수")
-    val memberCount: Long? = null,
 
     @Schema(description = "동행 게시글에 부착할 태그 아이디 리스트")
     val tagIds: Set<Long>? = null,
 
     @Schema(description = "동행 게시글에 게시된 오픈 카카오톡 URL")
     val openKakaoUrl: String? = null,
-
-    @Schema(description = "동행 시작 연령(누구나 가능의 경우 0)")
-    @JsonDeserialize(using = AccompanyAgeDeserializer::class)
-    val startAccompanyAge: AccompanyAge? = null,
-
-    @Schema(description = "동행 시작 연령(누구나 가능의 경우 99)")
-    @JsonDeserialize(using = AccompanyAgeDeserializer::class)
-    val endAccompanyAge: AccompanyAge? = null,
-
-    @Schema(description = "동행 선호 성별")
-    val preferGender: UserPreferAccompanyGender? = null,
 )
 
 fun UpdateAccompanyRequest.toServiceRequest(
@@ -131,16 +102,7 @@ fun UpdateAccompanyRequest.toServiceRequest(
     userId = userId,
     title = title,
     content = content,
-    continent = continent,
-    country = country,
-    city = city,
-    startTripDate = startTripDate,
-    endTripDate = endTripDate,
     bannerImageUrl = bannerImageUrl,
-    memberCount = memberCount,
     tagIds = tagIds,
     openKakaoUrl = openKakaoUrl,
-    startAccompanyAge = startAccompanyAge,
-    endAccompanyAge = endAccompanyAge,
-    preferGender = preferGender,
 )

@@ -23,16 +23,9 @@ data class UpdateAccompanyDto(
     val accompanyId: Long,
     val title: String? = null,
     val content: String? = null,
-    val destination: AccompanyDestination? = null,
-    val startTripDate: LocalDate? = null,
-    val endTripDate: LocalDate? = null,
     val bannerImageUrl: String? = null,
-    val memberCount: Long? = null,
     val tagIds: Set<Long>? = null,
     val openKakaoUrl: String? = null,
-    val startAccompanyAge: AccompanyAge? = null,
-    val endAccompanyAge: AccompanyAge? = null,
-    val preferGender: UserPreferAccompanyGender? = null,
 )
 
 data class AccompanyDto(

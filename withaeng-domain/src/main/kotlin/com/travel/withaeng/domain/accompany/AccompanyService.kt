@@ -33,15 +33,8 @@ class AccompanyService(
         accompany.update(
             title = params.title,
             content = params.content,
-            startTripDate = params.startTripDate,
-            endTripDate = params.endTripDate,
             bannerImageUrl = params.bannerImageUrl,
-            memberCount = params.memberCount,
             openKakaoUrl = params.openKakaoUrl,
-            accompanyDestination = params.destination,
-            startAccompanyAge = params.startAccompanyAge?.value,
-            endAccompanyAge = params.endAccompanyAge?.value,
-            preferGender = params.preferGender,
             tagIds = params.tagIds,
         )
 
