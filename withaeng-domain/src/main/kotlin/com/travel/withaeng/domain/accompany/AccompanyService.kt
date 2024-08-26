@@ -25,11 +25,7 @@ class AccompanyService(
 
     @Transactional
     fun update(params: UpdateAccompanyDto): AccompanyDto {
-        val accompany = accompanyRepository.findByIdOrNull(params.accompanyId) ?: throw WithaengException.of(
-            type = WithaengExceptionType.NOT_EXIST,
-            message = NOT_EXIST_MESSAGE
-        )
-
+        val accompany = findById(params.accompanyId)
         accompany.update(
             title = params.title,
             content = params.content,
@@ -41,13 +37,25 @@ class AccompanyService(
         return accompany.toDto()
     }
 
-    fun getDetail(accompanyId: Long): FindAccompanyDto {
+    fun detail(accompanyId: Long): FindAccompanyDto {
         return accompanyRepository.findAccompanyDetail(accompanyId)
             ?: throw WithaengException.of(
                 type = WithaengExceptionType.NOT_EXIST,
                 message = NOT_EXIST_MESSAGE
             )
     }
+
+    @Transactional
+    fun increaseViewCount(accompanyId: Long) {
+        val accompany = findById(accompanyId)
+        accompany.increaseViewCount()
+    }
+
+    private fun findById(accompanyId: Long) =
+        accompanyRepository.findByIdOrNull(accompanyId) ?: throw WithaengException.of(
+            type = WithaengExceptionType.NOT_EXIST,
+            message = NOT_EXIST_MESSAGE
+        )
 
     fun findAll(): List<AccompanyDto> {
         return accompanyRepository.findAll().map { it.toDto() }

@@ -1,6 +1,8 @@
 package com.travel.withaeng.applicationservice.accompany
 
 import com.travel.withaeng.applicationservice.accompany.dto.*
+import com.travel.withaeng.common.Events
+import com.travel.withaeng.domain.accompany.AccompanyIncrementViewCountEvent
 import com.travel.withaeng.domain.accompany.AccompanyService
 import com.travel.withaeng.domain.accompanylike.AccompanyLikeService
 import org.springframework.stereotype.Service
@@ -15,7 +17,8 @@ class AccompanyApplicationService(
 
     @Transactional
     fun create(request: CreateAccompanyServiceRequest): AccompanyResponse {
-        return accompanyService.create(request.toDomainDto()).toAccompanyResponse(0L)
+        return accompanyService.create(request.toDomainDto())
+            .toAccompanyResponse(0L)
     }
 
     @Transactional
@@ -26,7 +29,8 @@ class AccompanyApplicationService(
     }
 
     fun detail(accompanyId: Long, userId: Long?): FindAccompanyResponse {
-        val accompanyDto = accompanyService.getDetail(accompanyId)
+        increaseViewCount(accompanyId)
+        val accompanyDto = accompanyService.detail(accompanyId)
             .toAccompanyResponse()
 
         if (isHost(userId, accompanyDto.userId)) {
@@ -34,6 +38,10 @@ class AccompanyApplicationService(
         }
 
         return accompanyDto
+    }
+
+    private fun increaseViewCount(accompanyId: Long) {
+        Events.raise(AccompanyIncrementViewCountEvent(accompanyId))
     }
 
     private fun isHost(loginUserId: Long?, userId: Long) =

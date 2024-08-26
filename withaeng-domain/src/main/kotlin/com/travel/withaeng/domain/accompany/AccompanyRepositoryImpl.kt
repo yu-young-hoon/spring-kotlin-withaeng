@@ -4,6 +4,7 @@ import com.querydsl.core.types.dsl.BooleanExpression
 import com.querydsl.jpa.impl.JPAQueryFactory
 import com.travel.withaeng.domain.accompany.QAccompany.accompany
 import com.travel.withaeng.domain.accompanylike.QAccompanyLike.accompanyLike
+import com.travel.withaeng.domain.accompanystatistics.QAccompanyStatistics.accompanyStatistics
 import com.travel.withaeng.domain.user.QUser.user
 
 class AccompanyRepositoryImpl(
@@ -25,7 +26,7 @@ class AccompanyRepositoryImpl(
                     accompany.endTripDate,
                     accompany.bannerImageUrl,
                     accompany.memberCount,
-                    accompany.viewCount,
+                    accompanyStatistics.viewCount,
                     accompany.openKakaoUrl,
                     accompany.startAccompanyAge,
                     accompany.endAccompanyAge,
@@ -44,6 +45,8 @@ class AccompanyRepositoryImpl(
             .from(accompany)
             .leftJoin(accompanyLike)
             .on(accompany.id.eq(accompanyLike.accompanyId))
+            .innerJoin(accompanyStatistics)
+            .on(accompany.id.eq(accompanyStatistics.accompany.id))
             .innerJoin(user)
             .on(accompany.userId.eq(user.id))
             .where(
