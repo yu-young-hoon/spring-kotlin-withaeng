@@ -41,11 +41,12 @@ class AccompanyService(
         return accompany.toDto()
     }
 
-    fun findById(id: Long): AccompanyDto {
-        return accompanyRepository.findByIdOrNull(id)?.toDto() ?: throw WithaengException.of(
-            type = WithaengExceptionType.NOT_EXIST,
-            message = NOT_EXIST_MESSAGE
-        )
+    fun getDetail(accompanyId: Long): FindAccompanyDto {
+        return accompanyRepository.findAccompanyDetail(accompanyId)
+            ?: throw WithaengException.of(
+                type = WithaengExceptionType.NOT_EXIST,
+                message = NOT_EXIST_MESSAGE
+            )
     }
 
     fun findAll(): List<AccompanyDto> {

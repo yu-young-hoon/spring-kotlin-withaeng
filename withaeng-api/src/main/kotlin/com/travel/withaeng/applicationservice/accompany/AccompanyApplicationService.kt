@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional(readOnly = true)
 class AccompanyApplicationService(
     private val accompanyService: AccompanyService,
-    private val accompanyLikeService: AccompanyLikeService
+    private val accompanyLikeService: AccompanyLikeService,
 ) {
 
     @Transactional
@@ -25,11 +25,19 @@ class AccompanyApplicationService(
         return accompanyDto.toAccompanyResponse(likeCount)
     }
 
-    fun retrieve(accompanyId: Long): AccompanyResponse {
-        val accompanyDto = accompanyService.findById(accompanyId)
-        val likeCount = countAccompanyLikeByAccompanyId(accompanyId)
-        return accompanyDto.toAccompanyResponse(likeCount)
+    fun detail(accompanyId: Long, userId: Long?): FindAccompanyResponse {
+        val accompanyDto = accompanyService.getDetail(accompanyId)
+            .toAccompanyResponse()
+
+        if (isHost(userId, accompanyDto.userId)) {
+            // TODO : Host인 경우 승인보류 유저 목록 추가 필요
+        }
+
+        return accompanyDto
     }
+
+    private fun isHost(loginUserId: Long?, userId: Long) =
+        loginUserId == userId
 
     fun retrieveAll(): List<AccompanyResponse> {
         val accompanyDtoList = accompanyService.findAll()

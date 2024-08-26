@@ -2,6 +2,7 @@ package com.travel.withaeng.controller.accompany
 
 import com.travel.withaeng.applicationservice.accompany.AccompanyApplicationService
 import com.travel.withaeng.applicationservice.accompany.dto.AccompanyResponse
+import com.travel.withaeng.applicationservice.accompany.dto.FindAccompanyResponse
 import com.travel.withaeng.common.ApiResponse
 import com.travel.withaeng.controller.accompany.dto.CreateAccompanyRequest
 import com.travel.withaeng.controller.accompany.dto.UpdateAccompanyRequest
@@ -33,19 +34,28 @@ class AccompanyController(
         @GetAuth userInfo: UserInfo,
         @RequestBody @Valid request: CreateAccompanyRequest
     ): ApiResponse<AccompanyResponse> {
-        return ApiResponse.success(accompanyApplicationService.create(request.toServiceRequest(userInfo.id)))
+        return ApiResponse.success(
+            accompanyApplicationService.create(request.toServiceRequest(userInfo.id))
+        )
     }
 
     @Operation(summary = "Retrieve Accompany API", description = "동행 게시글 단건 조회 API")
     @GetMapping("/{accompanyId}")
-    fun retrieve(@PathVariable("accompanyId") accompanyId: Long): ApiResponse<AccompanyResponse> {
-        return ApiResponse.success(accompanyApplicationService.retrieve(accompanyId))
+    fun retrieve(
+        @GetAuth userInfo: UserInfo?,
+        @PathVariable("accompanyId") accompanyId: Long
+    ): ApiResponse<FindAccompanyResponse> {
+        return ApiResponse.success(
+            accompanyApplicationService.detail(accompanyId, userInfo?.id)
+        )
     }
 
     @Operation(summary = "Retrieve All Accompany API", description = "모든 동행 게시글 조회 API")
     @GetMapping("/all")
     fun retrieveAll(): ApiResponse<List<AccompanyResponse>> {
-        return ApiResponse.success(accompanyApplicationService.retrieveAll())
+        return ApiResponse.success(
+            accompanyApplicationService.retrieveAll()
+        )
     }
 
     @Operation(
