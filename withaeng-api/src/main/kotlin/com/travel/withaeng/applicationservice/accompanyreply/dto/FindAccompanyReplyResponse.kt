@@ -2,12 +2,12 @@ package com.travel.withaeng.applicationservice.accompanyreply.dto
 
 import com.travel.withaeng.domain.accompanyreply.AccompanyReplyStatus
 import com.travel.withaeng.domain.accompanyreply.FindAccompanyReplyDto
-import com.travel.withaeng.domain.user.UserBasicInfoDto
+import com.travel.withaeng.domain.accompanyreply.FindAccompanyReplyUserInfoDto
 import java.time.LocalDateTime
 
 data class FindAccompanyReplyResponse(
     val id: Long,
-    val author: UserBasicInfoDto,
+    val author: FindAccompanyReplyUserInfoDto,
     val accompanyId: Long,
     val parentId: Long? = null,
     val content: String?,

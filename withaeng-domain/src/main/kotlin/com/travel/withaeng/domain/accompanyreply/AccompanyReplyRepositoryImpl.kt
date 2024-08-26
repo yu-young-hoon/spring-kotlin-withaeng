@@ -5,7 +5,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory
 import com.travel.withaeng.domain.accompanyreply.QAccompanyReply.accompanyReply
 import com.travel.withaeng.domain.accompanyreplylike.QAccompanyReplyLike.accompanyReplyLike
 import com.travel.withaeng.domain.user.QUser.user
-import com.travel.withaeng.domain.user.QUserBasicInfoDto
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.support.PageableExecutionUtils
@@ -31,7 +30,7 @@ class AccompanyReplyRepositoryImpl(
                     accompanyReply.status,
                     accompanyReplyLike.count(),
                     accompanyReply.createdAt,
-                    QUserBasicInfoDto(
+                    QFindAccompanyReplyUserInfoDto(
                         user.id,
                         user.email,
                         user.nickname,

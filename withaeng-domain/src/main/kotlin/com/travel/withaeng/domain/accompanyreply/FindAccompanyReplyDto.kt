@@ -1,7 +1,6 @@
 package com.travel.withaeng.domain.accompanyreply
 
 import com.querydsl.core.annotations.QueryProjection
-import com.travel.withaeng.domain.user.UserBasicInfoDto
 import java.time.LocalDateTime
 
 data class FindAccompanyReplyDto @QueryProjection constructor(
@@ -12,5 +11,5 @@ data class FindAccompanyReplyDto @QueryProjection constructor(
     val status: AccompanyReplyStatus,
     val likeCount: Long = 0,
     val createdAt: LocalDateTime?,
-    val author: UserBasicInfoDto,
+    val author: FindAccompanyReplyUserInfoDto,
 )
