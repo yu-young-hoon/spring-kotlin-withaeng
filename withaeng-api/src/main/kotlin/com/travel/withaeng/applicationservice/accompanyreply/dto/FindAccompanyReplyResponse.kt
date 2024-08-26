@@ -1,15 +1,13 @@
 package com.travel.withaeng.applicationservice.accompanyreply.dto
 
-import com.travel.withaeng.applicationservice.user.dto.UserSimpleResponse
-import com.travel.withaeng.applicationservice.user.dto.toSimpleResponse
-import com.travel.withaeng.domain.accompanyreply.AccompanyReplyDto
 import com.travel.withaeng.domain.accompanyreply.AccompanyReplyStatus
-import com.travel.withaeng.domain.user.UserSimpleDto
+import com.travel.withaeng.domain.accompanyreply.FindAccompanyReplyDto
+import com.travel.withaeng.domain.accompanyreply.FindAccompanyReplyUserInfoDto
 import java.time.LocalDateTime
 
-data class AccompanyReplyResponse(
+data class FindAccompanyReplyResponse(
     val id: Long,
-    val author: UserSimpleResponse,
+    val author: FindAccompanyReplyUserInfoDto,
     val accompanyId: Long,
     val parentId: Long? = null,
     val content: String?,
@@ -18,12 +16,12 @@ data class AccompanyReplyResponse(
     val status: AccompanyReplyStatus,
 )
 
-fun AccompanyReplyDto.toResponse(userSimpleDto: UserSimpleDto, likeCount: Long = 0L): AccompanyReplyResponse {
-    return AccompanyReplyResponse(
+fun FindAccompanyReplyDto.toResponse(): FindAccompanyReplyResponse {
+    return FindAccompanyReplyResponse(
         id = id,
         accompanyId = accompanyId,
         parentId = parentId,
-        author = userSimpleDto.toSimpleResponse(),
+        author = author,
         content = content,
         likeCount = likeCount,
         createdAt = createdAt,

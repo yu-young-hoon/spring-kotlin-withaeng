@@ -14,7 +14,7 @@ fun Page<*>.toPaging(): Paging = Paging(
     offset = pageable.offset
 )
 
-interface PagingResponse<T> {
-    fun getPaging(): Paging
-    fun getContent(): T
-}
+class PagingResponse<T>(
+    val content: T,
+    val paging: Paging
+)
