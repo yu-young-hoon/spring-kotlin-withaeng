@@ -21,11 +21,8 @@ data class CreateAccompanyDto(
 
 data class UpdateAccompanyDto(
     val accompanyId: Long,
-    val title: String? = null,
     val content: String? = null,
-    val bannerImageUrl: String? = null,
     val tagIds: Set<Long>? = null,
-    val openKakaoUrl: String? = null,
 )
 
 data class AccompanyDto(

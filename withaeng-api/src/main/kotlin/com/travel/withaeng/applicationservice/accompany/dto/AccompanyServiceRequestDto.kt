@@ -45,21 +45,15 @@ fun CreateAccompanyServiceRequest.toDomainDto(): CreateAccompanyDto = CreateAcco
 data class UpdateAccompanyServiceRequest(
     val accompanyId: Long,
     val userId: Long,
-    val title: String? = null,
     val content: String? = null,
-    val bannerImageUrl: String? = null,
     val tagIds: Set<Long>? = null,
-    val openKakaoUrl: String? = null,
 )
 
 fun UpdateAccompanyServiceRequest.toDomainDto(): UpdateAccompanyDto {
     return UpdateAccompanyDto(
         accompanyId = accompanyId,
-        title = title,
         content = content,
-        bannerImageUrl = bannerImageUrl,
         tagIds = tagIds?.toSet(),
-        openKakaoUrl = openKakaoUrl,
     )
 }
 

@@ -82,16 +82,10 @@ class Accompany(
     }
 
     fun update(
-        title: String?,
         content: String?,
-        bannerImageUrl: String?,
-        openKakaoUrl: String?,
         tagIds: Set<Long>?
     ) {
-        this.title = title ?: this.title
         this.content = content ?: this.content
-        this.bannerImageUrl = bannerImageUrl ?: this.bannerImageUrl
-        this.openKakaoUrl = openKakaoUrl ?: this.openKakaoUrl
         this.tagIds = tagIds ?: this.tagIds
     }
 

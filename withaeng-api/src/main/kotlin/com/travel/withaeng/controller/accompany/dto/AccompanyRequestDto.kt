@@ -78,20 +78,11 @@ fun CreateAccompanyRequest.toServiceRequest(
 )
 
 data class UpdateAccompanyRequest(
-    @Schema(description = "동행 게시글 제목")
-    val title: String? = null,
-
     @Schema(description = "동행 게시글 내용")
     val content: String? = null,
 
-    @Schema(description = "동행 게시글 배너 이미지 URL")
-    val bannerImageUrl: String? = null,
-
     @Schema(description = "동행 게시글에 부착할 태그 아이디 리스트")
     val tagIds: Set<Long>? = null,
-
-    @Schema(description = "동행 게시글에 게시된 오픈 카카오톡 URL")
-    val openKakaoUrl: String? = null,
 )
 
 fun UpdateAccompanyRequest.toServiceRequest(
@@ -100,9 +91,6 @@ fun UpdateAccompanyRequest.toServiceRequest(
 ): UpdateAccompanyServiceRequest = UpdateAccompanyServiceRequest(
     accompanyId = accompanyId,
     userId = userId,
-    title = title,
     content = content,
-    bannerImageUrl = bannerImageUrl,
     tagIds = tagIds,
-    openKakaoUrl = openKakaoUrl,
 )

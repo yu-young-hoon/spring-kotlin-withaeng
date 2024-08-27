@@ -27,10 +27,7 @@ class AccompanyService(
     fun update(params: UpdateAccompanyDto): AccompanyDto {
         val accompany = findById(params.accompanyId)
         accompany.update(
-            title = params.title,
             content = params.content,
-            bannerImageUrl = params.bannerImageUrl,
-            openKakaoUrl = params.openKakaoUrl,
             tagIds = params.tagIds,
         )
 
