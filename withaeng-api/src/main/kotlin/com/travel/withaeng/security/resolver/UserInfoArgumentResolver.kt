@@ -23,9 +23,9 @@ class UserInfoArgumentResolver : HandlerMethodArgumentResolver {
         mavContainer: ModelAndViewContainer?,
         webRequest: NativeWebRequest,
         binderFactory: WebDataBinderFactory?
-    ): Any {
+    ): Any? {
         return when (val authentication = SecurityContextHolder.getContext().authentication) {
-            null -> throw WithaengException.of(WithaengExceptionType.AUTH_ERROR)
+            null -> null
             is JwtAuthentication -> authentication.principal
             else -> throw WithaengException.of(
                 type = WithaengExceptionType.AUTH_ERROR,

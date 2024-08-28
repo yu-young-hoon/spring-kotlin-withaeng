@@ -25,35 +25,34 @@ class AccompanyService(
 
     @Transactional
     fun update(params: UpdateAccompanyDto): AccompanyDto {
-        val accompany = accompanyRepository.findByIdOrNull(params.accompanyId) ?: throw WithaengException.of(
-            type = WithaengExceptionType.NOT_EXIST,
-            message = NOT_EXIST_MESSAGE
-        )
-
+        val accompany = findById(params.accompanyId)
         accompany.update(
-            title = params.title,
             content = params.content,
-            startTripDate = params.startTripDate,
-            endTripDate = params.endTripDate,
-            bannerImageUrl = params.bannerImageUrl,
-            memberCount = params.memberCount,
-            openKakaoUrl = params.openKakaoUrl,
-            accompanyDestination = params.destination,
-            startAccompanyAge = params.startAccompanyAge?.value,
-            endAccompanyAge = params.endAccompanyAge?.value,
-            preferGender = params.preferGender,
             tagIds = params.tagIds,
         )
 
         return accompany.toDto()
     }
 
-    fun findById(id: Long): AccompanyDto {
-        return accompanyRepository.findByIdOrNull(id)?.toDto() ?: throw WithaengException.of(
+    fun detail(accompanyId: Long): FindAccompanyDto {
+        return accompanyRepository.findAccompanyDetail(accompanyId)
+            ?: throw WithaengException.of(
+                type = WithaengExceptionType.NOT_EXIST,
+                message = NOT_EXIST_MESSAGE
+            )
+    }
+
+    @Transactional
+    fun increaseViewCount(accompanyId: Long) {
+        val accompany = findById(accompanyId)
+        accompany.increaseViewCount()
+    }
+
+    private fun findById(accompanyId: Long) =
+        accompanyRepository.findByIdOrNull(accompanyId) ?: throw WithaengException.of(
             type = WithaengExceptionType.NOT_EXIST,
             message = NOT_EXIST_MESSAGE
         )
-    }
 
     fun findAll(): List<AccompanyDto> {
         return accompanyRepository.findAll().map { it.toDto() }

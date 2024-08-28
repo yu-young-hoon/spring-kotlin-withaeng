@@ -2,6 +2,7 @@ package com.travel.withaeng.domain.accompany
 
 import com.travel.withaeng.converter.TagIdsConverter
 import com.travel.withaeng.domain.BaseEntity
+import com.travel.withaeng.domain.accompanystatistics.AccompanyStatistics
 import com.travel.withaeng.domain.user.UserPreferAccompanyGender
 import jakarta.persistence.*
 import org.hibernate.annotations.Comment
@@ -46,10 +47,6 @@ class Accompany(
     @Comment("모집 인원")
     var memberCount: Long = 0L,
 
-    @Column(name = "view_count", nullable = false)
-    @Comment("조회수")
-    var viewCount: Long = 0L,
-
     @Column(name = "open_kakao_url", nullable = false)
     @Comment("오픈 카카오 채팅 URI")
     var openKakaoUrl: String,
@@ -73,41 +70,28 @@ class Accompany(
     @Convert(converter = TagIdsConverter::class)
     @Column(name = "tag_ids", nullable = false)
     @Comment("태그 목록")
-    var tagIds: Set<Long> = setOf()
+    var tagIds: Set<Long> = setOf(),
 
-) : BaseEntity() {
+    @OneToOne(mappedBy = "accompany", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var accompanyStatistics: AccompanyStatistics? = null,
+
+    ) : BaseEntity() {
+
+    fun increaseViewCount() {
+        this.accompanyStatistics?.increaseViewCount()
+    }
 
     fun update(
-        title: String?,
         content: String?,
-        startTripDate: LocalDate?,
-        endTripDate: LocalDate?,
-        bannerImageUrl: String?,
-        memberCount: Long?,
-        openKakaoUrl: String?,
-        accompanyDestination: AccompanyDestination?,
-        startAccompanyAge: Int?,
-        endAccompanyAge: Int?,
-        preferGender: UserPreferAccompanyGender?,
         tagIds: Set<Long>?
     ) {
-        this.title = title ?: this.title
         this.content = content ?: this.content
-        this.startTripDate = startTripDate ?: this.startTripDate
-        this.endTripDate = endTripDate ?: this.endTripDate
-        this.bannerImageUrl = bannerImageUrl ?: this.bannerImageUrl
-        this.memberCount = memberCount ?: this.memberCount
-        this.openKakaoUrl = openKakaoUrl ?: this.openKakaoUrl
-        this.accompanyDestination = accompanyDestination ?: this.accompanyDestination
-        this.startAccompanyAge = startAccompanyAge ?: this.startAccompanyAge
-        this.endAccompanyAge = endAccompanyAge ?: this.endAccompanyAge
-        this.preferGender = preferGender ?: this.preferGender
         this.tagIds = tagIds ?: this.tagIds
     }
 
     companion object {
         fun create(params: CreateAccompanyDto): Accompany {
-            return Accompany(
+            val accompany = Accompany(
                 userId = params.userId,
                 title = params.title,
                 content = params.content,
@@ -120,8 +104,10 @@ class Accompany(
                 startAccompanyAge = params.startAccompanyAge.value,
                 endAccompanyAge = params.endAccompanyAge.value,
                 preferGender = params.preferGender,
-                tagIds = params.tagIds ?: setOf()
+                tagIds = params.tagIds ?: setOf(),
             )
+            accompany.accompanyStatistics = AccompanyStatistics(accompany = accompany)
+            return accompany
         }
     }
 }

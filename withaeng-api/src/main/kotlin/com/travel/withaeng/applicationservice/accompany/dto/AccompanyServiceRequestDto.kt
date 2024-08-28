@@ -45,46 +45,15 @@ fun CreateAccompanyServiceRequest.toDomainDto(): CreateAccompanyDto = CreateAcco
 data class UpdateAccompanyServiceRequest(
     val accompanyId: Long,
     val userId: Long,
-    val title: String? = null,
     val content: String? = null,
-    val continent: String? = null,
-    val country: String? = null,
-    val city: String? = null,
-    val startTripDate: LocalDate? = null,
-    val endTripDate: LocalDate? = null,
-    val bannerImageUrl: String? = null,
-    val memberCount: Long? = null,
     val tagIds: Set<Long>? = null,
-    val openKakaoUrl: String? = null,
-    val startAccompanyAge: AccompanyAge? = null,
-    val endAccompanyAge: AccompanyAge? = null,
-    val preferGender: UserPreferAccompanyGender? = null,
 )
 
 fun UpdateAccompanyServiceRequest.toDomainDto(): UpdateAccompanyDto {
-    val destination = if (continent == null || country == null || city == null) {
-        null
-    } else {
-        AccompanyDestination(
-            continent = Continent.valueOf(continent),
-            country = Country.valueOf(country),
-            city = City.valueOf(city)
-        )
-    }
     return UpdateAccompanyDto(
         accompanyId = accompanyId,
-        title = title,
         content = content,
-        destination = destination,
-        startTripDate = startTripDate,
-        endTripDate = endTripDate,
-        bannerImageUrl = bannerImageUrl,
-        memberCount = memberCount,
         tagIds = tagIds?.toSet(),
-        openKakaoUrl = openKakaoUrl,
-        startAccompanyAge = startAccompanyAge,
-        endAccompanyAge = endAccompanyAge,
-        preferGender = preferGender,
     )
 }
 
