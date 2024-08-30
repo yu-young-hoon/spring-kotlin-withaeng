@@ -23,4 +23,3 @@ pluginManagement {
         }
     }
 }
-include("withaeng-external")
