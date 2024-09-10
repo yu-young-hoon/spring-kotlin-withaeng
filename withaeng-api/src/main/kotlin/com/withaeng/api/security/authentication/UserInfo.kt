@@ -1,7 +1,7 @@
 package com.withaeng.api.security.authentication
 
 import com.withaeng.domain.user.UserRole
-import com.withaeng.domain.user.UserSimpleDto
+import com.withaeng.domain.user.dto.UserSimpleDto
 
 data class UserInfo(
     val id: Long,

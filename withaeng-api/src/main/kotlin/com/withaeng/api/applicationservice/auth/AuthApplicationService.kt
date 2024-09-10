@@ -5,10 +5,9 @@ import com.withaeng.api.security.authentication.UserInfo
 import com.withaeng.api.security.jwt.JwtAgent
 import com.withaeng.common.exception.WithaengException
 import com.withaeng.common.exception.WithaengExceptionType
-import com.withaeng.domain.user.CreateUserDto
 import com.withaeng.domain.user.UserRole
 import com.withaeng.domain.user.UserService
-import com.withaeng.domain.user.UserSimpleDto
+import com.withaeng.domain.user.dto.UserSimpleDto
 import com.withaeng.domain.validateemail.ValidatingEmailService
 import com.withaeng.domain.validateemail.ValidatingEmailType
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -22,7 +21,7 @@ class AuthApplicationService(
     private val userService: UserService,
     private val validatingEmailService: ValidatingEmailService,
     private val jwtAgent: JwtAgent,
-    private val passwordEncoder: PasswordEncoder
+    private val passwordEncoder: PasswordEncoder,
 ) {
 
     @Transactional
@@ -39,7 +38,12 @@ class AuthApplicationService(
             userService.deleteByEmail(userEmail)
             validatingEmailService.deleteAllByUserId(userDto.id)
         }
-        val newUserDto = userService.create(request.toCreateUserDto(UserNicknameUtils.createTemporaryNickname()))
+        val newUserDto = userService.create(
+            request.toCommand(
+                UserNicknameUtils.createTemporaryNickname(),
+                passwordEncoder.encode(request.password)
+            )
+        )
         validatingEmailService.create(
             email = newUserDto.email,
             userId = newUserDto.id,
@@ -150,12 +154,4 @@ class AuthApplicationService(
             throw WithaengException.of(WithaengExceptionType.AUTHENTICATION_FAILURE)
         }
     }
-
-    private fun SignUpServiceRequest.toCreateUserDto(temporaryNickname: String): CreateUserDto = CreateUserDto(
-        email = email,
-        nickname = temporaryNickname,
-        password = passwordEncoder.encode(password),
-        birth = birth,
-        isMale = isMale
-    )
 }

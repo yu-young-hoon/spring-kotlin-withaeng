@@ -11,9 +11,9 @@ import org.springframework.data.support.PageableExecutionUtils
 
 class AccompanyReplyRepositoryImpl(
 
-    private val queryFactory: JPAQueryFactory
+    private val queryFactory: JPAQueryFactory,
 
-) : AccompanyReplyRepositoryCustom {
+    ) : AccompanyReplyRepositoryCustom {
 
     override fun findAccompanyReplyList(
         accompanyId: Long,
@@ -33,7 +33,7 @@ class AccompanyReplyRepositoryImpl(
                     QFindAccompanyReplyUserInfoDto(
                         user.id,
                         user.email,
-                        user.nickname,
+                        user.profile.nickname,
                     )
                 )
             )

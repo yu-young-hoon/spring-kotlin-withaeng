@@ -4,7 +4,7 @@ import com.withaeng.api.applicationservice.user.dto.UserSimpleResponse
 import com.withaeng.api.applicationservice.user.dto.toSimpleResponse
 import com.withaeng.domain.accompanyreply.AccompanyReplyDto
 import com.withaeng.domain.accompanyreply.AccompanyReplyStatus
-import com.withaeng.domain.user.UserSimpleDto
+import com.withaeng.domain.user.dto.UserSimpleDto
 import java.time.LocalDateTime
 
 data class AccompanyReplyResponse(
