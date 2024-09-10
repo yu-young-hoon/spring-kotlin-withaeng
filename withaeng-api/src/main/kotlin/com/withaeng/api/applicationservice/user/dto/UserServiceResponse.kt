@@ -5,42 +5,34 @@ import com.withaeng.domain.user.dto.UserDetailsDto
 import com.withaeng.domain.user.dto.UserSimpleDto
 import java.time.LocalDate
 
-data class UserSimpleResponse(
+data class UserSimpleServiceResponse(
     val id: Long,
     val email: String,
     val nickname: String,
 )
 
-fun UserSimpleDto.toSimpleResponse(): UserSimpleResponse = UserSimpleResponse(
+fun UserSimpleDto.toSimpleResponse(): UserSimpleServiceResponse = UserSimpleServiceResponse(
     id = id,
     email = email,
     nickname = profile.nickname
 )
 
-data class UserDetailsResponse(
+data class UserDetailServiceResponse(
     val id: Long,
     val email: String,
     val gender: Gender,
     val birth: LocalDate,
-    val profile: UserProfileResponse,
-    val travelPreference: UserTravelPreferenceResponse? = null,
-    val mbti: Set<UserMbti>? = emptySet(),
-    val preferTravelType: UserPreferTravelType? = null,
-    val preferTravelThemes: Set<UserPreferTravelTheme> = emptySet(),
-    val consumeStyle: UserConsumeStyle? = null,
-    val foodRestrictions: Set<UserFoodRestriction> = emptySet(),
-    val preferAccompanyGender: UserPreferAccompanyGender? = null,
-    val smokingType: UserSmokingType? = null,
-    val drinkingType: UserDrinkingType? = null,
+    val profile: UserProfileServiceResponse,
+    val travelPreference: UserTravelPreferenceServiceResponse? = null,
 )
 
-data class UserProfileResponse(
+data class UserProfileServiceResponse(
     val nickname: String,
     val introduction: String? = null,
     val profileImageUrl: String? = null,
 )
 
-data class UserTravelPreferenceResponse(
+data class UserTravelPreferenceServiceResponse(
     val mbti: Set<UserMbti>? = emptySet(),
     val preferTravelType: UserPreferTravelType? = null,
     val preferTravelThemes: Set<UserPreferTravelTheme> = emptySet(),
@@ -50,18 +42,18 @@ data class UserTravelPreferenceResponse(
     val drinkingType: UserDrinkingType? = null,
 )
 
-fun UserDetailsDto.toDetailResponse(): UserDetailsResponse = UserDetailsResponse(
+fun UserDetailsDto.toDetailResponse(): UserDetailServiceResponse = UserDetailServiceResponse(
     id = id,
     email = email,
     gender = gender,
     birth = birth,
-    profile = UserProfileResponse(
+    profile = UserProfileServiceResponse(
         nickname = profile.nickname,
         introduction = profile.introduction,
         profileImageUrl = profile.profileImageUrl,
     ),
     travelPreference = travelPreference?.let {
-        UserTravelPreferenceResponse(
+        UserTravelPreferenceServiceResponse(
             mbti = it.mbti,
             preferTravelType = it.preferTravelType,
             preferTravelThemes = it.preferTravelThemes,

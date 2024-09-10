@@ -39,4 +39,11 @@ class UserTravelPreference(
 
     @OneToOne
     val user: User,
-) : BaseEntity()
+) : BaseEntity() {
+
+    companion object {
+        fun create(user: User): UserTravelPreference {
+            return UserTravelPreference(user = user)
+        }
+    }
+}

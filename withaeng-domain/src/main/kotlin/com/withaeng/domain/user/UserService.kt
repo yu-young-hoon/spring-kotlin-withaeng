@@ -8,8 +8,17 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-@Transactional(readOnly = true)
 class UserService(private val userRepository: UserRepository) {
+
+    @Transactional(readOnly = true)
+    fun findById(id: Long): UserSimpleDto {
+        return userRepository.findByIdOrNull(id).getOrThrow().toSimpleDto()
+    }
+
+    @Transactional(readOnly = true)
+    fun findByEmailOrNull(email: String): UserSimpleDto? {
+        return userRepository.findByEmail(email)?.toSimpleDto()
+    }
 
     @Transactional
     fun create(createUserCommand: CreateUserCommand): UserSimpleDto {
@@ -24,25 +33,26 @@ class UserService(private val userRepository: UserRepository) {
         ).toSimpleDto()
     }
 
-    fun findById(id: Long): UserSimpleDto {
-        return userRepository.findByIdOrNull(id).getOrThrow().toSimpleDto()
-    }
-
-    fun findByEmailOrNull(email: String): UserSimpleDto? {
-        return userRepository.findByEmail(email)?.toSimpleDto()
+    @Transactional
+    fun updateProfile(userId: Long, command: UpdateProfileCommand): UserSimpleDto {
+        val user = userRepository.findByIdOrNull(userId).getOrThrow()
+        user.profile.nickname = command.nickname ?: user.profile.nickname
+        user.profile.introduction = command.introduction
+        user.profile.profileImageUrl = command.profileImageUrl
+        return user.toSimpleDto()
     }
 
     @Transactional
     fun updateTravelPreference(userId: Long, command: UpdateTravelPreferenceCommand): UserDetailsDto {
         val user = userRepository.findByIdOrNull(userId).getOrThrow()
-        command.nickname?.let { user.profile.nickname = it }
-        command.mbti?.let { user.travelPreference?.mbti = it.toSet() }
-        command.preferTravelType?.let { user.travelPreference?.preferTravelType = it }
-        command.preferTravelThemes?.let { user.travelPreference?.preferTravelThemes = it.toSet() }
-        command.consumeStyle?.let { user.travelPreference?.consumeStyle = it }
-        command.foodRestrictions?.let { user.travelPreference?.foodRestrictions = it.toSet() }
-        command.smokingType?.let { user.travelPreference?.smokingType = it }
-        command.drinkingType?.let { user.travelPreference?.drinkingType = it }
+        user.travelPreference = user.travelPreference ?: UserTravelPreference.create(user)
+        user.travelPreference?.mbti = command.mbti ?: emptySet()
+        user.travelPreference?.preferTravelType = command.preferTravelType
+        user.travelPreference?.preferTravelThemes = command.preferTravelThemes ?: emptySet()
+        user.travelPreference?.consumeStyle = command.consumeStyle
+        user.travelPreference?.foodRestrictions = command.foodRestrictions ?: emptySet()
+        user.travelPreference?.smokingType = command.smokingType
+        user.travelPreference?.drinkingType = command.drinkingType
         return user.toDetailsDto()
     }
 

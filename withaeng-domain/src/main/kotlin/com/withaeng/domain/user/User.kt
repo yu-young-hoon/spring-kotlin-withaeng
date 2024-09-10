@@ -24,8 +24,8 @@ class User(
     @Embedded
     val profile: UserProfile,
 
-    @OneToOne(mappedBy = "user")
-    val travelPreference: UserTravelPreference? = null,
+    @OneToOne(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var travelPreference: UserTravelPreference? = null,
 
     @Convert(converter = UserRoleConverter::class)
     @Column(name = "roles")
