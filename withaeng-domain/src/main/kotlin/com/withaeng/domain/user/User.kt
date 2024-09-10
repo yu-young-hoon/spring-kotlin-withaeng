@@ -21,6 +21,9 @@ class User(
     @Column(name = "gender", nullable = false)
     val gender: Gender,
 
+    @Column(name = "manner_score", nullable = false)
+    var mannerScore: Double = 36.5,
+    
     @Embedded
     val profile: UserProfile,
 

@@ -1,8 +1,10 @@
 package com.withaeng.api.controller.user
 
 import com.withaeng.api.applicationservice.user.UserApplicationService
-import com.withaeng.api.applicationservice.user.dto.UserDetailServiceResponse
-import com.withaeng.api.applicationservice.user.dto.UserSimpleServiceResponse
+import com.withaeng.api.applicationservice.user.dto.UserDetailResponse
+import com.withaeng.api.applicationservice.user.dto.UserSimpleResponse
+import com.withaeng.api.applicationservice.user.dto.UserStatisticalProfileResponse
+import com.withaeng.api.applicationservice.user.dto.UserTravelPreferenceResponse
 import com.withaeng.api.common.ApiResponse
 import com.withaeng.api.controller.user.dto.UpdateProfileRequest
 import com.withaeng.api.controller.user.dto.UpdateTravelPreferenceRequest
@@ -13,15 +15,40 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @Tag(name = "User", description = "유저 정보 관리 API")
 @RestController
 @RequestMapping("/api/v1/user/me")
 class UserMeController(private val userApplicationService: UserApplicationService) {
+
+    @Operation(
+        summary = "Get Statistics",
+        description = "유저 통계 정보 조회 API",
+        security = [SecurityRequirement(name = "Authorization")]
+    )
+    @GetMapping("/profile")
+    fun getProfile(
+        @GetAuth userInfo: UserInfo,
+    ): ApiResponse<UserStatisticalProfileResponse> {
+        return ApiResponse.success(
+            userApplicationService.getProfile(userInfo.id)
+        )
+    }
+
+    @Operation(
+        summary = "Get User Detail",
+        description = "유저 상세 정보 조회 API",
+        security = [SecurityRequirement(name = "Authorization")]
+    )
+    @GetMapping("/travel-preference")
+    fun getTravelPreference(
+        @GetAuth userInfo: UserInfo,
+    ): ApiResponse<UserTravelPreferenceResponse> {
+        return ApiResponse.success(
+            userApplicationService.getTravelPreference(userInfo.id)
+        )
+    }
 
     @Operation(
         summary = "Update Profile",
@@ -32,7 +59,7 @@ class UserMeController(private val userApplicationService: UserApplicationServic
     fun updateProfile(
         @GetAuth userInfo: UserInfo,
         @RequestBody @Valid request: UpdateProfileRequest,
-    ): ApiResponse<UserSimpleServiceResponse> {
+    ): ApiResponse<UserSimpleResponse> {
         return ApiResponse.success(
             userApplicationService.updateProfile(request.toServiceRequest(userInfo.id))
         )
@@ -47,7 +74,7 @@ class UserMeController(private val userApplicationService: UserApplicationServic
     fun updateTravelPreference(
         @GetAuth userInfo: UserInfo,
         @RequestBody @Valid request: UpdateTravelPreferenceRequest,
-    ): ApiResponse<UserDetailServiceResponse> {
+    ): ApiResponse<UserDetailResponse> {
         return ApiResponse.success(
             userApplicationService.updateTravelPreference(request.toServiceRequest(userInfo.id))
         )

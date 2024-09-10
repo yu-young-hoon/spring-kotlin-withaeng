@@ -1,38 +1,41 @@
 package com.withaeng.api.applicationservice.user.dto
 
 import com.withaeng.domain.user.*
-import com.withaeng.domain.user.dto.UserDetailsDto
+import com.withaeng.domain.user.dto.UserDetailDto
 import com.withaeng.domain.user.dto.UserSimpleDto
+import com.withaeng.domain.user.dto.UserTravelPreferenceDto
 import java.time.LocalDate
 
-data class UserSimpleServiceResponse(
+data class UserSimpleResponse(
     val id: Long,
     val email: String,
     val nickname: String,
 )
 
-fun UserSimpleDto.toSimpleResponse(): UserSimpleServiceResponse = UserSimpleServiceResponse(
+fun UserSimpleDto.toSimpleResponse(): UserSimpleResponse = UserSimpleResponse(
     id = id,
     email = email,
     nickname = profile.nickname
 )
 
-data class UserDetailServiceResponse(
+data class UserDetailResponse(
     val id: Long,
+    val createdDate: LocalDate,
     val email: String,
     val gender: Gender,
     val birth: LocalDate,
-    val profile: UserProfileServiceResponse,
-    val travelPreference: UserTravelPreferenceServiceResponse? = null,
+    val mannerScore: Double,
+    val profile: UserProfileResponse,
+    val travelPreference: UserTravelPreferenceResponse? = null,
 )
 
-data class UserProfileServiceResponse(
+data class UserProfileResponse(
     val nickname: String,
     val introduction: String? = null,
     val profileImageUrl: String? = null,
 )
 
-data class UserTravelPreferenceServiceResponse(
+data class UserTravelPreferenceResponse(
     val mbti: Set<UserMbti>? = emptySet(),
     val preferTravelType: UserPreferTravelType? = null,
     val preferTravelThemes: Set<UserPreferTravelTheme> = emptySet(),
@@ -42,18 +45,20 @@ data class UserTravelPreferenceServiceResponse(
     val drinkingType: UserDrinkingType? = null,
 )
 
-fun UserDetailsDto.toDetailResponse(): UserDetailServiceResponse = UserDetailServiceResponse(
+fun UserDetailDto.toDetailResponse(): UserDetailResponse = UserDetailResponse(
     id = id,
+    createdDate = createdDate,
     email = email,
     gender = gender,
     birth = birth,
-    profile = UserProfileServiceResponse(
+    mannerScore = mannerScore,
+    profile = UserProfileResponse(
         nickname = profile.nickname,
         introduction = profile.introduction,
         profileImageUrl = profile.profileImageUrl,
     ),
     travelPreference = travelPreference?.let {
-        UserTravelPreferenceServiceResponse(
+        UserTravelPreferenceResponse(
             mbti = it.mbti,
             preferTravelType = it.preferTravelType,
             preferTravelThemes = it.preferTravelThemes,
@@ -64,3 +69,46 @@ fun UserDetailsDto.toDetailResponse(): UserDetailServiceResponse = UserDetailSer
         )
     },
 )
+
+fun UserTravelPreferenceDto.toServiceResponse(): UserTravelPreferenceResponse =
+    UserTravelPreferenceResponse(
+        mbti = mbti,
+        preferTravelType = preferTravelType,
+        preferTravelThemes = preferTravelThemes,
+        consumeStyle = consumeStyle,
+        foodRestrictions = foodRestrictions,
+        smokingType = smokingType,
+        drinkingType = drinkingType
+    )
+
+data class UserStatisticalProfileResponse(
+    val id: Long,
+    val nickname: String,
+    val introduction: String? = null,
+    val gender: Gender,
+    val birth: LocalDate,
+    val profileImageUrl: String? = null,
+    val profileCompletionPercentage: Int,
+    val mannerScore: Double,
+    val accompanyCount: Int,
+    val createdAt: LocalDate,
+) {
+    companion object {
+        fun of(
+            userDetail: UserDetailDto,
+            profileCompletionPercentage: Int,
+            accompanyCount: Int,
+        ): UserStatisticalProfileResponse = UserStatisticalProfileResponse(
+            id = userDetail.id,
+            nickname = userDetail.profile.nickname,
+            introduction = userDetail.profile.introduction,
+            gender = userDetail.gender,
+            birth = userDetail.birth,
+            profileImageUrl = userDetail.profile.profileImageUrl,
+            profileCompletionPercentage = profileCompletionPercentage,
+            mannerScore = userDetail.mannerScore,
+            accompanyCount = accompanyCount,
+            createdAt = userDetail.createdDate,
+        )
+    }
+}

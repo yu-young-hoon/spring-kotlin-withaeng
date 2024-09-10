@@ -24,7 +24,7 @@ class AccompanyReplyApplicationService(
 
     @Transactional
     fun create(request: CreateAccompanyReplyServiceRequest): AccompanyReplyResponse {
-        val userSimpleDto = userService.findById(request.userId)
+        val userSimpleDto = userService.findSimpleById(request.userId)
         return accompanyReplyService.create(
             accompanyId = request.accompanyId,
             userId = request.userId,
@@ -43,7 +43,7 @@ class AccompanyReplyApplicationService(
     @Transactional
     fun update(request: UpdateAccompanyReplyServiceRequest): AccompanyReplyResponse {
         val accompanyReplyDto = accompanyReplyService.findById(request.accompanyReplyId)
-        val userSimpleDto = userService.findById(request.userId)
+        val userSimpleDto = userService.findSimpleById(request.userId)
         validateUpdate(request, accompanyReplyDto)
         val updated = accompanyReplyService.update(
             replyId = accompanyReplyDto.id,

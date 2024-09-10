@@ -6,18 +6,53 @@ import com.withaeng.domain.user.dto.*
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import kotlin.reflect.full.declaredMemberProperties
 
 @Service
 class UserService(private val userRepository: UserRepository) {
 
     @Transactional(readOnly = true)
-    fun findById(id: Long): UserSimpleDto {
+    fun findSimpleById(id: Long): UserSimpleDto {
         return userRepository.findByIdOrNull(id).getOrThrow().toSimpleDto()
+    }
+
+    @Transactional(readOnly = true)
+    fun findDetailById(id: Long): UserDetailDto {
+        return userRepository.findByIdOrNull(id).getOrThrow().toDetailDto()
     }
 
     @Transactional(readOnly = true)
     fun findByEmailOrNull(email: String): UserSimpleDto? {
         return userRepository.findByEmail(email)?.toSimpleDto()
+    }
+
+    @Transactional(readOnly = true)
+    fun getProfileCompletionPercentage(userId: Long): Int {
+        val user = userRepository.findByIdOrNull(userId).getOrThrow()
+        val profile = user.profile
+        val travelPreference = user.travelPreference
+
+        val profileFields = UserProfile::class.declaredMemberProperties.filter { it.name != "user" }
+        val travelPreferenceFields = UserTravelPreference::class.declaredMemberProperties.filter { it.name != "user" }
+
+        val totalFields = profileFields.size + travelPreferenceFields.size
+        var filledFields = 0
+
+        profileFields.forEach { field ->
+            if (field.get(profile) != null && field.get(profile) != "") {
+                filledFields++
+            }
+        }
+
+        travelPreferenceFields.forEach { field ->
+            if (travelPreference != null && field.get(travelPreference) != null
+                && field.get(travelPreference) != emptySet<Any>()
+            ) {
+                filledFields++
+            }
+        }
+
+        return ((filledFields.toDouble() / totalFields) * 100).toInt()
     }
 
     @Transactional
@@ -43,7 +78,7 @@ class UserService(private val userRepository: UserRepository) {
     }
 
     @Transactional
-    fun updateTravelPreference(userId: Long, command: UpdateTravelPreferenceCommand): UserDetailsDto {
+    fun updateTravelPreference(userId: Long, command: UpdateTravelPreferenceCommand): UserDetailDto {
         val user = userRepository.findByIdOrNull(userId).getOrThrow()
         user.travelPreference = user.travelPreference ?: UserTravelPreference.create(user)
         user.travelPreference?.mbti = command.mbti ?: emptySet()
@@ -53,7 +88,7 @@ class UserService(private val userRepository: UserRepository) {
         user.travelPreference?.foodRestrictions = command.foodRestrictions ?: emptySet()
         user.travelPreference?.smokingType = command.smokingType
         user.travelPreference?.drinkingType = command.drinkingType
-        return user.toDetailsDto()
+        return user.toDetailDto()
     }
 
     @Transactional

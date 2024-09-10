@@ -9,6 +9,7 @@ data class UserSimpleDto(
     val password: String,
     val birth: LocalDate,
     val gender: Gender,
+    val mannerScore: Double,
     val profile: UserProfileDto,
     val roles: Set<UserRole>,
 )
@@ -19,6 +20,7 @@ fun User.toSimpleDto(): UserSimpleDto = UserSimpleDto(
     password = password,
     birth = birth,
     gender = gender,
+    mannerScore = mannerScore,
     profile = UserProfileDto(
         nickname = profile.nickname,
         introduction = profile.introduction,
@@ -27,12 +29,14 @@ fun User.toSimpleDto(): UserSimpleDto = UserSimpleDto(
     roles = roles,
 )
 
-data class UserDetailsDto(
+data class UserDetailDto(
     val id: Long,
+    val createdDate: LocalDate,
     val email: String,
     val password: String,
     val birth: LocalDate,
     val gender: Gender,
+    val mannerScore: Double,
     val profile: UserProfileDto,
     val travelPreference: UserTravelPreferenceDto? = null,
     val roles: Set<UserRole>,
@@ -54,12 +58,14 @@ data class UserTravelPreferenceDto(
     val drinkingType: UserDrinkingType? = null,
 )
 
-fun User.toDetailsDto(): UserDetailsDto = UserDetailsDto(
+fun User.toDetailDto(): UserDetailDto = UserDetailDto(
     id = id,
+    createdDate = createdAt.toLocalDate(),
     email = email,
     password = password,
     birth = birth,
     gender = gender,
+    mannerScore = mannerScore,
     profile = UserProfileDto(
         nickname = profile.nickname,
         introduction = profile.introduction,

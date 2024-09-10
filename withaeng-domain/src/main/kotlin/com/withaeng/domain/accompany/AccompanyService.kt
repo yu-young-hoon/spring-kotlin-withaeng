@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional(readOnly = true)
 class AccompanyService(
     private val accompanyRepository: AccompanyRepository,
-    private val tagRepository: TagRepository
+    private val tagRepository: TagRepository,
 ) {
 
     @Transactional
@@ -48,15 +48,19 @@ class AccompanyService(
         accompany.increaseViewCount()
     }
 
+    fun findAll(): List<AccompanyDto> {
+        return accompanyRepository.findAll().map { it.toDto() }
+    }
+
+    fun countByUserId(userId: Long): Int {
+        return accompanyRepository.countByUserId(userId)
+    }
+
     private fun findById(accompanyId: Long) =
         accompanyRepository.findByIdOrNull(accompanyId) ?: throw WithaengException.of(
             type = WithaengExceptionType.NOT_EXIST,
             message = NOT_EXIST_MESSAGE
         )
-
-    fun findAll(): List<AccompanyDto> {
-        return accompanyRepository.findAll().map { it.toDto() }
-    }
 
     private fun filterValidTagIds(tagIds: Set<Long>?): Set<Long> {
         if (tagIds == null) return emptySet()
