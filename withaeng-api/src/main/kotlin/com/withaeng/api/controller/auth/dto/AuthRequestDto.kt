@@ -1,29 +1,30 @@
 package com.withaeng.api.controller.auth.dto
 
 import com.withaeng.api.applicationservice.auth.dto.*
+import com.withaeng.domain.user.Gender
 import io.swagger.v3.oas.annotations.media.Schema
 import java.time.LocalDate
 
 @Schema(description = "[Request] 회원가입")
 data class SignUpRequest(
-    @Schema(description = "남/여 성별")
-    val isMale: Boolean,
-
-    @Schema(description = "생년월일 format:[2024-05-09]")
-    val birth: LocalDate,
-
     @Schema(description = "회원가입 할 이메일")
     val email: String,
 
     @Schema(description = "회원가입 할 패스워드")
-    val password: String
+    val password: String,
+
+    @Schema(description = "생년월일 format:[2024-05-09]")
+    val birth: LocalDate,
+
+    @Schema(description = "성별")
+    val gender: Gender,
 )
 
 fun SignUpRequest.toServiceRequest(): SignUpServiceRequest = SignUpServiceRequest(
-    isMale = isMale,
-    birth = birth,
     email = email,
-    password = password
+    password = password,
+    birth = birth,
+    gender = gender,
 )
 
 @Schema(description = "[Request] 로그인")

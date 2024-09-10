@@ -3,7 +3,7 @@ package com.withaeng.api.controller.user
 import com.withaeng.api.applicationservice.user.UserApplicationService
 import com.withaeng.api.applicationservice.user.dto.UserDetailsResponse
 import com.withaeng.api.common.ApiResponse
-import com.withaeng.api.controller.user.dto.AddUserDetailsRequest
+import com.withaeng.api.controller.user.dto.UpdateTravelPreferenceRequest
 import com.withaeng.api.controller.user.dto.toServiceRequest
 import com.withaeng.api.security.authentication.UserInfo
 import com.withaeng.api.security.resolver.GetAuth
@@ -26,13 +26,13 @@ class UserController(private val userApplicationService: UserApplicationService)
         description = "유저 관련 정보 수정 API",
         security = [SecurityRequirement(name = "Authorization")]
     )
-    @PostMapping("/add-details")
-    fun addDetails(
+    @PostMapping("/travel-preference")
+    fun updateTravelPreference(
         @GetAuth userInfo: UserInfo,
-        @RequestBody @Valid request: AddUserDetailsRequest
+        @RequestBody @Valid request: UpdateTravelPreferenceRequest,
     ): ApiResponse<UserDetailsResponse> {
         return ApiResponse.success(
-            userApplicationService.addDetails(request.toServiceRequest(userInfo.id))
+            userApplicationService.updateTravelPreference(request.toServiceRequest(userInfo.id))
         )
     }
 

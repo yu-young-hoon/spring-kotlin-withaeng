@@ -2,6 +2,7 @@ package com.withaeng.domain.user
 
 import com.withaeng.common.exception.WithaengException
 import com.withaeng.common.exception.WithaengExceptionType
+import com.withaeng.domain.user.dto.*
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -11,14 +12,14 @@ import org.springframework.transaction.annotation.Transactional
 class UserService(private val userRepository: UserRepository) {
 
     @Transactional
-    fun create(createUserDto: CreateUserDto): UserSimpleDto {
+    fun create(createUserCommand: CreateUserCommand): UserSimpleDto {
         return userRepository.save(
             User.create(
-                email = createUserDto.email,
-                nickname = createUserDto.nickname,
-                password = createUserDto.password,
-                birth = createUserDto.birth,
-                isMale = createUserDto.isMale
+                email = createUserCommand.email,
+                nickname = createUserCommand.nickname,
+                password = createUserCommand.password,
+                birth = createUserCommand.birth,
+                gender = createUserCommand.gender
             )
         ).toSimpleDto()
     }
@@ -32,17 +33,16 @@ class UserService(private val userRepository: UserRepository) {
     }
 
     @Transactional
-    fun addDetails(userId: Long, addDetailsUserDto: AddDetailsUserDto): UserDetailsDto {
+    fun updateTravelPreference(userId: Long, command: UpdateTravelPreferenceCommand): UserDetailsDto {
         val user = userRepository.findByIdOrNull(userId).getOrThrow()
-        addDetailsUserDto.nickname?.let { user.nickname = it }
-        addDetailsUserDto.mbti?.let { user.mbti = it }
-        addDetailsUserDto.preferTravelType?.let { user.preferTravelType = it }
-        addDetailsUserDto.preferTravelThemes?.let { user.preferTravelThemes = it.toSet() }
-        addDetailsUserDto.consumeStyle?.let { user.consumeStyle = it }
-        addDetailsUserDto.foodRestrictions?.let { user.foodRestrictions = it.toSet() }
-        addDetailsUserDto.preferAccompanyGender?.let { user.preferAccompanyGender = it }
-        addDetailsUserDto.smokingType?.let { user.smokingType = it }
-        addDetailsUserDto.drinkingType?.let { user.drinkingType = it }
+        command.nickname?.let { user.profile.nickname = it }
+        command.mbti?.let { user.travelPreference?.mbti = it.toSet() }
+        command.preferTravelType?.let { user.travelPreference?.preferTravelType = it }
+        command.preferTravelThemes?.let { user.travelPreference?.preferTravelThemes = it.toSet() }
+        command.consumeStyle?.let { user.travelPreference?.consumeStyle = it }
+        command.foodRestrictions?.let { user.travelPreference?.foodRestrictions = it.toSet() }
+        command.smokingType?.let { user.travelPreference?.smokingType = it }
+        command.drinkingType?.let { user.travelPreference?.drinkingType = it }
         return user.toDetailsDto()
     }
 

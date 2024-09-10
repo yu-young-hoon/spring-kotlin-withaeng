@@ -9,9 +9,9 @@ import com.withaeng.domain.user.QUser.user
 
 class AccompanyRepositoryImpl(
 
-    private val queryFactory: JPAQueryFactory
+    private val queryFactory: JPAQueryFactory,
 
-) : AccompanyRepositoryCustom {
+    ) : AccompanyRepositoryCustom {
 
     override fun findAccompanyDetail(accompanyId: Long): FindAccompanyDto? {
         return queryFactory
@@ -34,10 +34,10 @@ class AccompanyRepositoryImpl(
                     accompany.tagIds,
                     accompanyLike.count(),
                     QFindAccompanyUserInfoDto(
-                        user.nickname,
-                        user.profileImageUrl,
-                        user.isMale,
-                        user.bio,
+                        user.profile.nickname,
+                        user.profile.profileImageUrl,
+                        user.gender,
+                        user.profile.introduction,
                         user.createdAt,
                     ),
                 )
