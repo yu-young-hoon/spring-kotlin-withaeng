@@ -40,7 +40,8 @@ class SecurityConfig(private val jwtAgent: JwtAgent, private val objectMapper: O
             .httpBasic { it.disable() }
             .formLogin { it.disable() }
             .authorizeHttpRequests {
-                it.anyRequest().hasAnyRole(UserRole.USER.getActualRoleName(), UserRole.ADMIN.getActualRoleName())
+                it.requestMatchers("/api/v1/auth/**").permitAll()
+                    .anyRequest().hasAnyRole(UserRole.USER.getActualRoleName(), UserRole.ADMIN.getActualRoleName())
             }
             .addFilterBefore(JwtFilter(jwtAgent, objectMapper), UsernamePasswordAuthenticationFilter::class.java)
             .exceptionHandling {
