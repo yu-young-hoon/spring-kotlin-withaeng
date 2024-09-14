@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/api/v1/accompany")
 class AccompanyController(
-    private val accompanyApplicationService: AccompanyApplicationService
+    private val accompanyApplicationService: AccompanyApplicationService,
 ) {
 
     @Operation(
@@ -32,7 +32,7 @@ class AccompanyController(
     @PostMapping
     fun create(
         @GetAuth userInfo: UserInfo,
-        @RequestBody @Valid request: CreateAccompanyRequest
+        @RequestBody @Valid request: CreateAccompanyRequest,
     ): ApiResponse<AccompanyResponse> {
         return ApiResponse.success(
             accompanyApplicationService.create(request.toServiceRequest(userInfo.id))
@@ -43,7 +43,7 @@ class AccompanyController(
     @GetMapping("/{accompanyId}")
     fun retrieve(
         @GetAuth userInfo: UserInfo?,
-        @PathVariable("accompanyId") accompanyId: Long
+        @PathVariable("accompanyId") accompanyId: Long,
     ): ApiResponse<FindAccompanyResponse> {
         return ApiResponse.success(
             accompanyApplicationService.detail(accompanyId, userInfo?.id)
@@ -67,15 +67,30 @@ class AccompanyController(
     fun update(
         @GetAuth userInfo: UserInfo,
         @PathVariable accompanyId: Long,
-        @RequestBody @Valid param: UpdateAccompanyRequest
+        @RequestBody @Valid param: UpdateAccompanyRequest,
     ): ApiResponse<AccompanyResponse> {
         return ApiResponse.success(
             accompanyApplicationService.update(
                 param.toServiceRequest(
-                    accompanyId = accompanyId,
-                    userId = userInfo.id
+                    accompanyId = accompanyId, userId = userInfo.id
                 )
             )
         )
+    }
+
+    @Operation(
+        summary = "Create AccompanyJoinRequests API",
+        description = "동행 참가 신청 API",
+        security = [SecurityRequirement(name = "Authorization")]
+    )
+    @PostMapping("/{accompanyId}/join-requests")
+    fun requestJoin(
+        @GetAuth userInfo: UserInfo,
+        @PathVariable accompanyId: Long,
+    ): ApiResponse<Unit> {
+        accompanyApplicationService.requestJoin(
+            accompanyId = accompanyId, userId = userInfo.id
+        )
+        return ApiResponse.success()
     }
 }

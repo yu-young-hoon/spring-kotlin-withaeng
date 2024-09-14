@@ -28,7 +28,10 @@ class AccompanyService(
 
     @Transactional
     fun update(params: UpdateAccompanyDto): AccompanyDto {
-        val accompany = findById(params.accompanyId)
+        val accompany = accompanyRepository.findByIdOrNull(params.accompanyId) ?: throw WithaengException.of(
+            type = WithaengExceptionType.NOT_EXIST,
+            message = NOT_EXIST_MESSAGE
+        )
         accompany.update(
             content = params.content,
             tagIds = params.tagIds,
@@ -48,7 +51,10 @@ class AccompanyService(
 
     @Transactional
     fun increaseViewCount(accompanyId: Long) {
-        val accompany = findById(accompanyId)
+        val accompany = accompanyRepository.findByIdOrNull(accompanyId) ?: throw WithaengException.of(
+            type = WithaengExceptionType.NOT_EXIST,
+            message = NOT_EXIST_MESSAGE
+        )
         accompany.increaseViewCount()
     }
 
@@ -62,11 +68,14 @@ class AccompanyService(
         return accompanyRepository.countByUserId(userId)
     }
 
-    private fun findById(accompanyId: Long) =
-        accompanyRepository.findByIdOrNull(accompanyId) ?: throw WithaengException.of(
+    @Transactional(readOnly = true)
+    fun findById(accompanyId: Long): AccompanyDto {
+        val accompany = accompanyRepository.findByIdOrNull(accompanyId) ?: throw WithaengException.of(
             type = WithaengExceptionType.NOT_EXIST,
             message = NOT_EXIST_MESSAGE
         )
+        return accompany.toDto()
+    }
 
     private fun filterValidTagIds(tagIds: Set<Long>?): Set<Long> {
         if (tagIds == null) return emptySet()

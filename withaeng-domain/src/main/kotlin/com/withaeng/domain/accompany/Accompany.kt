@@ -1,6 +1,7 @@
 package com.withaeng.domain.accompany
 
 import com.withaeng.domain.BaseEntity
+import com.withaeng.domain.accompanyrequests.AccompanyJoinRequest
 import com.withaeng.domain.accompanystatistics.AccompanyStatistics
 import com.withaeng.domain.converter.TagIdsConverter
 import com.withaeng.domain.user.UserPreferAccompanyGender
@@ -75,6 +76,9 @@ class Accompany(
     @OneToOne(mappedBy = "accompany", cascade = [CascadeType.ALL], orphanRemoval = true)
     var accompanyStatistics: AccompanyStatistics? = null,
 
+    @OneToMany(mappedBy = "accompany", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var joinRequests: MutableList<AccompanyJoinRequest> = mutableListOf(),
+
     ) : BaseEntity() {
 
     fun increaseViewCount() {
@@ -83,7 +87,7 @@ class Accompany(
 
     fun update(
         content: String?,
-        tagIds: Set<Long>?
+        tagIds: Set<Long>?,
     ) {
         this.content = content ?: this.content
         this.tagIds = tagIds ?: this.tagIds

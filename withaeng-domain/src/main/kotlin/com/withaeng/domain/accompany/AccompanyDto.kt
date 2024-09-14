@@ -30,6 +30,7 @@ data class AccompanyDto(
     val userId: Long,
     val title: String,
     val content: String,
+    val accompanyStatus: AccompanyStatus,
     val destination: AccompanyDestination,
     val startTripDate: LocalDate,
     val endTripDate: LocalDate,
@@ -48,6 +49,7 @@ fun Accompany.toDto(): AccompanyDto = AccompanyDto(
     userId = userId,
     title = title,
     content = content,
+    accompanyStatus = accompanyStatus,
     destination = accompanyDestination,
     startTripDate = startTripDate,
     endTripDate = endTripDate,
@@ -67,7 +69,7 @@ data class SearchAccompanyDto(
     var startTripDate: LocalDate, // 동행 모집 시작일시
     var endTripDate: LocalDate,   // 동행 모집 마감일시
     var pageIndex: Long,
-    var pageSize: Long
+    var pageSize: Long,
 ) {
     fun getCurrentPage(): Long {
         return (this.pageIndex - 1) * this.pageSize
