@@ -21,5 +21,5 @@ class AuthConfig {
     }
 }
 
-@ConfigurationProperties(prefix = "witheang.auth")
+@ConfigurationProperties(prefix = "withaeng.auth")
 data class AuthProperty(val jwtSecretKey: String, val jwtIssuer: String)

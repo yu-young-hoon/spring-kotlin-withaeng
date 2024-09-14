@@ -72,6 +72,7 @@ jobs:
             export DATABASE_URL=${{ secrets.DATABASE_URL }}
             export DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}
             export DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}
+            export WITHAENG_HOST=${{ secrets.WITHAENG_HOST }}
             export JWT_ISSUER=${{ secrets.JWT_ISSUER }}
             export JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
             export JASYPT_PASSWORD=${{ secrets.JASYPT_PASSWORD }}
