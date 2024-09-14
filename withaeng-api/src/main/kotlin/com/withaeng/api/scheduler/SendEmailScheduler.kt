@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
+import java.util.concurrent.TimeUnit
 
 @Component
 class SendEmailScheduler(
@@ -29,7 +30,7 @@ class SendEmailScheduler(
 
     private val log: Logger = LoggerFactory.getLogger(SendEmailScheduler::class.java)
 
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(timeUnit = TimeUnit.SECONDS, fixedDelay = 20)
     @Async("asyncSchedulerExecutor")
     @Transactional
     fun sendEmail() {
