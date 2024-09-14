@@ -17,7 +17,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
@@ -30,10 +29,6 @@ class SecurityConfig(
 
     companion object {
         private const val MAX_CORS_EXPIRE_SECONDS = 3600L
-        private val PERMIT_ALL_GET = arrayOf(
-            "/api/v1/accompany/**",
-            "/api/v1/auth/**",
-        )
     }
 
     @Bean
@@ -49,7 +44,9 @@ class SecurityConfig(
             .httpBasic { it.disable() }
             .formLogin { it.disable() }
             .authorizeHttpRequests {
-                it.requestMatchers(HttpMethod.GET, *PERMIT_ALL_GET).permitAll()
+                it
+                    .requestMatchers("/api/v1/auth/**", "/api/v1/test/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/v1/accompany/**").permitAll()
                     .anyRequest().hasAnyRole(UserRole.USER.getActualRoleName(), UserRole.ADMIN.getActualRoleName())
             }
             .addFilterBefore(JwtFilter(jwtAgent), UsernamePasswordAuthenticationFilter::class.java)
@@ -63,8 +60,7 @@ class SecurityConfig(
     @Bean
     fun webSecurityCustomizer(): WebSecurityCustomizer {
         return WebSecurityCustomizer {
-            it.ignoring().requestMatchers(*getWhiteListForSecurityConfig().toTypedArray())
-                .requestMatchers(AntPathRequestMatcher("/swagger-ui", HttpMethod.GET.name()))
+            it.ignoring().requestMatchers(HttpMethod.GET, *getWhiteListForSecurityConfig().toTypedArray())
         }
     }
 
