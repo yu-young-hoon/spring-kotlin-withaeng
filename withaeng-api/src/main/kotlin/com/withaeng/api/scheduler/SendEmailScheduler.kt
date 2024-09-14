@@ -1,7 +1,5 @@
 package com.withaeng.api.scheduler
 
-import com.withaeng.api.common.Constants.Url.CHANGING_PASSWORD_EMAIL_URL
-import com.withaeng.api.common.Constants.Url.VALIDATING_EMAIL_URL
 import com.withaeng.domain.validateemail.ValidatingEmailService
 import com.withaeng.domain.validateemail.ValidatingEmailStatus
 import com.withaeng.domain.validateemail.ValidatingEmailType
@@ -9,6 +7,7 @@ import com.withaeng.external.ses.MailSender
 import com.withaeng.external.ses.MailType
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Async
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
@@ -18,8 +17,15 @@ import java.time.LocalDateTime
 @Component
 class SendEmailScheduler(
     private val validatingEmailService: ValidatingEmailService,
-    private val mailSender: MailSender
+    private val mailSender: MailSender,
+    @Value("\${withaeng.host}")
+    private val host: String,
 ) {
+
+    companion object {
+        private const val EMAIL_VALIDATE_REDIRECT_PATH = "/check-email"
+        private const val CHANGE_PASSWORD_REDIRECT_PATH = "/check-email-pw"
+    }
 
     private val log: Logger = LoggerFactory.getLogger(SendEmailScheduler::class.java)
 
@@ -47,9 +53,10 @@ class SendEmailScheduler(
     }
 
     private fun ValidatingEmailType.toMailType(): MailType =
-        if (this == ValidatingEmailType.CHANGE_PASSWORD) MailType.CHANGE_PASSWORD
-        else MailType.VALIDATE_EMAIL
+        if (this == ValidatingEmailType.CHANGE_PASSWORD)
+            MailType.CHANGE_PASSWORD else MailType.VALIDATE_EMAIL
 
     private fun ValidatingEmailType.toValidatingUrl(): String =
-        if (this == ValidatingEmailType.CHANGE_PASSWORD) CHANGING_PASSWORD_EMAIL_URL else VALIDATING_EMAIL_URL
+        if (this == ValidatingEmailType.CHANGE_PASSWORD)
+            host + EMAIL_VALIDATE_REDIRECT_PATH else host + CHANGE_PASSWORD_REDIRECT_PATH
 }
