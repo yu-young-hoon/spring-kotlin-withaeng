@@ -1,6 +1,5 @@
 package com.withaeng.api.config
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.withaeng.api.common.WhiteList.getWhiteListForSecurityConfig
 import com.withaeng.api.security.handler.HttpStatusAccessDeniedHandler
 import com.withaeng.api.security.handler.HttpStatusAuthenticationEntryPoint
@@ -25,7 +24,17 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfig(private val jwtAgent: JwtAgent, private val objectMapper: ObjectMapper) {
+class SecurityConfig(
+    private val jwtAgent: JwtAgent,
+) {
+
+    companion object {
+        private const val MAX_CORS_EXPIRE_SECONDS = 3600L
+        private val PERMIT_ALL_GET = arrayOf(
+            "/api/v1/accompany/**",
+            "/api/v1/auth/**",
+        )
+    }
 
     @Bean
     fun passwordEncoder(): PasswordEncoder {
@@ -40,10 +49,10 @@ class SecurityConfig(private val jwtAgent: JwtAgent, private val objectMapper: O
             .httpBasic { it.disable() }
             .formLogin { it.disable() }
             .authorizeHttpRequests {
-                it.requestMatchers("/api/v1/auth/**").permitAll()
+                it.requestMatchers(HttpMethod.GET, *PERMIT_ALL_GET).permitAll()
                     .anyRequest().hasAnyRole(UserRole.USER.getActualRoleName(), UserRole.ADMIN.getActualRoleName())
             }
-            .addFilterBefore(JwtFilter(jwtAgent, objectMapper), UsernamePasswordAuthenticationFilter::class.java)
+            .addFilterBefore(JwtFilter(jwtAgent), UsernamePasswordAuthenticationFilter::class.java)
             .exceptionHandling {
                 it.authenticationEntryPoint(HttpStatusAuthenticationEntryPoint())
                 it.accessDeniedHandler(HttpStatusAccessDeniedHandler())
@@ -72,9 +81,5 @@ class SecurityConfig(private val jwtAgent: JwtAgent, private val objectMapper: O
         return UrlBasedCorsConfigurationSource().apply {
             registerCorsConfiguration("api/v1/**", configuration)
         }
-    }
-
-    companion object {
-        private const val MAX_CORS_EXPIRE_SECONDS = 3600L
     }
 }

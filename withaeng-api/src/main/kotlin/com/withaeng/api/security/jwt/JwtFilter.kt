@@ -1,7 +1,5 @@
 package com.withaeng.api.security.jwt
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.withaeng.api.common.ApiResponse
 import com.withaeng.api.common.Constants.Authentication.BEARER_TYPE
 import com.withaeng.api.security.authentication.JwtAuthentication
 import com.withaeng.common.exception.WithaengException
@@ -12,37 +10,34 @@ import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpStatus
-import org.springframework.http.MediaType
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.filter.OncePerRequestFilter
 
 class JwtFilter(
     private val jwtAgent: JwtAgent,
-    private val objectMapper: ObjectMapper
 ) : OncePerRequestFilter() {
 
     private val log: Logger = LoggerFactory.getLogger(JwtFilter::class.java)
 
+    companion object {
+        private const val AUTH_PROVIDER_SPLIT_DELIMITER: String = " "
+        private const val ATTRIBUTE = "token_exception_message"
+    }
+
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        filterChain: FilterChain
+        filterChain: FilterChain,
     ) {
         log.debug("JWT Filter doFilterInternal()")
-        runCatching {
+        try {
             setAuthenticationFromToken(request)
-        }.onFailure { exception ->
+        } catch (exception: Exception) {
             log.debug("Authentication Failed: Authorization value=${request.getAuthorization()}, Message=${exception.message}")
             SecurityContextHolder.clearContext()
-            response.run {
-                status = HttpStatus.UNAUTHORIZED.value()
-                addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                val failResponse = ApiResponse.fail(WithaengExceptionType.AUTHENTICATION_FAILURE, exception.message)
-                writer.write(objectMapper.writeValueAsString(failResponse))
-            }
-        }.onSuccess {
+            request.setAttribute(ATTRIBUTE, exception.message)
+        } finally {
             filterChain.doFilter(request, response)
         }
     }
@@ -67,8 +62,4 @@ class JwtFilter(
     }
 
     private fun HttpServletRequest.getAuthorization(): String? = getHeader(HttpHeaders.AUTHORIZATION)
-
-    companion object {
-        private const val AUTH_PROVIDER_SPLIT_DELIMITER: String = " "
-    }
 }

@@ -8,11 +8,14 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-@Transactional(readOnly = true)
 class AccompanyService(
     private val accompanyRepository: AccompanyRepository,
     private val tagRepository: TagRepository,
 ) {
+
+    companion object {
+        private const val NOT_EXIST_MESSAGE = "해당하는 동행을 찾을 수 없습니다."
+    }
 
     @Transactional
     fun create(params: CreateAccompanyDto): AccompanyDto {
@@ -34,6 +37,7 @@ class AccompanyService(
         return accompany.toDto()
     }
 
+    @Transactional(readOnly = true)
     fun detail(accompanyId: Long): FindAccompanyDto {
         return accompanyRepository.findAccompanyDetail(accompanyId)
             ?: throw WithaengException.of(
@@ -48,10 +52,12 @@ class AccompanyService(
         accompany.increaseViewCount()
     }
 
+    @Transactional(readOnly = true)
     fun findAll(): List<AccompanyDto> {
         return accompanyRepository.findAll().map { it.toDto() }
     }
 
+    @Transactional(readOnly = true)
     fun countByUserId(userId: Long): Int {
         return accompanyRepository.countByUserId(userId)
     }
@@ -67,9 +73,5 @@ class AccompanyService(
         return tagRepository.findAllById(tagIds)
             .map { it.id }
             .toSet()
-    }
-
-    companion object {
-        private const val NOT_EXIST_MESSAGE = "해당하는 동행을 찾을 수 없습니다."
     }
 }
