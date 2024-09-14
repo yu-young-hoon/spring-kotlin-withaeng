@@ -5,6 +5,7 @@ import com.withaeng.api.security.authentication.UserInfo
 import com.withaeng.common.exception.WithaengException
 import com.withaeng.common.exception.WithaengExceptionType
 import org.springframework.core.MethodParameter
+import org.springframework.security.authentication.AnonymousAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.support.WebDataBinderFactory
 import org.springframework.web.context.request.NativeWebRequest
@@ -22,10 +23,10 @@ class UserInfoArgumentResolver : HandlerMethodArgumentResolver {
         parameter: MethodParameter,
         mavContainer: ModelAndViewContainer?,
         webRequest: NativeWebRequest,
-        binderFactory: WebDataBinderFactory?
+        binderFactory: WebDataBinderFactory?,
     ): Any? {
         return when (val authentication = SecurityContextHolder.getContext().authentication) {
-            null -> null
+            is AnonymousAuthenticationToken -> null
             is JwtAuthentication -> authentication.principal
             else -> throw WithaengException.of(
                 type = WithaengExceptionType.AUTH_ERROR,
