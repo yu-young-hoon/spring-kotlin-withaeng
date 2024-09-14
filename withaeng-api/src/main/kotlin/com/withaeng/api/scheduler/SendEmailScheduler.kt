@@ -54,10 +54,10 @@ class SendEmailScheduler(
     }
 
     private fun ValidatingEmailType.toMailType(): MailType =
-        if (this == ValidatingEmailType.CHANGE_PASSWORD)
-            MailType.CHANGE_PASSWORD else MailType.VALIDATE_EMAIL
+        if (this == ValidatingEmailType.VALIDATE_EMAIL)
+            MailType.VALIDATE_EMAIL else MailType.CHANGE_PASSWORD
 
     private fun ValidatingEmailType.toValidatingUrl(): String =
-        if (this == ValidatingEmailType.CHANGE_PASSWORD)
+        if (this == ValidatingEmailType.VALIDATE_EMAIL)
             host + EMAIL_VALIDATE_REDIRECT_PATH else host + CHANGE_PASSWORD_REDIRECT_PATH
 }
