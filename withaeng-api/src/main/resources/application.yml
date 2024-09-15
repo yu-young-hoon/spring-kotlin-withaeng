@@ -12,35 +12,21 @@ withaeng:
     jwt-issuer: ${JWT_ISSUER}
     jwt-secret-key: ${JWT_SECRET_KEY}
 
+springdoc: # todo: 개발 종료 후 prod 에서는 비활성화
+  swagger-ui:
+    path: /api-docs
+    operations-sorter: alpha
+  api-docs:
+    groups:
+      enabled: true
+
 jasypt.encryptor.password: ${JASYPT_PASSWORD}
 
 ---
 spring.config.activate.on-profile: local
 
-springdoc:
-  swagger-ui:
-    path: /api-docs
-    operations-sorter: alpha
-  api-docs:
-    groups:
-      enabled: true
-
 ---
 spring.config.activate.on-profile: dev
 
-springdoc:
-  swagger-ui:
-    path: /api-docs
-    operations-sorter: alpha
-  api-docs:
-    groups:
-      enabled: true
-
 ---
 spring.config.activate.on-profile: prod
-
-springdoc:
-  swagger-ui:
-    enabled: false
-  api-docs:
-    enabled: false
