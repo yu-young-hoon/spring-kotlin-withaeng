@@ -19,7 +19,7 @@ data class FindAccompanyDto @QueryProjection constructor(
     val startAccompanyAge: Int,
     val endAccompanyAge: Int,
     val preferGender: UserPreferAccompanyGender,
-    val tagIds: Set<Long>? = emptySet(),
+    val tags: Set<String>? = emptySet(),
     val likeCount: Long = 0,
     val author: FindAccompanyUserInfoDto,
 )
