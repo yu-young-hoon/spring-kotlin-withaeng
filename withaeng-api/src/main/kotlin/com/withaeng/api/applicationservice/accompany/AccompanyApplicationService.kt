@@ -1,7 +1,10 @@
 package com.withaeng.api.applicationservice.accompany
 
 import com.withaeng.api.applicationservice.accompany.dto.*
+import com.withaeng.common.exception.WithaengException
+import com.withaeng.common.exception.WithaengExceptionType
 import com.withaeng.domain.accompany.AccompanyService
+import com.withaeng.domain.accompanyjoinrequests.AccompanyJoinRequestService
 import com.withaeng.domain.accompanylike.AccompanyLikeService
 import org.springframework.stereotype.Service
 
@@ -9,6 +12,7 @@ import org.springframework.stereotype.Service
 class AccompanyApplicationService(
     private val accompanyService: AccompanyService,
     private val accompanyLikeService: AccompanyLikeService,
+    private val accompanyJoinRequestService: AccompanyJoinRequestService,
 ) {
 
     fun create(request: CreateAccompanyServiceRequest): AccompanyResponse {
@@ -52,5 +56,21 @@ class AccompanyApplicationService(
 
     private fun countAccompanyLikeByAccompanyId(accompanyId: Long): Long {
         return accompanyLikeService.countByAccompanyId(accompanyId)
+    }
+
+    fun requestJoin(accompanyId: Long, userId: Long) {
+        val accompanyDto = accompanyService.findById(accompanyId)
+        validateCreator(accompanyDto.userId, userId)
+        accompanyJoinRequestService.create(accompanyId, userId)
+    }
+
+
+    private fun validateCreator(createUserId: Long, requestUserId: Long) {
+        if (createUserId == requestUserId) {
+            throw WithaengException.of(
+                type = WithaengExceptionType.ACCESS_DENIED,
+                message = "본인의 동행은 신청할 수 없습니다."
+            )
+        }
     }
 }
