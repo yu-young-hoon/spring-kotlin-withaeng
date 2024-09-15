@@ -3,7 +3,7 @@ package com.withaeng.domain.accompany
 import com.withaeng.domain.BaseEntity
 import com.withaeng.domain.accompanyrequests.AccompanyJoinRequest
 import com.withaeng.domain.accompanystatistics.AccompanyStatistics
-import com.withaeng.domain.converter.TagIdsConverter
+import com.withaeng.domain.converter.AccompanyTagsConverter
 import com.withaeng.domain.user.UserPreferAccompanyGender
 import jakarta.persistence.*
 import org.hibernate.annotations.Comment
@@ -68,10 +68,10 @@ class Accompany(
     @Comment("동행 선호 성별")
     var preferGender: UserPreferAccompanyGender,
 
-    @Convert(converter = TagIdsConverter::class)
-    @Column(name = "tag_ids", nullable = false)
+    @Convert(converter = AccompanyTagsConverter::class)
+    @Column(name = "tags", nullable = false)
     @Comment("태그 목록")
-    var tagIds: Set<Long> = setOf(),
+    var tags: Set<String> = setOf(),
 
     @OneToOne(mappedBy = "accompany", cascade = [CascadeType.ALL], orphanRemoval = true)
     var accompanyStatistics: AccompanyStatistics? = null,
@@ -87,10 +87,10 @@ class Accompany(
 
     fun update(
         content: String?,
-        tagIds: Set<Long>?,
+        tags: Set<String>?,
     ) {
         this.content = content ?: this.content
-        this.tagIds = tagIds ?: this.tagIds
+        this.tags = tags ?: this.tags
     }
 
     fun updateStatusToComplete() {
@@ -112,7 +112,7 @@ class Accompany(
                 startAccompanyAge = params.startAccompanyAge.value,
                 endAccompanyAge = params.endAccompanyAge.value,
                 preferGender = params.preferGender,
-                tagIds = params.tagIds ?: setOf(),
+                tags = params.tags ?: setOf(),
             )
             accompany.accompanyStatistics = AccompanyStatistics(accompany = accompany)
             return accompany

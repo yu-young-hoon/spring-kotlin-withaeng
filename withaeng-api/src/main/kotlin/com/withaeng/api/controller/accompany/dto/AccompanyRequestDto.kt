@@ -1,11 +1,11 @@
 package com.withaeng.api.controller.accompany.dto
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import com.withaeng.api.applicationservice.accompany.dto.CreateAccompanyServiceRequest
+import com.withaeng.api.applicationservice.accompany.dto.UpdateAccompanyServiceRequest
 import com.withaeng.domain.accompany.AccompanyAge
 import com.withaeng.domain.accompany.AccompanyAgeDeserializer
 import com.withaeng.domain.user.UserPreferAccompanyGender
-import com.withaeng.api.applicationservice.accompany.dto.CreateAccompanyServiceRequest
-import com.withaeng.api.applicationservice.accompany.dto.UpdateAccompanyServiceRequest
 import io.swagger.v3.oas.annotations.media.Schema
 import java.time.LocalDate
 
@@ -39,7 +39,7 @@ data class CreateAccompanyRequest(
     val memberCount: Long,
 
     @Schema(description = "동행 게시글에 부착할 태그 아이디 리스트")
-    val tagIds: Set<Long>? = emptySet(),
+    val tags: Set<String>? = emptySet(),
 
     @Schema(description = "동행 게시글에 게시된 오픈 카카오톡 URL")
     val openKakaoUrl: String,
@@ -58,7 +58,7 @@ data class CreateAccompanyRequest(
 
 @Schema(description = "[Request] 동행 게시글 수정")
 fun CreateAccompanyRequest.toServiceRequest(
-    userId: Long
+    userId: Long,
 ): CreateAccompanyServiceRequest = CreateAccompanyServiceRequest(
     userId = userId,
     title = title,
@@ -70,7 +70,7 @@ fun CreateAccompanyRequest.toServiceRequest(
     endTripDate = endTripDate,
     bannerImageUrl = bannerImageUrl,
     memberCount = memberCount,
-    tagIds = tagIds,
+    tags = tags,
     openKakaoUrl = openKakaoUrl,
     startAccompanyAge = startAccompanyAge,
     endAccompanyAge = endAccompanyAge,
@@ -82,15 +82,15 @@ data class UpdateAccompanyRequest(
     val content: String? = null,
 
     @Schema(description = "동행 게시글에 부착할 태그 아이디 리스트")
-    val tagIds: Set<Long>? = null,
+    val tags: Set<String>? = null,
 )
 
 fun UpdateAccompanyRequest.toServiceRequest(
     accompanyId: Long,
-    userId: Long
+    userId: Long,
 ): UpdateAccompanyServiceRequest = UpdateAccompanyServiceRequest(
     accompanyId = accompanyId,
     userId = userId,
     content = content,
-    tagIds = tagIds,
+    tags = tags,
 )

@@ -21,7 +21,7 @@ data class FindAccompanyResponse(
     val startAccompanyAge: Int,
     val endAccompanyAge: Int,
     val preferGender: UserPreferAccompanyGender,
-    val tagIds: Set<Long>? = emptySet(),
+    val tags: Set<String>? = emptySet(),
     val likeCount: Long = 0,
     val author: FindAccompanyUserInfoDto,
     val approvalPendingUsers: Set<FindAccompanyUserInfoDto>? = null,
@@ -43,6 +43,6 @@ fun FindAccompanyDto.toAccompanyResponse() = FindAccompanyResponse(
     startAccompanyAge = startAccompanyAge,
     endAccompanyAge = endAccompanyAge,
     preferGender = preferGender,
-    tagIds = tagIds,
+    tags = tags,
     author = author,
 )

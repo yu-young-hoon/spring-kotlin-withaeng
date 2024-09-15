@@ -31,7 +31,7 @@ class AccompanyRepositoryImpl(
                     accompany.startAccompanyAge,
                     accompany.endAccompanyAge,
                     accompany.preferGender,
-                    accompany.tagIds,
+                    accompany.tags,
                     accompanyLike.count(),
                     QFindAccompanyUserInfoDto(
                         user.profile.nickname,

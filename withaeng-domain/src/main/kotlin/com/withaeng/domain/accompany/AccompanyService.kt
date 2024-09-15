@@ -2,7 +2,6 @@ package com.withaeng.domain.accompany
 
 import com.withaeng.common.exception.WithaengException
 import com.withaeng.common.exception.WithaengExceptionType
-import com.withaeng.domain.tag.TagRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -10,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class AccompanyService(
     private val accompanyRepository: AccompanyRepository,
-    private val tagRepository: TagRepository,
 ) {
 
     companion object {
@@ -19,9 +17,7 @@ class AccompanyService(
 
     @Transactional
     fun create(params: CreateAccompanyDto): AccompanyDto {
-        val actualTagIds = filterValidTagIds(params.tagIds)
-        val actualParams = params.copy(tagIds = actualTagIds)
-        val accompanyEntity = Accompany.create(actualParams)
+        val accompanyEntity = Accompany.create(params)
         accompanyRepository.save(accompanyEntity)
         return accompanyEntity.toDto()
     }
@@ -34,7 +30,7 @@ class AccompanyService(
         )
         accompany.update(
             content = params.content,
-            tagIds = params.tagIds,
+            tags = params.tags,
         )
 
         return accompany.toDto()
@@ -75,12 +71,5 @@ class AccompanyService(
             message = NOT_EXIST_MESSAGE
         )
         return accompany.toDto()
-    }
-
-    private fun filterValidTagIds(tagIds: Set<Long>?): Set<Long> {
-        if (tagIds == null) return emptySet()
-        return tagRepository.findAllById(tagIds)
-            .map { it.id }
-            .toSet()
     }
 }
