@@ -93,6 +93,10 @@ class Accompany(
         this.tagIds = tagIds ?: this.tagIds
     }
 
+    fun updateStatusToComplete() {
+        this.accompanyStatus = AccompanyStatus.COMPLETE
+    }
+
     companion object {
         fun create(params: CreateAccompanyDto): Accompany {
             val accompany = Accompany(

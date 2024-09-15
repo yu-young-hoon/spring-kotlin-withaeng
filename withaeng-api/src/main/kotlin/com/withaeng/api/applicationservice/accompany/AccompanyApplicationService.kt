@@ -39,13 +39,6 @@ class AccompanyApplicationService(
         return accompanyDto
     }
 
-    private fun increaseViewCount(accompanyId: Long) {
-        accompanyService.increaseViewCount(accompanyId)
-    }
-
-    private fun isHost(loginUserId: Long?, userId: Long) =
-        loginUserId == userId
-
     fun retrieveAll(): List<AccompanyResponse> {
         val accompanyDtoList = accompanyService.findAll()
         // TODO: Bulk로 가져오는 방법을 고안
@@ -54,22 +47,43 @@ class AccompanyApplicationService(
         }
     }
 
-    private fun countAccompanyLikeByAccompanyId(accompanyId: Long): Long {
-        return accompanyLikeService.countByAccompanyId(accompanyId)
-    }
-
     fun requestJoin(accompanyId: Long, userId: Long) {
         val accompanyDto = accompanyService.findById(accompanyId)
         validateCreator(accompanyDto.userId, userId)
         accompanyJoinRequestService.create(accompanyId, userId)
     }
 
+    fun acceptJoin(accompanyId: Long, userId: Long, joinRequestId: Long) {
+        val accompanyDto = accompanyService.findById(accompanyId)
+        validateNonCreator(accompanyDto.userId, userId)
+        accompanyJoinRequestService.acceptJoin(accompanyId, joinRequestId)
+    }
+
+    private fun increaseViewCount(accompanyId: Long) {
+        accompanyService.increaseViewCount(accompanyId)
+    }
+
+    private fun isHost(loginUserId: Long?, userId: Long) =
+        loginUserId == userId
+
+    private fun countAccompanyLikeByAccompanyId(accompanyId: Long): Long {
+        return accompanyLikeService.countByAccompanyId(accompanyId)
+    }
 
     private fun validateCreator(createUserId: Long, requestUserId: Long) {
         if (createUserId == requestUserId) {
             throw WithaengException.of(
                 type = WithaengExceptionType.ACCESS_DENIED,
                 message = "본인의 동행은 신청할 수 없습니다."
+            )
+        }
+    }
+
+    private fun validateNonCreator(createUserId: Long, requestUserId: Long) {
+        if (createUserId != requestUserId) {
+            throw WithaengException.of(
+                type = WithaengExceptionType.ACCESS_DENIED,
+                message = "접근 권한이 없습니다."
             )
         }
     }
