@@ -1,11 +1,14 @@
 package com.withaeng.api.applicationservice.accompany
 
 import com.withaeng.api.applicationservice.accompany.dto.*
+import com.withaeng.api.applicationservice.common.PagingResponse
+import com.withaeng.api.applicationservice.common.toPaging
 import com.withaeng.common.exception.WithaengException
 import com.withaeng.common.exception.WithaengExceptionType
 import com.withaeng.domain.accompany.AccompanyService
 import com.withaeng.domain.accompanyjoinrequests.AccompanyJoinRequestService
 import com.withaeng.domain.accompanylike.AccompanyLikeService
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 @Service
@@ -24,6 +27,15 @@ class AccompanyApplicationService(
         val accompanyDto = accompanyService.update(request.toDomainDto())
         val likeCount = countAccompanyLikeByAccompanyId(request.accompanyId)
         return accompanyDto.toAccompanyResponse(likeCount)
+    }
+
+    fun search(
+        pageable: Pageable,
+        request: SearchAccompanyServiceRequest,
+    ): PagingResponse<List<AccompanySummaryResponse>> {
+        val pageResult = accompanyService.search(pageable, request.toQuery())
+            .map { accompanyDto -> accompanyDto.toAccompanyResponse() }
+        return PagingResponse(pageResult.content, pageResult.toPaging())
     }
 
     fun detail(accompanyId: Long, userId: Long?): FindAccompanyResponse {
@@ -63,7 +75,6 @@ class AccompanyApplicationService(
         validateCreator(accompanyDto.userId, userId)
         accompanyJoinRequestService.create(accompanyId, userId)
     }
-
 
     private fun validateCreator(createUserId: Long, requestUserId: Long) {
         if (createUserId == requestUserId) {

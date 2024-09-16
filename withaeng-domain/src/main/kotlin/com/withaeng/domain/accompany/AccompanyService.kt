@@ -2,6 +2,9 @@ package com.withaeng.domain.accompany
 
 import com.withaeng.common.exception.WithaengException
 import com.withaeng.common.exception.WithaengExceptionType
+import com.withaeng.domain.accompany.dto.*
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -34,6 +37,11 @@ class AccompanyService(
         )
 
         return accompany.toDto()
+    }
+
+    @Transactional(readOnly = true)
+    fun search(pageable: Pageable, query: SearchAccompanyQuery): Page<SearchAccompanyDto> {
+        return accompanyRepository.searchAccompanies(pageable, query)
     }
 
     @Transactional(readOnly = true)

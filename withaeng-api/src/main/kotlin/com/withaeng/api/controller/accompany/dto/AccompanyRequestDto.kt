@@ -2,9 +2,9 @@ package com.withaeng.api.controller.accompany.dto
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.withaeng.api.applicationservice.accompany.dto.CreateAccompanyServiceRequest
+import com.withaeng.api.applicationservice.accompany.dto.SearchAccompanyServiceRequest
 import com.withaeng.api.applicationservice.accompany.dto.UpdateAccompanyServiceRequest
-import com.withaeng.domain.accompany.AccompanyAge
-import com.withaeng.domain.accompany.AccompanyAgeDeserializer
+import com.withaeng.domain.accompany.*
 import com.withaeng.domain.user.UserPreferAccompanyGender
 import io.swagger.v3.oas.annotations.media.Schema
 import java.time.LocalDate
@@ -93,4 +93,40 @@ fun UpdateAccompanyRequest.toServiceRequest(
     userId = userId,
     content = content,
     tags = tags,
+)
+
+data class SearchAccompanyRequest(
+    @Schema(description = "동행 대륙")
+    val continent: Continent? = null,
+    @Schema(description = "동행 나라")
+    val country: Country? = null,
+    @Schema(description = "동행 도시")
+    val city: City? = null,
+    @Schema(description = "동행 시작 날짜")
+    val startDate: LocalDate? = null,
+    @Schema(description = "동행 종료 날짜")
+    val endDate: LocalDate? = null,
+    @Schema(description = "동행 최소 인원")
+    val minMemberCount: Int? = null,
+    @Schema(description = "동행 최대 인원")
+    val maxMemberCount: Int? = null,
+    @Schema(description = "동행 최소 연령대")
+    val minAllowedAge: AccompanyAge? = null,
+    @Schema(description = "동행 최대 연령대")
+    val maxAllowedAge: AccompanyAge? = null,
+    @Schema(description = "동행 선호 성별")
+    val preferGender: UserPreferAccompanyGender? = null,
+)
+
+fun SearchAccompanyRequest.toServiceRequest(): SearchAccompanyServiceRequest = SearchAccompanyServiceRequest(
+    continent = continent,
+    country = country,
+    city = city,
+    startDate = startDate,
+    endDate = endDate,
+    minMemberCount = minMemberCount,
+    maxMemberCount = maxMemberCount,
+    minAllowedAge = minAllowedAge,
+    maxAllowedAge = maxAllowedAge,
+    preferGender = preferGender
 )

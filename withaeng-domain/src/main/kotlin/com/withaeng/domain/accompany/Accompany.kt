@@ -1,6 +1,7 @@
 package com.withaeng.domain.accompany
 
 import com.withaeng.domain.BaseEntity
+import com.withaeng.domain.accompany.dto.CreateAccompanyDto
 import com.withaeng.domain.accompanyrequests.AccompanyJoinRequest
 import com.withaeng.domain.accompanystatistics.AccompanyStatistics
 import com.withaeng.domain.converter.AccompanyTagsConverter

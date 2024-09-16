@@ -1,6 +1,9 @@
 package com.withaeng.api.applicationservice.accompany.dto
 
 import com.withaeng.domain.accompany.*
+import com.withaeng.domain.accompany.dto.CreateAccompanyDto
+import com.withaeng.domain.accompany.dto.SearchAccompanyQuery
+import com.withaeng.domain.accompany.dto.UpdateAccompanyDto
 import com.withaeng.domain.user.UserPreferAccompanyGender
 import java.time.LocalDate
 
@@ -58,8 +61,29 @@ fun UpdateAccompanyServiceRequest.toDomainDto(): UpdateAccompanyDto {
 }
 
 data class SearchAccompanyServiceRequest(
-    val orderBy: String,
-    val isDescending: Boolean,
-    val pageIndex: Long,
-    val pageSize: Long,
+    val continent: Continent? = null,
+    val country: Country? = null,
+    val city: City? = null,
+    val startDate: LocalDate? = null,
+    val endDate: LocalDate? = null,
+    val minMemberCount: Int? = null,
+    val maxMemberCount: Int? = null,
+    val minAllowedAge: AccompanyAge? = null,
+    val maxAllowedAge: AccompanyAge? = null,
+    val preferGender: UserPreferAccompanyGender? = null,
 )
+
+fun SearchAccompanyServiceRequest.toQuery(): SearchAccompanyQuery {
+    return SearchAccompanyQuery(
+        continent = continent,
+        country = country,
+        city = city,
+        startDate = startDate,
+        endDate = endDate,
+        minMemberCount = minMemberCount,
+        maxMemberCount = maxMemberCount,
+        minAllowedAge = minAllowedAge,
+        maxAllowedAge = maxAllowedAge,
+        preferGender = preferGender,
+    )
+}

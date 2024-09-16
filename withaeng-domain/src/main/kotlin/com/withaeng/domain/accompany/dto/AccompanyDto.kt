@@ -1,5 +1,10 @@
-package com.withaeng.domain.accompany
+package com.withaeng.domain.accompany.dto
 
+import com.querydsl.core.annotations.QueryProjection
+import com.withaeng.domain.accompany.Accompany
+import com.withaeng.domain.accompany.AccompanyAge
+import com.withaeng.domain.accompany.AccompanyDestination
+import com.withaeng.domain.accompany.AccompanyStatus
 import com.withaeng.domain.user.UserPreferAccompanyGender
 import java.time.LocalDate
 
@@ -41,7 +46,7 @@ data class AccompanyDto(
     val startAccompanyAge: AccompanyAge,
     val endAccompanyAge: AccompanyAge,
     val preferGender: UserPreferAccompanyGender,
-    val tags: Set<String>? = null,
+    val tags: Set<String>? = emptySet(),
 )
 
 fun Accompany.toDto(): AccompanyDto = AccompanyDto(
@@ -63,15 +68,21 @@ fun Accompany.toDto(): AccompanyDto = AccompanyDto(
     tags = tags,
 )
 
-data class SearchAccompanyDto(
-    var viewCntOrder: Boolean,    // 조회수 높은 순서
-    var likeCntOrder: Boolean,    // 좋아요 높은 순서
-    var startTripDate: LocalDate, // 동행 모집 시작일시
-    var endTripDate: LocalDate,   // 동행 모집 마감일시
-    var pageIndex: Long,
-    var pageSize: Long,
-) {
-    fun getCurrentPage(): Long {
-        return (this.pageIndex - 1) * this.pageSize
-    }
-}
+data class SearchAccompanyDto @QueryProjection constructor(
+    val id: Long,
+    val bannerImageUrl: String?,
+    val status: AccompanyStatus,
+    val startDate: LocalDate,
+    val endDate: LocalDate,
+    val currentMemberCount: Long,
+    val maxMemberCount: Long,
+    val title: String,
+    val tags: Set<String>? = emptySet(),
+    val host: SearchAccompanyHostDto,
+)
+
+data class SearchAccompanyHostDto @QueryProjection constructor(
+    val id: Long,
+    val nickname: String,
+    val profileImageUrl: String?,
+)
