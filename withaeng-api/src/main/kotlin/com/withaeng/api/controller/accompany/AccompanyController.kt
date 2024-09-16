@@ -2,9 +2,12 @@ package com.withaeng.api.controller.accompany
 
 import com.withaeng.api.applicationservice.accompany.AccompanyApplicationService
 import com.withaeng.api.applicationservice.accompany.dto.AccompanyResponse
+import com.withaeng.api.applicationservice.accompany.dto.AccompanySummaryResponse
 import com.withaeng.api.applicationservice.accompany.dto.FindAccompanyResponse
 import com.withaeng.api.common.ApiResponse
+import com.withaeng.api.common.PageInfoRequest
 import com.withaeng.api.controller.accompany.dto.CreateAccompanyRequest
+import com.withaeng.api.controller.accompany.dto.SearchAccompanyRequest
 import com.withaeng.api.controller.accompany.dto.UpdateAccompanyRequest
 import com.withaeng.api.controller.accompany.dto.toServiceRequest
 import com.withaeng.api.security.authentication.UserInfo
@@ -13,6 +16,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
+import org.springdoc.core.annotations.ParameterObject
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
@@ -50,6 +54,17 @@ class AccompanyController(
         )
     }
 
+    @Operation(summary = "Search Accompany", description = "동행 검색 API (필터링만 지원)")
+    @GetMapping("/search")
+    fun search(
+        @ParameterObject pageInfoRequest: PageInfoRequest,
+        @ParameterObject request: SearchAccompanyRequest,
+    ): ApiResponse<List<AccompanySummaryResponse>> {
+        return ApiResponse.success(
+            accompanyApplicationService.search(pageInfoRequest.toPageRequest(), request.toServiceRequest())
+        )
+    }
+
     @Operation(summary = "Retrieve All Accompany API", description = "모든 동행 게시글 조회 API")
     @GetMapping("/all")
     fun retrieveAll(): ApiResponse<List<AccompanyResponse>> {
@@ -72,7 +87,8 @@ class AccompanyController(
         return ApiResponse.success(
             accompanyApplicationService.update(
                 param.toServiceRequest(
-                    accompanyId = accompanyId, userId = userInfo.id
+                    accompanyId = accompanyId,
+                    userId = userInfo.id
                 )
             )
         )

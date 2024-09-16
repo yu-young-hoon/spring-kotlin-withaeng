@@ -1,8 +1,10 @@
 package com.withaeng.api.applicationservice.accompany.dto
 
 import com.withaeng.domain.accompany.AccompanyDestination
-import com.withaeng.domain.accompany.AccompanyDto
-import com.withaeng.domain.user.UserPreferAccompanyGender
+import com.withaeng.domain.accompany.AccompanyPreferGender
+import com.withaeng.domain.accompany.AccompanyStatus
+import com.withaeng.domain.accompany.dto.AccompanyDto
+import com.withaeng.domain.accompany.dto.SearchAccompanyDto
 import java.time.LocalDate
 
 data class AccompanyResponse(
@@ -21,7 +23,7 @@ data class AccompanyResponse(
     val openKakaoUrl: String? = null,
     val startAccompanyAge: Int,
     val endAccompanyAge: Int,
-    val preferGender: UserPreferAccompanyGender,
+    val preferGender: AccompanyPreferGender,
 )
 
 fun AccompanyDto.toAccompanyResponse(likeCount: Long): AccompanyResponse = AccompanyResponse(
@@ -41,4 +43,40 @@ fun AccompanyDto.toAccompanyResponse(likeCount: Long): AccompanyResponse = Accom
     endAccompanyAge = endAccompanyAge.value,
     preferGender = preferGender,
     tags = tags,
+)
+
+data class AccompanySummaryResponse(
+    val id: Long,
+    val bannerImageUrl: String?,
+    val status: AccompanyStatus,
+    val startDate: LocalDate,
+    val endDate: LocalDate,
+    val currentMemberCount: Long,
+    val maxMemberCount: Long,
+    val title: String,
+    val tags: Set<String>? = null,
+    val host: AccompanyHostSummaryResponse,
+)
+
+data class AccompanyHostSummaryResponse(
+    val id: Long,
+    val profileImageUrl: String?,
+    val nickname: String,
+)
+
+fun SearchAccompanyDto.toAccompanyResponse(): AccompanySummaryResponse = AccompanySummaryResponse(
+    id = id,
+    bannerImageUrl = bannerImageUrl,
+    status = status,
+    startDate = startDate,
+    endDate = endDate,
+    currentMemberCount = currentMemberCount,
+    maxMemberCount = maxMemberCount,
+    title = title,
+    tags = tags,
+    host = AccompanyHostSummaryResponse(
+        id = host.id,
+        nickname = host.nickname,
+        profileImageUrl = host.profileImageUrl,
+    ),
 )

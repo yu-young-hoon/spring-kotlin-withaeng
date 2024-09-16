@@ -12,7 +12,6 @@ class EnumModule : SimpleModule() {
         addSimpleEnumDeserializer<UserPreferTravelTheme>()
         addSimpleEnumDeserializer<UserConsumeStyle>()
         addSimpleEnumDeserializer<UserFoodRestriction>()
-        addSimpleEnumDeserializer<UserPreferAccompanyGender>()
         addSimpleEnumDeserializer<UserSmokingType>()
         addSimpleEnumDeserializer<UserDrinkingType>()
     }

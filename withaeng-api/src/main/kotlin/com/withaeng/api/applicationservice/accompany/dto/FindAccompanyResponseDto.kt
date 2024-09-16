@@ -1,9 +1,9 @@
 package com.withaeng.api.applicationservice.accompany.dto
 
 import com.withaeng.domain.accompany.AccompanyDestination
-import com.withaeng.domain.accompany.FindAccompanyDto
-import com.withaeng.domain.accompany.FindAccompanyUserInfoDto
-import com.withaeng.domain.user.UserPreferAccompanyGender
+import com.withaeng.domain.accompany.AccompanyPreferGender
+import com.withaeng.domain.accompany.dto.FindAccompanyDto
+import com.withaeng.domain.accompany.dto.FindAccompanyUserInfoDto
 import java.time.LocalDate
 
 data class FindAccompanyResponse(
@@ -20,7 +20,7 @@ data class FindAccompanyResponse(
     val openKakaoUrl: String,
     val startAccompanyAge: Int,
     val endAccompanyAge: Int,
-    val preferGender: UserPreferAccompanyGender,
+    val preferGender: AccompanyPreferGender,
     val tags: Set<String>? = emptySet(),
     val likeCount: Long = 0,
     val author: FindAccompanyUserInfoDto,
