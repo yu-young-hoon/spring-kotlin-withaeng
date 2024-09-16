@@ -3,12 +3,12 @@ package com.withaeng.api.applicationservice.accompany
 import com.withaeng.api.applicationservice.accompany.dto.*
 import com.withaeng.api.applicationservice.common.PagingResponse
 import com.withaeng.api.applicationservice.common.toPaging
+import com.withaeng.api.common.PageInfoRequest
 import com.withaeng.common.exception.WithaengException
 import com.withaeng.common.exception.WithaengExceptionType
 import com.withaeng.domain.accompany.AccompanyService
 import com.withaeng.domain.accompanyjoinrequests.AccompanyJoinRequestService
 import com.withaeng.domain.accompanylike.AccompanyLikeService
-import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 @Service
@@ -30,10 +30,10 @@ class AccompanyApplicationService(
     }
 
     fun search(
-        pageable: Pageable,
+        pageInfoRequest: PageInfoRequest,
         request: SearchAccompanyServiceRequest,
     ): PagingResponse<List<AccompanySummaryResponse>> {
-        val pageResult = accompanyService.search(pageable, request.toQuery())
+        val pageResult = accompanyService.search(pageInfoRequest.toPageRequest(), request.toQuery())
             .map { accompanyDto -> accompanyDto.toAccompanyResponse() }
         return PagingResponse(pageResult.content, pageResult.toPaging())
     }
