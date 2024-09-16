@@ -1,5 +1,6 @@
 package com.withaeng.domain.accompany
 
+import com.querydsl.core.types.OrderSpecifier
 import com.querydsl.core.types.dsl.BooleanExpression
 import com.querydsl.jpa.impl.JPAQueryFactory
 import com.withaeng.domain.accompany.QAccompany.accompany
@@ -84,8 +85,8 @@ class AccompanyRepositoryImpl(
                 )
             )
             .from(accompany)
-            .innerJoin(user)
-            .on(accompany.userId.eq(user.id))
+            .innerJoin(user).on(accompany.userId.eq(user.id))
+            .innerJoin(accompanyStatistics).on(accompany.id.eq(accompanyStatistics.accompany.id))
             .leftJoin(accompanyJoinRequest).on(
                 accompanyJoinRequest.accompany.eq(accompany)
                     .and(accompanyJoinRequest.status.eq(AccompanyJoinRequestStatus.ACCEPT))
@@ -104,7 +105,7 @@ class AccompanyRepositoryImpl(
                 accompany.tags
             )
             .where(
-                statusEq(AccompanyStatus.ING),
+                statusEq(query.status),
                 continentEq(query.continent),
                 countryEq(query.country),
                 cityEq(query.city),
@@ -113,7 +114,7 @@ class AccompanyRepositoryImpl(
                 containAllowedAge(query.minAllowedAge, query.maxAllowedAge),
                 preferGenderEq(query.preferGender),
             )
-            .orderBy(accompany.id.desc())
+            .orderBy(*orderSpecifiers(query.sort))
             .offset(pageable.offset)
             .limit(pageable.pageSize.toLong())
             .fetch()
@@ -140,8 +141,28 @@ class AccompanyRepositoryImpl(
         return PageableExecutionUtils.getPage(result, pageable) { countQuery.fetchOne() ?: 0L }
     }
 
-    private fun statusEq(status: AccompanyStatus): BooleanExpression? {
-        return accompany.accompanyStatus.eq(status)
+    private fun orderSpecifiers(sort: AccompanySort?): Array<OrderSpecifier<*>> {
+        return when (sort) {
+            AccompanySort.RECENT -> arrayOf(
+                accompany.createdAt.desc(),
+                accompanyStatistics.viewCount.desc(),
+            )
+
+            AccompanySort.POPULAR -> arrayOf(
+                accompanyStatistics.viewCount.desc(),
+                accompany.createdAt.desc(),
+            )
+            
+            else -> arrayOf(
+                accompany.createdAt.desc(),
+                accompanyStatistics.viewCount.desc(),
+            )
+        }
+    }
+
+
+    private fun statusEq(status: AccompanyStatus?): BooleanExpression? {
+        return status?.let { accompany.accompanyStatus.eq(it) }
     }
 
     private fun continentEq(continent: Continent?): BooleanExpression? {

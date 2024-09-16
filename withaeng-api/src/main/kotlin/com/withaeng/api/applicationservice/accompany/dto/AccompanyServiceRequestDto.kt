@@ -60,6 +60,8 @@ fun UpdateAccompanyServiceRequest.toDomainDto(): UpdateAccompanyDto {
 }
 
 data class SearchAccompanyServiceRequest(
+    val sort: AccompanySort? = null,
+    val status: AccompanyStatus? = null,
     val continent: Continent? = null,
     val country: Country? = null,
     val city: City? = null,
@@ -74,6 +76,8 @@ data class SearchAccompanyServiceRequest(
 
 fun SearchAccompanyServiceRequest.toQuery(): SearchAccompanyQuery {
     return SearchAccompanyQuery(
+        sort = sort,
+        status = status,
         continent = continent,
         country = country,
         city = city,
