@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.withaeng.api.applicationservice.accompany.dto.CreateAccompanyServiceRequest
 import com.withaeng.api.applicationservice.accompany.dto.SearchAccompanyServiceRequest
 import com.withaeng.api.applicationservice.accompany.dto.UpdateAccompanyServiceRequest
+import com.withaeng.api.common.PageInfoRequest
 import com.withaeng.domain.accompany.*
 import io.swagger.v3.oas.annotations.media.Schema
 import java.time.LocalDate
@@ -95,6 +96,10 @@ fun UpdateAccompanyRequest.toServiceRequest(
 )
 
 data class SearchAccompanyRequest(
+    @Schema(description = "요청할 페이지 번호 (0부터 시작)")
+    val page: String = "0",
+    @Schema(description = "페이지당 데이터 개수")
+    val size: String = "5",
     @Schema(description = "동행 대륙")
     val continent: Continent? = null,
     @Schema(description = "동행 나라")
@@ -116,6 +121,8 @@ data class SearchAccompanyRequest(
     @Schema(description = "동행 선호 성별")
     val preferGender: AccompanyPreferGender? = null,
 )
+
+fun SearchAccompanyRequest.toPageInfoRequest(): PageInfoRequest = PageInfoRequest(page = page, size = size)
 
 fun SearchAccompanyRequest.toServiceRequest(): SearchAccompanyServiceRequest = SearchAccompanyServiceRequest(
     continent = continent,

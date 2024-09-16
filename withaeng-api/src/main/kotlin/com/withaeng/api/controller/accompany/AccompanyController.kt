@@ -5,11 +5,7 @@ import com.withaeng.api.applicationservice.accompany.dto.AccompanyResponse
 import com.withaeng.api.applicationservice.accompany.dto.AccompanySummaryResponse
 import com.withaeng.api.applicationservice.accompany.dto.FindAccompanyResponse
 import com.withaeng.api.common.ApiResponse
-import com.withaeng.api.common.PageInfoRequest
-import com.withaeng.api.controller.accompany.dto.CreateAccompanyRequest
-import com.withaeng.api.controller.accompany.dto.SearchAccompanyRequest
-import com.withaeng.api.controller.accompany.dto.UpdateAccompanyRequest
-import com.withaeng.api.controller.accompany.dto.toServiceRequest
+import com.withaeng.api.controller.accompany.dto.*
 import com.withaeng.api.security.authentication.UserInfo
 import com.withaeng.api.security.resolver.GetAuth
 import io.swagger.v3.oas.annotations.Operation
@@ -57,11 +53,10 @@ class AccompanyController(
     @Operation(summary = "Search Accompany", description = "동행 검색 API (필터링만 지원)")
     @GetMapping("/search")
     fun search(
-        @ParameterObject pageInfoRequest: PageInfoRequest,
         @ParameterObject request: SearchAccompanyRequest,
     ): ApiResponse<List<AccompanySummaryResponse>> {
         return ApiResponse.success(
-            accompanyApplicationService.search(pageInfoRequest.toPageRequest(), request.toServiceRequest())
+            accompanyApplicationService.search(request.toPageInfoRequest(), request.toServiceRequest())
         )
     }
 
