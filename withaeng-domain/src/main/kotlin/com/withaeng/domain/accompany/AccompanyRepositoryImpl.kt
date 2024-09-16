@@ -104,6 +104,7 @@ class AccompanyRepositoryImpl(
                 accompany.tags
             )
             .where(
+                statusEq(AccompanyStatus.ING),
                 continentEq(query.continent),
                 countryEq(query.country),
                 cityEq(query.city),
@@ -112,6 +113,7 @@ class AccompanyRepositoryImpl(
                 containAllowedAge(query.minAllowedAge, query.maxAllowedAge),
                 preferGenderEq(query.preferGender),
             )
+            .orderBy(accompany.id.desc())
             .offset(pageable.offset)
             .limit(pageable.pageSize.toLong())
             .fetch()
@@ -136,6 +138,10 @@ class AccompanyRepositoryImpl(
             )
 
         return PageableExecutionUtils.getPage(result, pageable) { countQuery.fetchOne() ?: 0L }
+    }
+
+    private fun statusEq(status: AccompanyStatus): BooleanExpression? {
+        return accompany.accompanyStatus.eq(status)
     }
 
     private fun continentEq(continent: Continent?): BooleanExpression? {
