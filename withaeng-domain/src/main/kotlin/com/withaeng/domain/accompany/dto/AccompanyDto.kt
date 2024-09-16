@@ -5,8 +5,10 @@ import com.withaeng.domain.accompany.Accompany
 import com.withaeng.domain.accompany.AccompanyAge
 import com.withaeng.domain.accompany.AccompanyDestination
 import com.withaeng.domain.accompany.AccompanyStatus
+import com.withaeng.domain.user.Gender
 import com.withaeng.domain.user.UserPreferAccompanyGender
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 data class CreateAccompanyDto(
     val userId: Long,
@@ -85,4 +87,36 @@ data class SearchAccompanyHostDto @QueryProjection constructor(
     val id: Long,
     val nickname: String,
     val profileImageUrl: String?,
+)
+
+
+data class FindAccompanyDto @QueryProjection constructor(
+    val id: Long,
+    val userId: Long,
+    val title: String,
+    val content: String,
+    val destination: AccompanyDestination,
+    val startTripDate: LocalDate,
+    val endTripDate: LocalDate,
+    val bannerImageUrl: String? = null,
+    val memberCount: Long,
+    val viewCount: Long,
+    val openKakaoUrl: String,
+    val startAccompanyAge: Int,
+    val endAccompanyAge: Int,
+    val preferGender: UserPreferAccompanyGender,
+    val tags: Set<String>? = emptySet(),
+    val likeCount: Long = 0,
+    val author: FindAccompanyUserInfoDto,
+)
+
+data class FindAccompanyUserInfoDto @QueryProjection constructor(
+    val nickname: String,
+    val profileImageUrl: String?,
+    val gender: Gender,
+    val introduction: String?,
+    val joinDate: LocalDateTime,
+    // TODO : 여행 관심사 Set 추가 필요
+    // TODO : 온도 추가 필요
+    // TODO : 연령대 추가 필요
 )

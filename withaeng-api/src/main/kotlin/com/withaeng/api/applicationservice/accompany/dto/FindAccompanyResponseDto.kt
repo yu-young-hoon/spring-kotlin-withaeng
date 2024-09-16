@@ -1,8 +1,8 @@
 package com.withaeng.api.applicationservice.accompany.dto
 
 import com.withaeng.domain.accompany.AccompanyDestination
-import com.withaeng.domain.accompany.FindAccompanyDto
-import com.withaeng.domain.accompany.FindAccompanyUserInfoDto
+import com.withaeng.domain.accompany.dto.FindAccompanyDto
+import com.withaeng.domain.accompany.dto.FindAccompanyUserInfoDto
 import com.withaeng.domain.user.UserPreferAccompanyGender
 import java.time.LocalDate
 
