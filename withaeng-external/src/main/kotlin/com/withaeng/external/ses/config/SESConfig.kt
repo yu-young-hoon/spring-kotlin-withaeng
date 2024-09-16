@@ -19,7 +19,7 @@ class SESConfig {
     @Value("\${cloud.aws.credentials.secret-key}")
     private lateinit var secretKey: String
 
-    @Value("\${cloud.aws.region.static}")
+    @Value("\${cloud.aws.ses.region}")
     private lateinit var regionName: String
 
     @Bean
