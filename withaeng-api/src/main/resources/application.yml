@@ -20,8 +20,6 @@ springdoc: # todo: 개발 종료 후 prod 에서는 비활성화
     groups:
       enabled: true
 
-jasypt.encryptor.password: ${JASYPT_PASSWORD}
-
 ---
 spring.config.activate.on-profile: local
 

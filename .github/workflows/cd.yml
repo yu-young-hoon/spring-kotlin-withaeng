@@ -80,6 +80,5 @@ jobs:
             export AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }}
             export AWS_SES_REGION=${{ secrets.AWS_SES_REGION }}
             export AWS_SES_FROM=${{ secrets.AWS_SES_FROM }}
-            export JASYPT_PASSWORD=${{ secrets.JASYPT_PASSWORD }}
             sudo -E docker compose -f /tmp/withaeng-api/docker-compose.yml down
             sudo -E docker compose -f /tmp/withaeng-api/docker-compose.yml up --build -d
