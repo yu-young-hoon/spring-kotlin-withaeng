@@ -100,6 +100,10 @@ data class SearchAccompanyRequest(
     val page: String = "0",
     @Schema(description = "페이지당 데이터 개수")
     val size: String = "5",
+    @Schema(description = "동행 정렬 기준")
+    val sort: AccompanySort? = null,
+    @Schema(description = "동행 상태")
+    val status: AccompanyStatus? = null,
     @Schema(description = "동행 대륙")
     val continent: Continent? = null,
     @Schema(description = "동행 나라")
@@ -125,6 +129,8 @@ data class SearchAccompanyRequest(
 fun SearchAccompanyRequest.toPageInfoRequest(): PageInfoRequest = PageInfoRequest(page = page, size = size)
 
 fun SearchAccompanyRequest.toServiceRequest(): SearchAccompanyServiceRequest = SearchAccompanyServiceRequest(
+    sort = sort,
+    status = status,
     continent = continent,
     country = country,
     city = city,
