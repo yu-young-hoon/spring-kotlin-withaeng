@@ -5,7 +5,6 @@ import com.withaeng.domain.accompany.dto.CreateAccompanyDto
 import com.withaeng.domain.accompanyrequests.AccompanyJoinRequest
 import com.withaeng.domain.accompanystatistics.AccompanyStatistics
 import com.withaeng.domain.converter.AccompanyTagsConverter
-import com.withaeng.domain.user.UserPreferAccompanyGender
 import jakarta.persistence.*
 import org.hibernate.annotations.Comment
 import org.hibernate.annotations.DynamicUpdate
@@ -67,7 +66,7 @@ class Accompany(
 
     @Column(name = "prefer_gender", nullable = false)
     @Comment("동행 선호 성별")
-    var preferGender: UserPreferAccompanyGender,
+    var preferGender: AccompanyPreferGender,
 
     @Convert(converter = AccompanyTagsConverter::class)
     @Column(name = "tags", nullable = false)

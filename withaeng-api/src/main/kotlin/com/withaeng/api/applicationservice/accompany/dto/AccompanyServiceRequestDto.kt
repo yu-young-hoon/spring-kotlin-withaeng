@@ -4,7 +4,6 @@ import com.withaeng.domain.accompany.*
 import com.withaeng.domain.accompany.dto.CreateAccompanyDto
 import com.withaeng.domain.accompany.dto.SearchAccompanyQuery
 import com.withaeng.domain.accompany.dto.UpdateAccompanyDto
-import com.withaeng.domain.user.UserPreferAccompanyGender
 import java.time.LocalDate
 
 data class CreateAccompanyServiceRequest(
@@ -22,7 +21,7 @@ data class CreateAccompanyServiceRequest(
     val openKakaoUrl: String,
     val startAccompanyAge: AccompanyAge,
     val endAccompanyAge: AccompanyAge,
-    val preferGender: UserPreferAccompanyGender,
+    val preferGender: AccompanyPreferGender,
 )
 
 fun CreateAccompanyServiceRequest.toDomainDto(): CreateAccompanyDto = CreateAccompanyDto(
@@ -70,7 +69,7 @@ data class SearchAccompanyServiceRequest(
     val maxMemberCount: Int? = null,
     val minAllowedAge: AccompanyAge? = null,
     val maxAllowedAge: AccompanyAge? = null,
-    val preferGender: UserPreferAccompanyGender? = null,
+    val preferGender: AccompanyPreferGender? = null,
 )
 
 fun SearchAccompanyServiceRequest.toQuery(): SearchAccompanyQuery {

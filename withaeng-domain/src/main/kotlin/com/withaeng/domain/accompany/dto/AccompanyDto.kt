@@ -1,12 +1,8 @@
 package com.withaeng.domain.accompany.dto
 
 import com.querydsl.core.annotations.QueryProjection
-import com.withaeng.domain.accompany.Accompany
-import com.withaeng.domain.accompany.AccompanyAge
-import com.withaeng.domain.accompany.AccompanyDestination
-import com.withaeng.domain.accompany.AccompanyStatus
+import com.withaeng.domain.accompany.*
 import com.withaeng.domain.user.Gender
-import com.withaeng.domain.user.UserPreferAccompanyGender
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -23,7 +19,7 @@ data class CreateAccompanyDto(
     val openKakaoUrl: String,
     val startAccompanyAge: AccompanyAge,
     val endAccompanyAge: AccompanyAge,
-    val preferGender: UserPreferAccompanyGender,
+    val preferGender: AccompanyPreferGender,
 )
 
 data class UpdateAccompanyDto(
@@ -47,7 +43,7 @@ data class AccompanyDto(
     val openKakaoUrl: String,
     val startAccompanyAge: AccompanyAge,
     val endAccompanyAge: AccompanyAge,
-    val preferGender: UserPreferAccompanyGender,
+    val preferGender: AccompanyPreferGender,
     val tags: Set<String>? = emptySet(),
 )
 
@@ -104,7 +100,7 @@ data class FindAccompanyDto @QueryProjection constructor(
     val openKakaoUrl: String,
     val startAccompanyAge: Int,
     val endAccompanyAge: Int,
-    val preferGender: UserPreferAccompanyGender,
+    val preferGender: AccompanyPreferGender,
     val tags: Set<String>? = emptySet(),
     val likeCount: Long = 0,
     val author: FindAccompanyUserInfoDto,

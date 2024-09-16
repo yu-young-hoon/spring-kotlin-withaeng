@@ -1,10 +1,10 @@
 package com.withaeng.api.applicationservice.accompany.dto
 
 import com.withaeng.domain.accompany.AccompanyDestination
+import com.withaeng.domain.accompany.AccompanyPreferGender
 import com.withaeng.domain.accompany.AccompanyStatus
 import com.withaeng.domain.accompany.dto.AccompanyDto
 import com.withaeng.domain.accompany.dto.SearchAccompanyDto
-import com.withaeng.domain.user.UserPreferAccompanyGender
 import java.time.LocalDate
 
 data class AccompanyResponse(
@@ -23,7 +23,7 @@ data class AccompanyResponse(
     val openKakaoUrl: String? = null,
     val startAccompanyAge: Int,
     val endAccompanyAge: Int,
-    val preferGender: UserPreferAccompanyGender,
+    val preferGender: AccompanyPreferGender,
 )
 
 fun AccompanyDto.toAccompanyResponse(likeCount: Long): AccompanyResponse = AccompanyResponse(

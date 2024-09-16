@@ -5,7 +5,6 @@ import com.withaeng.api.applicationservice.accompany.dto.CreateAccompanyServiceR
 import com.withaeng.api.applicationservice.accompany.dto.SearchAccompanyServiceRequest
 import com.withaeng.api.applicationservice.accompany.dto.UpdateAccompanyServiceRequest
 import com.withaeng.domain.accompany.*
-import com.withaeng.domain.user.UserPreferAccompanyGender
 import io.swagger.v3.oas.annotations.media.Schema
 import java.time.LocalDate
 
@@ -53,7 +52,7 @@ data class CreateAccompanyRequest(
     val endAccompanyAge: AccompanyAge,
 
     @Schema(description = "동행 선호 성별")
-    val preferGender: UserPreferAccompanyGender,
+    val preferGender: AccompanyPreferGender,
 )
 
 @Schema(description = "[Request] 동행 게시글 수정")
@@ -115,7 +114,7 @@ data class SearchAccompanyRequest(
     @Schema(description = "동행 최대 연령대")
     val maxAllowedAge: AccompanyAge? = null,
     @Schema(description = "동행 선호 성별")
-    val preferGender: UserPreferAccompanyGender? = null,
+    val preferGender: AccompanyPreferGender? = null,
 )
 
 fun SearchAccompanyRequest.toServiceRequest(): SearchAccompanyServiceRequest = SearchAccompanyServiceRequest(

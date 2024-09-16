@@ -9,7 +9,6 @@ import com.withaeng.domain.accompanyrequests.AccompanyJoinRequestStatus
 import com.withaeng.domain.accompanyrequests.QAccompanyJoinRequest.accompanyJoinRequest
 import com.withaeng.domain.accompanystatistics.QAccompanyStatistics.accompanyStatistics
 import com.withaeng.domain.user.QUser.user
-import com.withaeng.domain.user.UserPreferAccompanyGender
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.support.PageableExecutionUtils
@@ -166,7 +165,7 @@ class AccompanyRepositoryImpl(
             ?.and(maxAllowedAge?.let { accompany.startAccompanyAge.loe(maxAllowedAge.value) })
     }
 
-    private fun preferGenderEq(preferGender: UserPreferAccompanyGender?): BooleanExpression? {
+    private fun preferGenderEq(preferGender: AccompanyPreferGender?): BooleanExpression? {
         return preferGender?.let { accompany.preferGender.eq(it) }
     }
 
