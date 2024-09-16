@@ -28,6 +28,25 @@ class AccompanyJoinRequestService(
         accompanyJoinRequestRepository.save(accompanyJoinRequest)
     }
 
+    @Transactional
+    fun acceptJoin(accompanyId: Long, joinRequestId: Long) {
+        val accompanyJoinRequest = accompanyJoinRequestRepository.findByIdOrNull(joinRequestId)
+            ?: throw WithaengException.of(
+                type = WithaengExceptionType.NOT_EXIST,
+                message = "동행 신청 정보가 존재하지 않습니다."
+            )
+        val accompany = accompanyRepository.findByIdOrNull(accompanyId) ?: throw WithaengException.of(
+            type = WithaengExceptionType.NOT_EXIST,
+            message = "해당하는 동행을 찾을 수 없습니다."
+        )
+        validateFull(accompany, accompanyId)
+        accompanyJoinRequest.accept()
+
+        if (isBelowMemberLimit(accompany, accompanyId)) {
+            accompany.updateStatusToComplete()
+        }
+    }
+
     private fun validateFull(accompany: Accompany, accompanyId: Long) {
         if (isFull(accompany, accompanyId)) {
             throw WithaengException.of(
@@ -48,11 +67,14 @@ class AccompanyJoinRequestService(
 
     private fun isFull(accompany: Accompany, accompanyId: Long) =
         accompany.accompanyStatus == AccompanyStatus.COMPLETE ||
-                accompany.memberCount < getAcceptedCount(accompanyId) + 1
+                isBelowMemberLimit(accompany, accompanyId)
 
     private fun getAcceptedCount(accompanyId: Long) =
         accompanyJoinRequestRepository.countByAccompanyIdAndStatus(accompanyId)
 
     private fun existsByUser(accompanyId: Long, userId: Long) =
         accompanyJoinRequestRepository.existsByAccompanyIdAndUserId(accompanyId, userId)
+
+    private fun isBelowMemberLimit(accompany: Accompany, accompanyId: Long) =
+        accompany.memberCount < getAcceptedCount(accompanyId) + 1
 }

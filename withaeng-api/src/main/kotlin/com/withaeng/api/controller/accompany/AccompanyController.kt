@@ -109,4 +109,20 @@ class AccompanyController(
         )
         return ApiResponse.success()
     }
+
+    @Operation(
+        summary = "Create AccompanyJoinRequests API",
+        description = "동행 승인 API",
+        security = [SecurityRequirement(name = "Authorization")]
+    )
+    @PutMapping("/{accompanyId}/join-requests/{joinRequestId}/accept")
+    fun acceptJoin(
+        @GetAuth userInfo: UserInfo,
+        @PathVariable accompanyId: Long,
+        @PathVariable joinRequestId: Long,
+    ) {
+        accompanyApplicationService.acceptJoin(
+            accompanyId = accompanyId, userId = userInfo.id, joinRequestId = joinRequestId
+        )
+    }
 }
