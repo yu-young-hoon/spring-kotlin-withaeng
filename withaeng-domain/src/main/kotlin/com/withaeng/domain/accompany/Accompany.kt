@@ -64,6 +64,7 @@ class Accompany(
     @Comment("동행 종료 연령")
     var endAccompanyAge: Int,
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "prefer_gender", nullable = false)
     @Comment("동행 선호 성별")
     var preferGender: AccompanyPreferGender,
