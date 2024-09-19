@@ -87,9 +87,6 @@ class AccompanyApplicationService(
         accompanyService.increaseViewCount(accompanyId)
     }
 
-    private fun isHost(loginUserId: Long?, userId: Long) =
-        loginUserId == userId
-
     private fun countAccompanyLikeByAccompanyId(accompanyId: Long): Long {
         return accompanyLikeService.countByAccompanyId(accompanyId)
     }
@@ -111,4 +108,7 @@ class AccompanyApplicationService(
             )
         }
     }
+
+    private fun isHost(loginUserId: Long?, userId: Long) =
+        loginUserId == userId
 }
