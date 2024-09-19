@@ -98,6 +98,9 @@ class Accompany(
         this.accompanyStatus = AccompanyStatus.COMPLETE
     }
 
+    fun isCompleted() =
+        this.accompanyStatus == AccompanyStatus.COMPLETE
+
     companion object {
         fun create(params: CreateAccompanyDto): Accompany {
             val accompany = Accompany(

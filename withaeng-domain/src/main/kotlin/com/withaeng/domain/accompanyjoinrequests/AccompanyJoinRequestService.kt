@@ -4,7 +4,8 @@ import com.withaeng.common.exception.WithaengException
 import com.withaeng.common.exception.WithaengExceptionType
 import com.withaeng.domain.accompany.Accompany
 import com.withaeng.domain.accompany.AccompanyRepository
-import com.withaeng.domain.accompany.AccompanyStatus
+import com.withaeng.domain.accompanyjoinrequests.dto.AccompanyJoinRequestDto
+import com.withaeng.domain.accompanyjoinrequests.dto.toDto
 import com.withaeng.domain.accompanyrequests.AccompanyJoinRequest
 import com.withaeng.domain.accompanyrequests.AccompanyJoinRequestStatus
 import org.springframework.data.repository.findByIdOrNull
@@ -27,6 +28,14 @@ class AccompanyJoinRequestService(
     }
 
     @Transactional
+    fun cancelJoin(accompanyId: Long, joinRequestId: Long) {
+        val accompany = findAccompanyByIdOrNull(accompanyId)
+        validateCompletedAccompany(accompany)
+        val accompanyJoinRequest = findAccompanyJoinRequestByIdOrNull(joinRequestId)
+        accompanyJoinRequest.cancel()
+    }
+
+    @Transactional
     fun acceptJoin(accompanyId: Long, joinRequestId: Long) {
         val accompanyJoinRequest = findAccompanyJoinRequestByIdOrNull(joinRequestId)
         val accompany = findAccompanyByIdOrNull(accompanyId)
@@ -45,6 +54,12 @@ class AccompanyJoinRequestService(
         validateFull(accompany, accompanyId)
         validateWaitStatus(accompanyJoinRequest)
         accompanyJoinRequest.reject()
+    }
+
+    @Transactional(readOnly = true)
+    fun findById(joinRequestId: Long): AccompanyJoinRequestDto {
+        val accompanyJoinRequest = findAccompanyJoinRequestByIdOrNull(joinRequestId)
+        return accompanyJoinRequest.toDto()
     }
 
     private fun findAccompanyByIdOrNull(accompanyId: Long) =
@@ -69,6 +84,15 @@ class AccompanyJoinRequestService(
         }
     }
 
+    private fun validateCompletedAccompany(accompany: Accompany) {
+        if (accompany.isCompleted()) {
+            throw WithaengException.of(
+                type = WithaengExceptionType.INVALID_ACCESS,
+                message = "모집 마감된 동행은 취소할 수 없습니다."
+            )
+        }
+    }
+
     private fun validateFull(accompany: Accompany, accompanyId: Long) {
         if (isFull(accompany, accompanyId)) {
             throw WithaengException.of(
@@ -88,7 +112,7 @@ class AccompanyJoinRequestService(
     }
 
     private fun isFull(accompany: Accompany, accompanyId: Long) =
-        accompany.accompanyStatus == AccompanyStatus.COMPLETE ||
+        accompany.isCompleted() ||
                 isBelowMemberLimit(accompany, accompanyId)
 
     private fun getAcceptedCount(accompanyId: Long) =

@@ -29,6 +29,10 @@ class AccompanyJoinRequest(
         }
     }
 
+    fun cancel() {
+        status = AccompanyJoinRequestStatus.CANCEL
+    }
+
     fun accept() {
         status = AccompanyJoinRequestStatus.ACCEPT
     }

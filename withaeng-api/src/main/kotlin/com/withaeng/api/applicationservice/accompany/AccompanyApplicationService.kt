@@ -61,19 +61,25 @@ class AccompanyApplicationService(
 
     fun requestJoin(accompanyId: Long, userId: Long) {
         val accompanyDto = accompanyService.findById(accompanyId)
-        validateCreator(accompanyDto.userId, userId)
+        validateSelfRequestNotAllowed(accompanyDto.userId, userId)
         accompanyJoinRequestService.create(accompanyId, userId)
     }
 
-    fun acceptJoin(accompanyId: Long, userId: Long, joinRequestId: Long) {
+    fun cancelJoin(accompanyId: Long, userId: Long, joinRequestId: Long) {
         val accompanyDto = accompanyService.findById(accompanyId)
-        validateNonCreator(accompanyDto.userId, userId)
+        val accompanyJoinRequestDto = accompanyJoinRequestService.findById(joinRequestId)
+        validateSelfRequestNotAllowed(accompanyDto.userId, userId)
+        validateCreatorAccess(accompanyJoinRequestDto.userId, userId)
+        accompanyJoinRequestService.cancelJoin(accompanyId, joinRequestId)
+    }
+
+    fun acceptJoin(accompanyId: Long, userId: Long, joinRequestId: Long) {
         accompanyJoinRequestService.acceptJoin(accompanyId, joinRequestId)
     }
 
     fun rejectJoin(accompanyId: Long, userId: Long, joinRequestId: Long) {
         val accompanyDto = accompanyService.findById(accompanyId)
-        validateNonCreator(accompanyDto.userId, userId)
+        validateCreatorAccess(accompanyDto.userId, userId)
         accompanyJoinRequestService.rejectJoin(accompanyId, joinRequestId)
     }
 
@@ -88,16 +94,16 @@ class AccompanyApplicationService(
         return accompanyLikeService.countByAccompanyId(accompanyId)
     }
 
-    private fun validateCreator(createUserId: Long, requestUserId: Long) {
+    private fun validateSelfRequestNotAllowed(createUserId: Long, requestUserId: Long) {
         if (createUserId == requestUserId) {
             throw WithaengException.of(
                 type = WithaengExceptionType.ACCESS_DENIED,
-                message = "본인의 동행은 신청할 수 없습니다."
+                message = "본인의 동행은 신청, 취소할 수 없습니다."
             )
         }
     }
 
-    private fun validateNonCreator(createUserId: Long, requestUserId: Long) {
+    private fun validateCreatorAccess(createUserId: Long, requestUserId: Long) {
         if (createUserId != requestUserId) {
             throw WithaengException.of(
                 type = WithaengExceptionType.ACCESS_DENIED,
