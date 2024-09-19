@@ -66,7 +66,7 @@ class ControllerExceptionAdvice {
     @ExceptionHandler(MethodArgumentNotValidException::class)
     protected fun handleMethodArgumentNotValidException(e: MethodArgumentNotValidException): ResponseEntity<ApiResponse<Any>> {
         logger.error("MethodArgumentNotValidException handler", e)
-        val errorMessage = e.allErrors.joinToString(" ,")
+        val errorMessage = e.bindingResult.fieldError?.defaultMessage
         return errorResponse(WithaengExceptionType.ARGUMENT_NOT_VALID, errorMessage)
     }
 
@@ -92,7 +92,7 @@ class ControllerExceptionAdvice {
 
     private fun errorResponse(
         exceptionType: WithaengExceptionType,
-        message: String?
+        message: String?,
     ) = errorResponse(
         exceptionType.httpStatusCode,
         ApiErrorResponse(exceptionType.name, message)
