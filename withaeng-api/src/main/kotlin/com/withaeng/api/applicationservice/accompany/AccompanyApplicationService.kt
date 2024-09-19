@@ -71,6 +71,12 @@ class AccompanyApplicationService(
         accompanyJoinRequestService.acceptJoin(accompanyId, joinRequestId)
     }
 
+    fun rejectJoin(accompanyId: Long, userId: Long, joinRequestId: Long) {
+        val accompanyDto = accompanyService.findById(accompanyId)
+        validateNonCreator(accompanyDto.userId, userId)
+        accompanyJoinRequestService.rejectJoin(accompanyId, joinRequestId)
+    }
+
     private fun increaseViewCount(accompanyId: Long) {
         accompanyService.increaseViewCount(accompanyId)
     }
