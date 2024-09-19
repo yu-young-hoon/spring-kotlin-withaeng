@@ -7,6 +7,7 @@ import com.withaeng.api.applicationservice.accompany.dto.UpdateAccompanyServiceR
 import com.withaeng.api.common.PageInfoRequest
 import com.withaeng.domain.accompany.*
 import io.swagger.v3.oas.annotations.media.Schema
+import jakarta.validation.constraints.Min
 import java.time.LocalDate
 
 @Schema(description = "[Request] 동행 게시글 생성")
@@ -36,6 +37,7 @@ data class CreateAccompanyRequest(
     val bannerImageUrl: String? = null,
 
     @Schema(description = "동행 멤버수")
+    @field:Min(2, message = "멤버 수는 최소 2명 이상(본인 + 동행자 1명 이상)이어야 합니다.")
     val memberCount: Long,
 
     @Schema(description = "동행 게시글에 부착할 태그 아이디 리스트")
