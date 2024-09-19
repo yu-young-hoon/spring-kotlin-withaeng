@@ -121,4 +121,8 @@ class AccompanyJoinRequestService(
 
     private fun isBelowMemberLimit(accompany: Accompany, accompanyId: Long) =
         accompany.memberCount < getAcceptedJoinRequestCount(accompanyId) + 1
+
+    @Transactional(readOnly = true)
+    fun findJoinRequestsByAccompanyId(accompanyId: Long) =
+        accompanyJoinRequestRepository.findJoinRequestsByAccompanyId(accompanyId)
 }

@@ -41,14 +41,13 @@ class AccompanyApplicationService(
     fun detail(accompanyId: Long, userId: Long?): FindAccompanyResponse {
         increaseViewCount(accompanyId)
         val accompanyDto = accompanyService.detail(accompanyId)
-            .toAccompanyResponse()
 
         if (isHost(userId, accompanyDto.userId)) {
-            // TODO : Host인 경우 승인보류 유저 목록 추가 필요
-            println("호스트임")
+            val joinRequests = accompanyJoinRequestService.findJoinRequestsByAccompanyId(accompanyId)
+            return accompanyDto.toGuestAccompanyResponse(joinRequests)
         }
 
-        return accompanyDto
+        return accompanyDto.toHostAccompanyResponse()
     }
 
     fun retrieveAll(): List<AccompanyResponse> {
