@@ -107,6 +107,23 @@ class AccompanyController(
 
     @Operation(
         summary = "Create AccompanyJoinRequests API",
+        description = "동행 참가 취소 API - Guest",
+        security = [SecurityRequirement(name = "Authorization")]
+    )
+    @PutMapping("/{accompanyId}/join-requests/{joinRequestId}/cancel")
+    fun cancelJoin(
+        @GetAuth userInfo: UserInfo,
+        @PathVariable accompanyId: Long,
+        @PathVariable joinRequestId: Long,
+    ): ApiResponse<Unit> {
+        accompanyApplicationService.cancelJoin(
+            accompanyId = accompanyId, userId = userInfo.id, joinRequestId = joinRequestId
+        )
+        return ApiResponse.success()
+    }
+
+    @Operation(
+        summary = "Create AccompanyJoinRequests API",
         description = "동행 승인 API - Host",
         security = [SecurityRequirement(name = "Authorization")]
     )
