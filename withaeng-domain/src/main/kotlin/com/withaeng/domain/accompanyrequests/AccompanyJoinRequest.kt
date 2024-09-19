@@ -41,15 +41,6 @@ class AccompanyJoinRequest(
         status = AccompanyJoinRequestStatus.REJECT
     }
 
-    fun duplicated(userId: Long): Boolean {
-        return requestedBy(userId) && (onStatus(AccompanyJoinRequestStatus.WAIT) || onStatus(AccompanyJoinRequestStatus.ACCEPT))
-    }
-
-    fun requestedBy(userId: Long): Boolean {
-        return this.userId == userId
-    }
-
-    fun onStatus(accept: AccompanyJoinRequestStatus): Boolean {
-        return this.status == accept
-    }
+    fun isNotWaiting() =
+        this.status != AccompanyJoinRequestStatus.WAIT
 }

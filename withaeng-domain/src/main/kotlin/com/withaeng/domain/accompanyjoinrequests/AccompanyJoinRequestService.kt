@@ -7,7 +7,6 @@ import com.withaeng.domain.accompany.AccompanyRepository
 import com.withaeng.domain.accompanyjoinrequests.dto.AccompanyJoinRequestDto
 import com.withaeng.domain.accompanyjoinrequests.dto.toDto
 import com.withaeng.domain.accompanyrequests.AccompanyJoinRequest
-import com.withaeng.domain.accompanyrequests.AccompanyJoinRequestStatus
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -52,7 +51,7 @@ class AccompanyJoinRequestService(
         val accompanyJoinRequest = findAccompanyJoinRequestByIdOrNull(joinRequestId)
         val accompany = findAccompanyByIdOrNull(accompanyId)
         validateFull(accompany, accompanyId)
-        validateWaitStatus(accompanyJoinRequest)
+        validateNotWaitingJoinRequest(accompanyJoinRequest)
         accompanyJoinRequest.reject()
     }
 
@@ -75,8 +74,14 @@ class AccompanyJoinRequestService(
                 message = "동행 신청 정보가 존재하지 않습니다."
             )
 
-    private fun validateWaitStatus(accompanyJoinRequest: AccompanyJoinRequest) {
-        if (accompanyJoinRequest.status != AccompanyJoinRequestStatus.WAIT) {
+    private fun getAcceptedJoinRequestCount(accompanyId: Long) =
+        accompanyJoinRequestRepository.countByAccompanyIdAndStatus(accompanyId)
+
+    private fun existsJoinRequestByUser(accompanyId: Long, userId: Long) =
+        accompanyJoinRequestRepository.existsByAccompanyIdAndUserId(accompanyId, userId)
+
+    private fun validateNotWaitingJoinRequest(accompanyJoinRequest: AccompanyJoinRequest) {
+        if (accompanyJoinRequest.isNotWaiting()) {
             throw WithaengException.of(
                 type = WithaengExceptionType.INVALID_ACCESS,
                 message = "승인 대기 상태가 아닙니다."
@@ -103,7 +108,7 @@ class AccompanyJoinRequestService(
     }
 
     private fun validateDuplicateJoin(accompanyId: Long, userId: Long) {
-        if (existsByUser(accompanyId, userId)) {
+        if (existsJoinRequestByUser(accompanyId, userId)) {
             throw WithaengException.of(
                 type = WithaengExceptionType.ALREADY_EXIST,
                 message = "동행 신청한 내역이 존재합니다."
@@ -112,15 +117,8 @@ class AccompanyJoinRequestService(
     }
 
     private fun isFull(accompany: Accompany, accompanyId: Long) =
-        accompany.isCompleted() ||
-                isBelowMemberLimit(accompany, accompanyId)
-
-    private fun getAcceptedCount(accompanyId: Long) =
-        accompanyJoinRequestRepository.countByAccompanyIdAndStatus(accompanyId)
-
-    private fun existsByUser(accompanyId: Long, userId: Long) =
-        accompanyJoinRequestRepository.existsByAccompanyIdAndUserId(accompanyId, userId)
+        accompany.isCompleted() || isBelowMemberLimit(accompany, accompanyId)
 
     private fun isBelowMemberLimit(accompany: Accompany, accompanyId: Long) =
-        accompany.memberCount < getAcceptedCount(accompanyId) + 1
+        accompany.memberCount < getAcceptedJoinRequestCount(accompanyId) + 1
 }
