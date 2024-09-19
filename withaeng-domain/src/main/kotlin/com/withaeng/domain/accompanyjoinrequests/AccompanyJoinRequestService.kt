@@ -6,6 +6,7 @@ import com.withaeng.domain.accompany.Accompany
 import com.withaeng.domain.accompany.AccompanyRepository
 import com.withaeng.domain.accompany.AccompanyStatus
 import com.withaeng.domain.accompanyrequests.AccompanyJoinRequest
+import com.withaeng.domain.accompanyrequests.AccompanyJoinRequestStatus
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -18,10 +19,7 @@ class AccompanyJoinRequestService(
 
     @Transactional
     fun create(accompanyId: Long, userId: Long) {
-        val accompany = accompanyRepository.findByIdOrNull(accompanyId) ?: throw WithaengException.of(
-            type = WithaengExceptionType.NOT_EXIST,
-            message = "해당하는 동행을 찾을 수 없습니다."
-        )
+        val accompany = findAccompanyByIdOrNull(accompanyId)
         validateFull(accompany, accompanyId)
         validateDuplicateJoin(accompanyId, userId)
         val accompanyJoinRequest = AccompanyJoinRequest.create(userId, accompany)
@@ -30,20 +28,44 @@ class AccompanyJoinRequestService(
 
     @Transactional
     fun acceptJoin(accompanyId: Long, joinRequestId: Long) {
-        val accompanyJoinRequest = accompanyJoinRequestRepository.findByIdOrNull(joinRequestId)
-            ?: throw WithaengException.of(
-                type = WithaengExceptionType.NOT_EXIST,
-                message = "동행 신청 정보가 존재하지 않습니다."
-            )
-        val accompany = accompanyRepository.findByIdOrNull(accompanyId) ?: throw WithaengException.of(
-            type = WithaengExceptionType.NOT_EXIST,
-            message = "해당하는 동행을 찾을 수 없습니다."
-        )
+        val accompanyJoinRequest = findAccompanyJoinRequestByIdOrNull(joinRequestId)
+        val accompany = findAccompanyByIdOrNull(accompanyId)
         validateFull(accompany, accompanyId)
         accompanyJoinRequest.accept()
 
         if (isBelowMemberLimit(accompany, accompanyId)) {
             accompany.updateStatusToComplete()
+        }
+    }
+
+    @Transactional
+    fun rejectJoin(accompanyId: Long, joinRequestId: Long) {
+        val accompanyJoinRequest = findAccompanyJoinRequestByIdOrNull(joinRequestId)
+        val accompany = findAccompanyByIdOrNull(accompanyId)
+        validateFull(accompany, accompanyId)
+        validateWaitStatus(accompanyJoinRequest)
+        accompanyJoinRequest.reject()
+    }
+
+    private fun findAccompanyByIdOrNull(accompanyId: Long) =
+        accompanyRepository.findByIdOrNull(accompanyId) ?: throw WithaengException.of(
+            type = WithaengExceptionType.NOT_EXIST,
+            message = "해당하는 동행을 찾을 수 없습니다."
+        )
+
+    private fun findAccompanyJoinRequestByIdOrNull(joinRequestId: Long) =
+        accompanyJoinRequestRepository.findByIdOrNull(joinRequestId)
+            ?: throw WithaengException.of(
+                type = WithaengExceptionType.NOT_EXIST,
+                message = "동행 신청 정보가 존재하지 않습니다."
+            )
+
+    private fun validateWaitStatus(accompanyJoinRequest: AccompanyJoinRequest) {
+        if (accompanyJoinRequest.status != AccompanyJoinRequestStatus.WAIT) {
+            throw WithaengException.of(
+                type = WithaengExceptionType.INVALID_ACCESS,
+                message = "승인 대기 상태가 아닙니다."
+            )
         }
     }
 

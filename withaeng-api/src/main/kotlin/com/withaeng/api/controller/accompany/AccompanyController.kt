@@ -91,7 +91,7 @@ class AccompanyController(
 
     @Operation(
         summary = "Create AccompanyJoinRequests API",
-        description = "동행 참가 신청 API",
+        description = "동행 참가 신청 API - Guest",
         security = [SecurityRequirement(name = "Authorization")]
     )
     @PostMapping("/{accompanyId}/join-requests")
@@ -107,7 +107,7 @@ class AccompanyController(
 
     @Operation(
         summary = "Create AccompanyJoinRequests API",
-        description = "동행 승인 API",
+        description = "동행 승인 API - Host",
         security = [SecurityRequirement(name = "Authorization")]
     )
     @PutMapping("/{accompanyId}/join-requests/{joinRequestId}/accept")
@@ -117,6 +117,22 @@ class AccompanyController(
         @PathVariable joinRequestId: Long,
     ) {
         accompanyApplicationService.acceptJoin(
+            accompanyId = accompanyId, userId = userInfo.id, joinRequestId = joinRequestId
+        )
+    }
+
+    @Operation(
+        summary = "Create AccompanyJoinRequests API",
+        description = "동행 거부 API - Host",
+        security = [SecurityRequirement(name = "Authorization")]
+    )
+    @PutMapping("/{accompanyId}/join-requests/{joinRequestId}/reject")
+    fun rejectJoin(
+        @GetAuth userInfo: UserInfo,
+        @PathVariable accompanyId: Long,
+        @PathVariable joinRequestId: Long,
+    ) {
+        accompanyApplicationService.rejectJoin(
             accompanyId = accompanyId, userId = userInfo.id, joinRequestId = joinRequestId
         )
     }

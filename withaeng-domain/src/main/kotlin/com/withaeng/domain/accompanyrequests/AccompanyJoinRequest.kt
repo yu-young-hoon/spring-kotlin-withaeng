@@ -33,6 +33,10 @@ class AccompanyJoinRequest(
         status = AccompanyJoinRequestStatus.ACCEPT
     }
 
+    fun reject() {
+        status = AccompanyJoinRequestStatus.REJECT
+    }
+
     fun duplicated(userId: Long): Boolean {
         return requestedBy(userId) && (onStatus(AccompanyJoinRequestStatus.WAIT) || onStatus(AccompanyJoinRequestStatus.ACCEPT))
     }
