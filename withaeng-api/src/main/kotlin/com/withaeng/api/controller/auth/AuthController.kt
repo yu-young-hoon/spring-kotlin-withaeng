@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/api/v1/auth")
 class AuthController(
-    private val authApplicationService: AuthApplicationService
+    private val authApplicationService: AuthApplicationService,
 ) {
     @Operation(summary = "Sign Up API", description = "회원가입 API")
     @PostMapping("/sign-up")
@@ -38,10 +38,10 @@ class AuthController(
         )
     }
 
-    @Operation(summary = "Validating Email API", description = "이메일 인증 API")
+    @Operation(summary = "Email Verify API", description = "이메일 인증 API")
     @PutMapping("/validate-email")
-    fun validateEmail(@RequestBody request: ValidateEmailRequest): ApiResponse<Unit> {
-        authApplicationService.validateEmail(request.toServiceRequest())
+    fun verifyEmail(@RequestBody request: VerifyEmailRequest): ApiResponse<Unit> {
+        authApplicationService.verifyEmail(request.toServiceRequest())
         return ApiResponse.success()
     }
 

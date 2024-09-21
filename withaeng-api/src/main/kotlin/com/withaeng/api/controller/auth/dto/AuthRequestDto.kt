@@ -33,7 +33,7 @@ data class SignInRequest(
     val email: String,
 
     @Schema(description = "로그인 할 패스워드")
-    val password: String
+    val password: String,
 )
 
 fun SignInRequest.toServiceRequest(): SignInServiceRequest = SignInServiceRequest(
@@ -44,7 +44,7 @@ fun SignInRequest.toServiceRequest(): SignInServiceRequest = SignInServiceReques
 @Schema(description = "[Request] 이메일 재전송")
 data class ResendEmailRequest(
     @Schema(description = "재전송 할 이메일")
-    val email: String
+    val email: String,
 )
 
 fun ResendEmailRequest.toServiceRequest(): ResendEmailServiceRequest = ResendEmailServiceRequest(
@@ -52,15 +52,15 @@ fun ResendEmailRequest.toServiceRequest(): ResendEmailServiceRequest = ResendEma
 )
 
 @Schema(description = "[Request] 이메일 인증")
-data class ValidateEmailRequest(
+data class VerifyEmailRequest(
     @Schema(description = "이메일 인증 할 이메일")
     val email: String,
 
     @Schema(description = "이메일 인증으로 보낸 코드 (UUID 형태)")
-    val code: String
+    val code: String,
 )
 
-fun ValidateEmailRequest.toServiceRequest(): ValidateEmailServiceRequest = ValidateEmailServiceRequest(
+fun VerifyEmailRequest.toServiceRequest(): VerifyEmailServiceRequest = VerifyEmailServiceRequest(
     email = email,
     code = code
 )
@@ -69,7 +69,7 @@ fun ValidateEmailRequest.toServiceRequest(): ValidateEmailServiceRequest = Valid
 @Schema(description = "[Request] 비밀번호 재설정을 위한 이메일 전송")
 data class SendEmailForChangePasswordRequest(
     @Schema(description = "이메일 인증 할 이메일")
-    val email: String
+    val email: String,
 )
 
 fun SendEmailForChangePasswordRequest.toServiceRequest(): SendEmailForChangePasswordServiceRequest =
@@ -84,7 +84,7 @@ data class ChangePasswordRequest(
     val code: String,
 
     @Schema(description = "새로운 패스워드")
-    val password: String
+    val password: String,
 )
 
 fun ChangePasswordRequest.toServiceRequest(): ChangePasswordServiceRequest = ChangePasswordServiceRequest(
