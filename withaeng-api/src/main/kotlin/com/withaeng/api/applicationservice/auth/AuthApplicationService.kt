@@ -134,7 +134,7 @@ class AuthApplicationService(
             userId = userDto.id,
             code = request.code
         )
-        userService.updatePassword(userDto.id, passwordEncoder.encode(request.password))
+        userService.replacePassword(userDto.id, passwordEncoder.encode(request.password))
     }
 
     private fun verifyEmailCode(email: String, userId: Long, code: String) {

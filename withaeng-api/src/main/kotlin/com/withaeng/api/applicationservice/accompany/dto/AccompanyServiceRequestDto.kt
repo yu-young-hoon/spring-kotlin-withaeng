@@ -15,16 +15,16 @@ data class CreateAccompanyServiceRequest(
     val city: String,
     val startTripDate: LocalDate,
     val endTripDate: LocalDate,
-    val bannerImageUrl: String? = null,
     val memberCount: Long,
     val tags: Set<String>? = emptySet(),
     val openKakaoUrl: String,
     val startAccompanyAge: AccompanyAge,
     val endAccompanyAge: AccompanyAge,
     val preferGender: AccompanyPreferGender,
+    val hasImage: Boolean = false,
 )
 
-fun CreateAccompanyServiceRequest.toDomainDto(): CreateAccompanyDto = CreateAccompanyDto(
+fun CreateAccompanyServiceRequest.toDomainDto(imageUrl: String? = null): CreateAccompanyDto = CreateAccompanyDto(
     userId = userId,
     title = title,
     content = content,
@@ -35,7 +35,7 @@ fun CreateAccompanyServiceRequest.toDomainDto(): CreateAccompanyDto = CreateAcco
     ),
     startTripDate = startTripDate,
     endTripDate = endTripDate,
-    bannerImageUrl = bannerImageUrl,
+    bannerImageUrl = imageUrl,
     memberCount = memberCount,
     tags = tags?.toSet(),
     openKakaoUrl = openKakaoUrl,

@@ -1,8 +1,8 @@
 package com.withaeng.api.controller.user
 
 import com.withaeng.api.applicationservice.user.UserApplicationService
+import com.withaeng.api.applicationservice.user.dto.UpdateProfileResponse
 import com.withaeng.api.applicationservice.user.dto.UserDetailResponse
-import com.withaeng.api.applicationservice.user.dto.UserSimpleResponse
 import com.withaeng.api.applicationservice.user.dto.UserStatisticalProfileResponse
 import com.withaeng.api.applicationservice.user.dto.UserTravelPreferenceResponse
 import com.withaeng.api.common.ApiResponse
@@ -51,21 +51,6 @@ class UserMeController(private val userApplicationService: UserApplicationServic
     }
 
     @Operation(
-        summary = "Update Profile",
-        description = "프로필 업데이트 API",
-        security = [SecurityRequirement(name = "Authorization")]
-    )
-    @PutMapping("/profile")
-    fun updateProfile(
-        @GetAuth userInfo: UserInfo,
-        @RequestBody @Valid request: UpdateProfileRequest,
-    ): ApiResponse<UserSimpleResponse> {
-        return ApiResponse.success(
-            userApplicationService.updateProfile(request.toServiceRequest(userInfo.id))
-        )
-    }
-
-    @Operation(
         summary = "Update Travel Preference",
         description = "여행 선호 정보 업데이트 API",
         security = [SecurityRequirement(name = "Authorization")]
@@ -76,7 +61,36 @@ class UserMeController(private val userApplicationService: UserApplicationServic
         @RequestBody @Valid request: UpdateTravelPreferenceRequest,
     ): ApiResponse<UserDetailResponse> {
         return ApiResponse.success(
-            userApplicationService.updateTravelPreference(request.toServiceRequest(userInfo.id))
+            userApplicationService.updateTravelPreference(userInfo.id, request.toServiceRequest())
+        )
+    }
+
+    @Operation(
+        summary = "Update Profile",
+        description = "프로필 업데이트 API",
+        security = [SecurityRequirement(name = "Authorization")]
+    )
+    @PatchMapping("/profile")
+    fun updateProfile(
+        @GetAuth userInfo: UserInfo,
+        @RequestBody @Valid request: UpdateProfileRequest,
+    ): ApiResponse<UpdateProfileResponse> {
+        return ApiResponse.success(
+            userApplicationService.updateProfile(userInfo.id, request.toServiceRequest())
+        )
+    }
+
+    @Operation(
+        summary = "Delete Profile Image",
+        description = "프로필 이미지 삭제 API",
+        security = [SecurityRequirement(name = "Authorization")]
+    )
+    @DeleteMapping("/profile-image")
+    fun deleteProfileImage(
+        @GetAuth userInfo: UserInfo,
+    ): ApiResponse<Unit> {
+        return ApiResponse.success(
+            userApplicationService.deleteProfileImage(userInfo.id)
         )
     }
 }

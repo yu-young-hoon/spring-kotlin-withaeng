@@ -80,3 +80,8 @@ fun SearchAccompanyDto.toAccompanyResponse(): AccompanySummaryResponse = Accompa
         profileImageUrl = host.profileImageUrl,
     ),
 )
+
+data class CreateAccompanyResponse(
+    val id: Long,
+    val preSignedUrl: String? = null,
+)

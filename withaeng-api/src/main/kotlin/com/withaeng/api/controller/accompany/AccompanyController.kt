@@ -3,6 +3,7 @@ package com.withaeng.api.controller.accompany
 import com.withaeng.api.applicationservice.accompany.AccompanyApplicationService
 import com.withaeng.api.applicationservice.accompany.dto.AccompanyResponse
 import com.withaeng.api.applicationservice.accompany.dto.AccompanySummaryResponse
+import com.withaeng.api.applicationservice.accompany.dto.CreateAccompanyResponse
 import com.withaeng.api.applicationservice.accompany.dto.FindAccompanyResponse
 import com.withaeng.api.common.ApiResponse
 import com.withaeng.api.controller.accompany.dto.*
@@ -34,7 +35,7 @@ class AccompanyController(
     fun create(
         @GetAuth userInfo: UserInfo,
         @RequestBody @Valid request: CreateAccompanyRequest,
-    ): ApiResponse<AccompanyResponse> {
+    ): ApiResponse<CreateAccompanyResponse> {
         return ApiResponse.success(
             accompanyApplicationService.create(request.toServiceRequest(userInfo.id))
         )
