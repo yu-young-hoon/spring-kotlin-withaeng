@@ -29,7 +29,7 @@ data class ResendEmailServiceRequest(
     val email: String,
 )
 
-data class ValidateEmailServiceRequest(
+data class VerifyEmailServiceRequest(
     val email: String,
     val code: String,
 )

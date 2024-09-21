@@ -1,10 +1,11 @@
 package com.withaeng.api.scheduler
 
-import com.withaeng.domain.validateemail.ValidatingEmailService
-import com.withaeng.domain.validateemail.ValidatingEmailStatus
-import com.withaeng.domain.validateemail.ValidatingEmailType
-import com.withaeng.external.ses.MailSender
-import com.withaeng.external.ses.MailType
+import com.withaeng.domain.verificationemail.VerificationEmailDto
+import com.withaeng.domain.verificationemail.VerificationEmailService
+import com.withaeng.domain.verificationemail.VerificationEmailStatus
+import com.withaeng.domain.verificationemail.VerificationEmailType
+import com.withaeng.external.email.template.EmailTemplate
+import com.withaeng.external.email.template.TemplatedEmailSender
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -17,47 +18,65 @@ import java.util.concurrent.TimeUnit
 
 @Component
 class SendEmailScheduler(
-    private val validatingEmailService: ValidatingEmailService,
-    private val mailSender: MailSender,
-    @Value("\${withaeng.host}")
-    private val host: String,
+    private val verificationEmailService: VerificationEmailService,
+    private val templatedEmailSender: TemplatedEmailSender,
+    @Value("\${withaeng.host}") private val host: String,
 ) {
 
     companion object {
-        private const val EMAIL_VALIDATE_REDIRECT_PATH = "/check-email"
+        private const val FIXED_DELAY_SECONDS = 20L
+        private const val VERIFY_EMAIL_REDIRECT_PATH = "/check-email"
         private const val CHANGE_PASSWORD_REDIRECT_PATH = "/check-email-pw"
     }
 
     private val log: Logger = LoggerFactory.getLogger(SendEmailScheduler::class.java)
 
-    @Scheduled(timeUnit = TimeUnit.SECONDS, fixedDelay = 20)
+    @Scheduled(timeUnit = TimeUnit.SECONDS, fixedDelay = FIXED_DELAY_SECONDS)
     @Async("asyncSchedulerExecutor")
     @Transactional
     fun sendEmail() {
         val now = LocalDateTime.now()
         log.info("Start sending emails at {}", now)
-        val willSendMails = validatingEmailService.findAllByStatusNot(ValidatingEmailStatus.DONE)
-        willSendMails.forEach { emailDto ->
-            val to = emailDto.email
-            val code = emailDto.code
-            val type = emailDto.type
-            val redirectUrl = "${type.toValidatingUrl()}?code=$code&email=$to"
-            mailSender.send(redirectUrl, to, emailDto.type.toMailType())
+
+        val verificationEmails = getSendTargets()
+        if (verificationEmails.isEmpty()) {
+            log.info("No emails to send at {}", now)
+            return
         }
-        if (willSendMails.isNotEmpty()) {
-            val updateCount = validatingEmailService.updateStatusByIds(
-                willSendMails.map { it.id }.toSet(),
-                ValidatingEmailStatus.DONE
-            )
-            log.info("End sending {} emails at {}", updateCount, now)
-        }
+
+        verificationEmails.forEach(this::sendVerificationEmail)
+
+        val updatedCount = updateEmailStatuses(verificationEmails)
+        log.info("End sending {} emails at {}", updatedCount, now)
     }
 
-    private fun ValidatingEmailType.toMailType(): MailType =
-        if (this == ValidatingEmailType.VALIDATE_EMAIL)
-            MailType.VALIDATE_EMAIL else MailType.CHANGE_PASSWORD
+    private fun getSendTargets() = verificationEmailService.findAllByStatusNot(VerificationEmailStatus.DONE)
 
-    private fun ValidatingEmailType.toValidatingUrl(): String =
-        if (this == ValidatingEmailType.VALIDATE_EMAIL)
-            host + EMAIL_VALIDATE_REDIRECT_PATH else host + CHANGE_PASSWORD_REDIRECT_PATH
+    private fun sendVerificationEmail(verificationEmail: VerificationEmailDto) =
+        templatedEmailSender.send(
+            to = verificationEmail.email,
+            template = verificationEmail.toEmailTemplate(),
+            variables = mapOf(
+                "email" to verificationEmail.email,
+                "redirectUrl" to createRedirectUrl(verificationEmail),
+            )
+        )
+
+    private fun updateEmailStatuses(verificationEmails: List<VerificationEmailDto>): Int {
+        val emailIds = verificationEmails.map { it.id }.toSet()
+        return verificationEmailService.updateStatusByIds(emailIds, VerificationEmailStatus.DONE)
+    }
+
+    private fun createRedirectUrl(verificationEmail: VerificationEmailDto): String =
+        "${host}${verificationEmail.toRedirectPath()}?email=${verificationEmail.email}&code=${verificationEmail.code}"
+
+    private fun VerificationEmailDto.toEmailTemplate(): EmailTemplate = when (this.type) {
+        VerificationEmailType.VERIFY_EMAIL -> EmailTemplate.VERIFY_EMAIL
+        VerificationEmailType.CHANGE_PASSWORD -> EmailTemplate.CHANGE_PASSWORD
+    }
+
+    private fun VerificationEmailDto.toRedirectPath(): String = when (this.type) {
+        VerificationEmailType.VERIFY_EMAIL -> VERIFY_EMAIL_REDIRECT_PATH
+        VerificationEmailType.CHANGE_PASSWORD -> CHANGE_PASSWORD_REDIRECT_PATH
+    }
 }

@@ -8,8 +8,8 @@ import com.withaeng.common.exception.WithaengExceptionType
 import com.withaeng.domain.user.UserRole
 import com.withaeng.domain.user.UserService
 import com.withaeng.domain.user.dto.UserSimpleDto
-import com.withaeng.domain.validateemail.ValidatingEmailService
-import com.withaeng.domain.validateemail.ValidatingEmailType
+import com.withaeng.domain.verificationemail.VerificationEmailService
+import com.withaeng.domain.verificationemail.VerificationEmailType
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -19,7 +19,7 @@ import java.util.*
 @Transactional(readOnly = true)
 class AuthApplicationService(
     private val userService: UserService,
-    private val validatingEmailService: ValidatingEmailService,
+    private val verificationEmailService: VerificationEmailService,
     private val jwtAgent: JwtAgent,
     private val passwordEncoder: PasswordEncoder,
 ) {
@@ -36,7 +36,7 @@ class AuthApplicationService(
                 )
             }
             userService.deleteByEmail(userEmail)
-            validatingEmailService.deleteAllByUserId(userDto.id)
+            verificationEmailService.deleteAllByUserId(userDto.id)
         }
         val newUserDto = userService.create(
             request.toCommand(
@@ -44,11 +44,11 @@ class AuthApplicationService(
                 passwordEncoder.encode(request.password)
             )
         )
-        validatingEmailService.create(
+        verificationEmailService.create(
             email = newUserDto.email,
             userId = newUserDto.id,
             code = UUID.randomUUID().toString(),
-            type = ValidatingEmailType.VALIDATE_EMAIL
+            type = VerificationEmailType.VERIFY_EMAIL
         )
         return UserResponse(newUserDto.id, newUserDto.email, jwtAgent.provide(UserInfo.from(newUserDto)))
     }
@@ -76,17 +76,17 @@ class AuthApplicationService(
                 message = "이미 인증된 유저입니다."
             )
         }
-        validatingEmailService.deleteAllByUserIdAndEmailType(userDto.id, ValidatingEmailType.VALIDATE_EMAIL)
-        validatingEmailService.create(
+        verificationEmailService.deleteAllByUserIdAndEmailType(userDto.id, VerificationEmailType.VERIFY_EMAIL)
+        verificationEmailService.create(
             email = userDto.email,
             userId = userDto.id,
             code = UUID.randomUUID().toString(),
-            type = ValidatingEmailType.VALIDATE_EMAIL
+            type = VerificationEmailType.VERIFY_EMAIL
         )
     }
 
     @Transactional
-    fun validateEmail(request: ValidateEmailServiceRequest) {
+    fun verifyEmail(request: VerifyEmailServiceRequest) {
         val requestedEmail = request.email
         val userDto = userService.findByEmailOrNull(requestedEmail)
             ?: throw WithaengException.of(
@@ -99,7 +99,7 @@ class AuthApplicationService(
                 message = "이미 인증된 유저입니다."
             )
         }
-        validateEmailCode(
+        verifyEmailCode(
             email = requestedEmail,
             userId = userDto.id,
             code = request.code
@@ -113,12 +113,12 @@ class AuthApplicationService(
             type = WithaengExceptionType.NOT_EXIST,
             message = "이메일에 해당하는 유저를 찾을 수 없습니다."
         )
-        validatingEmailService.deleteAllByUserIdAndEmailType(userDto.id, ValidatingEmailType.CHANGE_PASSWORD)
-        validatingEmailService.create(
+        verificationEmailService.deleteAllByUserIdAndEmailType(userDto.id, VerificationEmailType.CHANGE_PASSWORD)
+        verificationEmailService.create(
             email = userDto.email,
             userId = userDto.id,
             code = UUID.randomUUID().toString(),
-            type = ValidatingEmailType.CHANGE_PASSWORD
+            type = VerificationEmailType.CHANGE_PASSWORD
         )
     }
 
@@ -129,7 +129,7 @@ class AuthApplicationService(
             type = WithaengExceptionType.NOT_EXIST,
             message = "이메일에 해당하는 유저를 찾을 수 없습니다."
         )
-        validateEmailCode(
+        verifyEmailCode(
             email = email,
             userId = userDto.id,
             code = request.code
@@ -137,12 +137,12 @@ class AuthApplicationService(
         userService.updatePassword(userDto.id, passwordEncoder.encode(request.password))
     }
 
-    private fun validateEmailCode(email: String, userId: Long, code: String) {
-        val validatingEmailDto = validatingEmailService.findByEmail(email)
-        if (validatingEmailDto.userId != userId || validatingEmailDto.code != code) {
+    private fun verifyEmailCode(email: String, userId: Long, code: String) {
+        val verificationEmailDto = verificationEmailService.findByEmail(email)
+        if (verificationEmailDto.userId != userId || verificationEmailDto.code != code) {
             throw WithaengException.of(WithaengExceptionType.INVALID_INPUT, "Code가 올바르지 않습니다.")
         }
-        validatingEmailService.deleteById(validatingEmailDto.id)
+        verificationEmailService.deleteById(verificationEmailDto.id)
     }
 
     private fun UserSimpleDto.isValidUser(): Boolean {
