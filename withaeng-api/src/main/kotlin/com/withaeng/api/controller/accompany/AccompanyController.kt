@@ -132,10 +132,11 @@ class AccompanyController(
         @GetAuth userInfo: UserInfo,
         @PathVariable accompanyId: Long,
         @PathVariable joinRequestId: Long,
-    ) {
+    ): ApiResponse<Unit> {
         accompanyApplicationService.acceptJoin(
             accompanyId = accompanyId, userId = userInfo.id, joinRequestId = joinRequestId
         )
+        return ApiResponse.success()
     }
 
     @Operation(
@@ -148,9 +149,10 @@ class AccompanyController(
         @GetAuth userInfo: UserInfo,
         @PathVariable accompanyId: Long,
         @PathVariable joinRequestId: Long,
-    ) {
+    ): ApiResponse<Unit> {
         accompanyApplicationService.rejectJoin(
             accompanyId = accompanyId, userId = userInfo.id, joinRequestId = joinRequestId
         )
+        return ApiResponse.success()
     }
 }
