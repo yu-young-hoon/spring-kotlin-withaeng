@@ -6,6 +6,9 @@ cloud:
     ses:
       region: ${AWS_SES_REGION}
       from: ${AWS_SES_FROM}
+    s3:
+      region: ${AWS_S3_REGION}
+      bucket: ${AWS_S3_BUCKET}
 
 ---
 spring.config.activate.on-profile: local
