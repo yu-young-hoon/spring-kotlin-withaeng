@@ -9,6 +9,7 @@ import com.withaeng.api.controller.accompany.dto.*
 import com.withaeng.api.security.authentication.UserInfo
 import com.withaeng.api.security.resolver.GetAuth
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
@@ -43,7 +44,7 @@ class AccompanyController(
     @GetMapping("/{accompanyId}")
     fun retrieve(
         @GetAuth userInfo: UserInfo?,
-        @PathVariable("accompanyId") accompanyId: Long,
+        @Parameter(description = "동행 id") @PathVariable("accompanyId") accompanyId: Long,
     ): ApiResponse<FindAccompanyResponse> {
         return ApiResponse.success(
             accompanyApplicationService.detail(accompanyId, userInfo?.id)
@@ -76,7 +77,7 @@ class AccompanyController(
     @PutMapping("/{accompanyId}")
     fun update(
         @GetAuth userInfo: UserInfo,
-        @PathVariable accompanyId: Long,
+        @Parameter(description = "동행 id") @PathVariable accompanyId: Long,
         @RequestBody @Valid param: UpdateAccompanyRequest,
     ): ApiResponse<AccompanyResponse> {
         return ApiResponse.success(
@@ -97,7 +98,7 @@ class AccompanyController(
     @PostMapping("/{accompanyId}/join-requests")
     fun requestJoin(
         @GetAuth userInfo: UserInfo,
-        @PathVariable accompanyId: Long,
+        @Parameter(description = "동행 id") @PathVariable accompanyId: Long,
     ): ApiResponse<Unit> {
         accompanyApplicationService.requestJoin(
             accompanyId = accompanyId, userId = userInfo.id
@@ -113,8 +114,8 @@ class AccompanyController(
     @PutMapping("/{accompanyId}/join-requests/{joinRequestId}/cancel")
     fun cancelJoin(
         @GetAuth userInfo: UserInfo,
-        @PathVariable accompanyId: Long,
-        @PathVariable joinRequestId: Long,
+        @Parameter(description = "동행 id") @PathVariable accompanyId: Long,
+        @Parameter(description = "동행 참가 요청 id") @PathVariable joinRequestId: Long,
     ): ApiResponse<Unit> {
         accompanyApplicationService.cancelJoin(
             accompanyId = accompanyId, userId = userInfo.id, joinRequestId = joinRequestId
@@ -130,12 +131,13 @@ class AccompanyController(
     @PutMapping("/{accompanyId}/join-requests/{joinRequestId}/accept")
     fun acceptJoin(
         @GetAuth userInfo: UserInfo,
-        @PathVariable accompanyId: Long,
-        @PathVariable joinRequestId: Long,
-    ) {
+        @Parameter(description = "동행 id") @PathVariable accompanyId: Long,
+        @Parameter(description = "동행 참가 요청 id") @PathVariable joinRequestId: Long,
+    ): ApiResponse<Unit> {
         accompanyApplicationService.acceptJoin(
             accompanyId = accompanyId, userId = userInfo.id, joinRequestId = joinRequestId
         )
+        return ApiResponse.success()
     }
 
     @Operation(
@@ -146,11 +148,12 @@ class AccompanyController(
     @PutMapping("/{accompanyId}/join-requests/{joinRequestId}/reject")
     fun rejectJoin(
         @GetAuth userInfo: UserInfo,
-        @PathVariable accompanyId: Long,
-        @PathVariable joinRequestId: Long,
-    ) {
+        @Parameter(description = "동행 id") @PathVariable accompanyId: Long,
+        @Parameter(description = "동행 참가 요청 id") @PathVariable joinRequestId: Long,
+    ): ApiResponse<Unit> {
         accompanyApplicationService.rejectJoin(
             accompanyId = accompanyId, userId = userInfo.id, joinRequestId = joinRequestId
         )
+        return ApiResponse.success()
     }
 }
