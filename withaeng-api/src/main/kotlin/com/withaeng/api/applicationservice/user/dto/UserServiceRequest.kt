@@ -5,21 +5,19 @@ import com.withaeng.domain.user.dto.UpdateProfileCommand
 import com.withaeng.domain.user.dto.UpdateTravelPreferenceCommand
 
 data class UpdateProfileServiceRequest(
-    val userId: Long,
     val nickname: String?,
     val introduction: String?,
-    val profileImageUrl: String?,
+    val hasImage: Boolean = false,
 )
 
-fun UpdateProfileServiceRequest.toCommand(): UpdateProfileCommand =
+fun UpdateProfileServiceRequest.toCommand(imageUrl: String? = null): UpdateProfileCommand =
     UpdateProfileCommand(
         nickname = nickname,
         introduction = introduction,
-        profileImageUrl = profileImageUrl
+        profileImageUrl = imageUrl
     )
 
 data class UpdateTravelPreferenceServiceRequest(
-    val userId: Long,
     val mbti: Set<UserMbti>? = emptySet(),
     val preferTravelType: UserPreferTravelType? = null,
     val preferTravelThemes: Set<UserPreferTravelTheme>? = emptySet(),

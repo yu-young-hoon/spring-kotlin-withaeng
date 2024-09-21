@@ -14,15 +14,14 @@ data class UpdateProfileRequest(
     val introduction: String? = null,
 
     @Schema(description = "프로필 이미지 URL")
-    val profileImageUrl: String? = null,
+    val hasImage: Boolean = false,
 )
 
-fun UpdateProfileRequest.toServiceRequest(userId: Long): UpdateProfileServiceRequest =
+fun UpdateProfileRequest.toServiceRequest(): UpdateProfileServiceRequest =
     UpdateProfileServiceRequest(
-        userId = userId,
         nickname = nickname,
         introduction = introduction,
-        profileImageUrl = profileImageUrl
+        hasImage = hasImage,
     )
 
 @Schema(description = "[Request] User 여행 선호 스타일 정보를 추가합니다")
@@ -49,9 +48,8 @@ data class UpdateTravelPreferenceRequest(
     val drinkingType: UserDrinkingType? = null,
 )
 
-fun UpdateTravelPreferenceRequest.toServiceRequest(userId: Long): UpdateTravelPreferenceServiceRequest =
+fun UpdateTravelPreferenceRequest.toServiceRequest(): UpdateTravelPreferenceServiceRequest =
     UpdateTravelPreferenceServiceRequest(
-        userId = userId,
         mbti = mbti,
         preferTravelType = preferTravelType,
         preferTravelThemes = preferTravelThemes,

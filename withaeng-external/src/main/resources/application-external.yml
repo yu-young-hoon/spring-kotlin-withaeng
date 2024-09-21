@@ -3,22 +3,20 @@ cloud:
     credentials:
       access-key: ${AWS_ACCESS_KEY}
       secret-key: ${AWS_SECRET_KEY}
-    ses:
-      region: ${AWS_SES_REGION}
-      from: ${AWS_SES_FROM}
-    s3:
-      region: ${AWS_S3_REGION}
-      bucket: ${AWS_S3_BUCKET}
 
 ---
 spring.config.activate.on-profile: local
 
-spring:
-  thymeleaf:
-    cache: false
+spring.thymeleaf.cache: false
+
+cloud.aws.s3.bucket: withaeng-images-dev
 
 ---
 spring.config.activate.on-profile: dev
 
+cloud.aws.s3.bucket: withaeng-images-dev
+
 ---
 spring.config.activate.on-profile: prod
+
+cloud.aws.s3.bucket: withaeng-images

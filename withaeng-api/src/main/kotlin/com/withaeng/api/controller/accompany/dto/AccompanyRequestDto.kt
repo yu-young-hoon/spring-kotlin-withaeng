@@ -33,9 +33,6 @@ data class CreateAccompanyRequest(
     @Schema(description = "동행 종료 날짜 (1999-01-01)")
     val endTripDate: LocalDate,
 
-    @Schema(description = "동행 게시글 배너 이미지 URL")
-    val bannerImageUrl: String? = null,
-
     @Schema(description = "동행 멤버수")
     @field:Min(2, message = "멤버 수는 최소 2명 이상(본인 + 동행자 1명 이상)이어야 합니다.")
     val memberCount: Long,
@@ -56,6 +53,9 @@ data class CreateAccompanyRequest(
 
     @Schema(description = "동행 선호 성별")
     val preferGender: AccompanyPreferGender,
+
+    @Schema(description = "이미지 업로드 여부")
+    val hasImage: Boolean = false,
 )
 
 @Schema(description = "[Request] 동행 게시글 수정")
@@ -70,13 +70,13 @@ fun CreateAccompanyRequest.toServiceRequest(
     city = city,
     startTripDate = startTripDate,
     endTripDate = endTripDate,
-    bannerImageUrl = bannerImageUrl,
     memberCount = memberCount,
     tags = tags,
     openKakaoUrl = openKakaoUrl,
     startAccompanyAge = startAccompanyAge,
     endAccompanyAge = endAccompanyAge,
     preferGender = preferGender,
+    hasImage = hasImage,
 )
 
 data class UpdateAccompanyRequest(

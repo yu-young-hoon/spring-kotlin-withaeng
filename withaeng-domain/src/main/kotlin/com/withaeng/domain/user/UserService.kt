@@ -69,16 +69,7 @@ class UserService(private val userRepository: UserRepository) {
     }
 
     @Transactional
-    fun updateProfile(userId: Long, command: UpdateProfileCommand): UserSimpleDto {
-        val user = userRepository.findByIdOrNull(userId).getOrThrow()
-        user.profile.nickname = command.nickname ?: user.profile.nickname
-        user.profile.introduction = command.introduction
-        user.profile.profileImageUrl = command.profileImageUrl
-        return user.toSimpleDto()
-    }
-
-    @Transactional
-    fun updateTravelPreference(userId: Long, command: UpdateTravelPreferenceCommand): UserDetailDto {
+    fun replaceTravelPreference(userId: Long, command: UpdateTravelPreferenceCommand): UserDetailDto {
         val user = userRepository.findByIdOrNull(userId).getOrThrow()
         user.travelPreference = user.travelPreference ?: UserTravelPreference.create(user)
         user.travelPreference?.mbti = command.mbti ?: emptySet()
@@ -92,9 +83,18 @@ class UserService(private val userRepository: UserRepository) {
     }
 
     @Transactional
-    fun updatePassword(userId: Long, password: String): UserSimpleDto {
+    fun replacePassword(userId: Long, password: String): UserSimpleDto {
         val user = userRepository.findByIdOrNull(userId).getOrThrow()
         user.password = password
+        return user.toSimpleDto()
+    }
+
+    @Transactional
+    fun updateProfile(userId: Long, command: UpdateProfileCommand): UserSimpleDto {
+        val user = userRepository.findByIdOrNull(userId).getOrThrow()
+        user.profile.nickname = command.nickname ?: user.profile.nickname
+        user.profile.introduction = command.introduction ?: user.profile.introduction
+        user.profile.profileImageUrl = command.profileImageUrl ?: user.profile.profileImageUrl
         return user.toSimpleDto()
     }
 
@@ -109,6 +109,12 @@ class UserService(private val userRepository: UserRepository) {
     @Transactional
     fun deleteByEmail(email: String) {
         return userRepository.deleteByEmail(email)
+    }
+
+    @Transactional
+    fun deleteProfileImage(id: Long) {
+        val user = userRepository.findByIdOrNull(id).getOrThrow()
+        user.profile.profileImageUrl = null
     }
 
     private fun User?.getOrThrow(): User {

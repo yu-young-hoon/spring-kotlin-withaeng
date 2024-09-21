@@ -112,3 +112,8 @@ data class UserStatisticalProfileResponse(
         )
     }
 }
+
+data class UpdateProfileResponse(
+    val id: Long,
+    val preSignedUrl: String? = null,
+)

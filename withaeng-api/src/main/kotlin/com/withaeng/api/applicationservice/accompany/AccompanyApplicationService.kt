@@ -9,18 +9,35 @@ import com.withaeng.common.exception.WithaengExceptionType
 import com.withaeng.domain.accompany.AccompanyService
 import com.withaeng.domain.accompanyjoinrequests.AccompanyJoinRequestService
 import com.withaeng.domain.accompanylike.AccompanyLikeService
+import com.withaeng.external.image.PreSignedUrl
+import com.withaeng.external.image.PreSignedUrlGenerator
 import org.springframework.stereotype.Service
+import java.util.*
+
+private const val ACCOMPANY_IMAGE_STORAGE_DIR = "accompany"
 
 @Service
 class AccompanyApplicationService(
     private val accompanyService: AccompanyService,
     private val accompanyLikeService: AccompanyLikeService,
     private val accompanyJoinRequestService: AccompanyJoinRequestService,
+    private val preSignedUrlGenerator: PreSignedUrlGenerator,
 ) {
 
-    fun create(request: CreateAccompanyServiceRequest): AccompanyResponse {
-        return accompanyService.create(request.toDomainDto())
-            .toAccompanyResponse(0L)
+    fun create(request: CreateAccompanyServiceRequest): CreateAccompanyResponse {
+        if (request.hasImage) {
+            val preSignedUrl = generatePreSignedUrl()
+            val createAccompanyDto = request.toDomainDto(preSignedUrl.imageUrl())
+            val accompanyDto = accompanyService.create(createAccompanyDto)
+            return CreateAccompanyResponse(accompanyDto.id, preSignedUrl.uploadUrl())
+        }
+        val accompanyDto = accompanyService.create(request.toDomainDto())
+        return CreateAccompanyResponse(accompanyDto.id)
+    }
+
+    private fun generatePreSignedUrl(): PreSignedUrl {
+        val objectKey = "$ACCOMPANY_IMAGE_STORAGE_DIR/${UUID.randomUUID()}"
+        return preSignedUrlGenerator.generate(objectKey)
     }
 
     fun update(request: UpdateAccompanyServiceRequest): AccompanyResponse {

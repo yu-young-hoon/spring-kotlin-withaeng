@@ -14,15 +14,13 @@ class SesConfig(
     private var accessKey: String,
     @Value("\${cloud.aws.credentials.secret-key}")
     private var secretKey: String,
-    @Value("\${cloud.aws.ses.region}")
-    private var region: String,
 ) {
 
     @Bean
     fun sesClient(): SesClient {
         return SesClient.builder()
             .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKey, secretKey)))
-            .region(Region.of(region))
+            .region(Region.AP_NORTHEAST_2)
             .build()
     }
 }
