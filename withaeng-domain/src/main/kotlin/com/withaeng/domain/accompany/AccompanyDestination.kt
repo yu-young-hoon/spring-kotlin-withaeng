@@ -1,5 +1,8 @@
 package com.withaeng.domain.accompany
 
+import com.withaeng.domain.destination.City
+import com.withaeng.domain.destination.Continent
+import com.withaeng.domain.destination.Country
 import jakarta.persistence.Column
 import jakarta.persistence.Embeddable
 import jakarta.persistence.EnumType
@@ -21,5 +24,5 @@ data class AccompanyDestination(
     @Enumerated(EnumType.STRING)
     @Column(name = "city")
     @Comment("도시")
-    val city: City
+    val city: City,
 )

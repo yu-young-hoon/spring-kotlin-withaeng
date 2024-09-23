@@ -1,8 +1,8 @@
-package com.withaeng.domain.accompany
+package com.withaeng.domain.destination
 
 enum class Continent(
     val continentCode: String,
-    val continentName: String
+    val continentName: String,
 ) {
 
     EAST_ASIA("EA", "동아시아"),

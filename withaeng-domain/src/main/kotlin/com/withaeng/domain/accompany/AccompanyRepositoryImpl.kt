@@ -9,6 +9,9 @@ import com.withaeng.domain.accompanylike.QAccompanyLike.accompanyLike
 import com.withaeng.domain.accompanyrequests.AccompanyJoinRequestStatus
 import com.withaeng.domain.accompanyrequests.QAccompanyJoinRequest.accompanyJoinRequest
 import com.withaeng.domain.accompanystatistics.QAccompanyStatistics.accompanyStatistics
+import com.withaeng.domain.destination.City
+import com.withaeng.domain.destination.Continent
+import com.withaeng.domain.destination.Country
 import com.withaeng.domain.user.QUser.user
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -152,7 +155,7 @@ class AccompanyRepositoryImpl(
                 accompanyStatistics.viewCount.desc(),
                 accompany.createdAt.desc(),
             )
-            
+
             else -> arrayOf(
                 accompany.createdAt.desc(),
                 accompanyStatistics.viewCount.desc(),

@@ -1,6 +1,12 @@
 package com.withaeng.domain.accompany.dto
 
-import com.withaeng.domain.accompany.*
+import com.withaeng.domain.accompany.AccompanyAge
+import com.withaeng.domain.accompany.AccompanyPreferGender
+import com.withaeng.domain.accompany.AccompanySort
+import com.withaeng.domain.accompany.AccompanyStatus
+import com.withaeng.domain.destination.City
+import com.withaeng.domain.destination.Continent
+import com.withaeng.domain.destination.Country
 import java.time.LocalDate
 
 data class SearchAccompanyQuery(

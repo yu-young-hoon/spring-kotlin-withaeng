@@ -6,6 +6,9 @@ import com.withaeng.api.applicationservice.accompany.dto.SearchAccompanyServiceR
 import com.withaeng.api.applicationservice.accompany.dto.UpdateAccompanyServiceRequest
 import com.withaeng.api.common.PageInfoRequest
 import com.withaeng.domain.accompany.*
+import com.withaeng.domain.destination.City
+import com.withaeng.domain.destination.Continent
+import com.withaeng.domain.destination.Country
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.Min
 import java.time.LocalDate

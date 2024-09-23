@@ -5,7 +5,11 @@ import com.withaeng.domain.accompany.AccompanyPreferGender
 import com.withaeng.domain.accompany.AccompanyStatus
 import com.withaeng.domain.accompany.dto.AccompanyDto
 import com.withaeng.domain.accompany.dto.SearchAccompanyDto
+import com.withaeng.domain.destination.City
+import com.withaeng.domain.destination.Continent
+import com.withaeng.domain.destination.Country
 import java.time.LocalDate
+import java.util.*
 
 data class AccompanyResponse(
     val id: Long,
@@ -84,4 +88,8 @@ fun SearchAccompanyDto.toAccompanyResponse(): AccompanySummaryResponse = Accompa
 data class CreateAccompanyResponse(
     val id: Long,
     val preSignedUrl: String? = null,
+)
+
+data class DestinationResponse(
+    val continents: EnumMap<Continent, EnumMap<Country, List<City>>>,
 )

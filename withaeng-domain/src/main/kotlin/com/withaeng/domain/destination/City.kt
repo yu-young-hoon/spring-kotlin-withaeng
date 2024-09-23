@@ -1,9 +1,9 @@
-package com.withaeng.domain.accompany
+package com.withaeng.domain.destination
 
 enum class City(
     val countryCode: String,
     val cityCode: String,
-    val cityName: String
+    val cityName: String,
 ) {
 
     SEOUL(Country.KOREA.countryCode, "SEOUL", "서울"),
