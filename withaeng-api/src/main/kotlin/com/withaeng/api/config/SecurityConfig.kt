@@ -45,7 +45,7 @@ class SecurityConfig(
             .formLogin { it.disable() }
             .authorizeHttpRequests {
                 it
-                    .requestMatchers("/api/v1/auth/**", "/api/v1/test/**").permitAll()
+                    .requestMatchers("/api/v1/auth/**", "/api/v1/test/**", "/api/v1/destinations").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/v1/accompany/**").permitAll()
                     .anyRequest().hasAnyRole(UserRole.USER.getActualRoleName(), UserRole.ADMIN.getActualRoleName())
             }

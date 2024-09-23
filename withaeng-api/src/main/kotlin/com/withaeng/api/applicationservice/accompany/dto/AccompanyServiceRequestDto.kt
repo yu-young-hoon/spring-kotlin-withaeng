@@ -4,6 +4,9 @@ import com.withaeng.domain.accompany.*
 import com.withaeng.domain.accompany.dto.CreateAccompanyDto
 import com.withaeng.domain.accompany.dto.SearchAccompanyQuery
 import com.withaeng.domain.accompany.dto.UpdateAccompanyDto
+import com.withaeng.domain.destination.City
+import com.withaeng.domain.destination.Continent
+import com.withaeng.domain.destination.Country
 import java.time.LocalDate
 
 data class CreateAccompanyServiceRequest(
