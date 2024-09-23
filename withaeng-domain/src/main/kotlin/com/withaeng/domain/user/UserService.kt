@@ -69,7 +69,7 @@ class UserService(private val userRepository: UserRepository) {
     }
 
     @Transactional
-    fun replaceTravelPreference(userId: Long, command: UpdateTravelPreferenceCommand): UserDetailDto {
+    fun replaceTravelPreference(userId: Long, command: UpdateTravelPreferenceCommand): UserSimpleDto {
         val user = userRepository.findByIdOrNull(userId).getOrThrow()
         user.travelPreference = user.travelPreference ?: UserTravelPreference.create(user)
         user.travelPreference?.mbti = command.mbti ?: emptySet()
@@ -79,22 +79,13 @@ class UserService(private val userRepository: UserRepository) {
         user.travelPreference?.foodRestrictions = command.foodRestrictions ?: emptySet()
         user.travelPreference?.smokingType = command.smokingType
         user.travelPreference?.drinkingType = command.drinkingType
-        return user.toDetailDto()
+        return user.toSimpleDto()
     }
 
     @Transactional
     fun replacePassword(userId: Long, password: String): UserSimpleDto {
         val user = userRepository.findByIdOrNull(userId).getOrThrow()
         user.password = password
-        return user.toSimpleDto()
-    }
-
-    @Transactional
-    fun updateProfile(userId: Long, command: UpdateProfileCommand): UserSimpleDto {
-        val user = userRepository.findByIdOrNull(userId).getOrThrow()
-        user.profile.nickname = command.nickname ?: user.profile.nickname
-        user.profile.introduction = command.introduction ?: user.profile.introduction
-        user.profile.profileImageUrl = command.profileImageUrl ?: user.profile.profileImageUrl
         return user.toSimpleDto()
     }
 
@@ -107,14 +98,35 @@ class UserService(private val userRepository: UserRepository) {
     }
 
     @Transactional
-    fun deleteByEmail(email: String) {
-        return userRepository.deleteByEmail(email)
+    fun updateNickname(id: Long, nickname: String?): UserSimpleDto {
+        val user = userRepository.findByIdOrNull(id).getOrThrow()
+        user.profile.nickname = nickname ?: user.profile.nickname
+        return user.toSimpleDto()
+    }
+
+    @Transactional
+    fun putIntroduction(id: Long, introduction: String?): UserSimpleDto {
+        val user = userRepository.findByIdOrNull(id).getOrThrow()
+        user.profile.introduction = introduction
+        return user.toSimpleDto()
+    }
+
+    @Transactional
+    fun putProfileImage(id: Long, imageUrl: String): UserSimpleDto {
+        val user = userRepository.findByIdOrNull(id).getOrThrow()
+        user.profile.profileImageUrl = imageUrl
+        return user.toSimpleDto()
     }
 
     @Transactional
     fun deleteProfileImage(id: Long) {
         val user = userRepository.findByIdOrNull(id).getOrThrow()
         user.profile.profileImageUrl = null
+    }
+
+    @Transactional
+    fun deleteByEmail(email: String) {
+        return userRepository.deleteByEmail(email)
     }
 
     private fun User?.getOrThrow(): User {
