@@ -1,6 +1,5 @@
 package com.withaeng.api.controller.destination
 
-import com.withaeng.api.applicationservice.accompany.dto.DestinationResponse
 import com.withaeng.api.common.ApiResponse
 import com.withaeng.domain.destination.City
 import com.withaeng.domain.destination.Continent
@@ -9,7 +8,6 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import java.util.*
 
 @Tag(name = "Destination", description = "여행지 API")
 @RestController
@@ -17,26 +15,38 @@ import java.util.*
 class DestinationController {
 
     @GetMapping
-    fun getDestinations(): ApiResponse<DestinationResponse> {
+    fun getDestinations(): ApiResponse<GetDestinationsResponse> {
         return ApiResponse.success(
-            DestinationResponse(createDestinationsMap())
+            getDestinationsTree()
         )
     }
 
-    private fun createDestinationsMap(): EnumMap<Continent, EnumMap<Country, List<City>>> {
-        val structure = EnumMap<Continent, EnumMap<Country, List<City>>>(Continent::class.java)
-        Continent.entries.forEach { continent ->
-            val countriesInContinent = EnumMap<Country, List<City>>(Country::class.java)
-            Country.entries
+    fun getDestinationsTree(): GetDestinationsResponse {
+        val continents = Continent.entries.map { continent ->
+            val countriesInContinent = Country.entries
                 .filter { it.continentCode == continent.continentCode }
-                .forEach { country ->
+                .map { country ->
                     val citiesInCountry = City.entries
                         .filter { it.countryCode == country.countryCode }
-                        .toList()
-                    countriesInContinent[country] = citiesInCountry
+                        .map { it.name }
+                    CountryNode(name = country.name, cities = citiesInCountry)
                 }
-            structure[continent] = countriesInContinent
+            ContinentNode(name = continent.name, countries = countriesInContinent)
         }
-        return structure
+        return GetDestinationsResponse(continents = continents)
     }
 }
+
+data class GetDestinationsResponse(
+    val continents: List<ContinentNode>,
+)
+
+data class ContinentNode(
+    val name: String,
+    val countries: List<CountryNode>,
+)
+
+data class CountryNode(
+    val name: String,
+    val cities: List<String>,
+)
