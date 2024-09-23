@@ -1,21 +1,7 @@
 package com.withaeng.api.applicationservice.user.dto
 
 import com.withaeng.domain.user.*
-import com.withaeng.domain.user.dto.UpdateProfileCommand
 import com.withaeng.domain.user.dto.UpdateTravelPreferenceCommand
-
-data class UpdateProfileServiceRequest(
-    val nickname: String?,
-    val introduction: String?,
-    val hasImage: Boolean = false,
-)
-
-fun UpdateProfileServiceRequest.toCommand(imageUrl: String? = null): UpdateProfileCommand =
-    UpdateProfileCommand(
-        nickname = nickname,
-        introduction = introduction,
-        profileImageUrl = imageUrl
-    )
 
 data class UpdateTravelPreferenceServiceRequest(
     val mbti: Set<UserMbti>? = emptySet(),

@@ -1,31 +1,23 @@
 package com.withaeng.api.controller.user.dto
 
-import com.withaeng.api.applicationservice.user.dto.UpdateProfileServiceRequest
 import com.withaeng.api.applicationservice.user.dto.UpdateTravelPreferenceServiceRequest
 import com.withaeng.domain.user.*
 import io.swagger.v3.oas.annotations.media.Schema
 
 @Schema(description = "[Request] User 프로필 정보를 추가합니다")
-data class UpdateProfileRequest(
+data class PatchNicknameRequest(
     @Schema(description = "유저 닉네임")
     val nickname: String? = null,
-
-    @Schema(description = "유저 소개")
-    val introduction: String? = null,
-
-    @Schema(description = "프로필 이미지 URL")
-    val hasImage: Boolean = false,
 )
 
-fun UpdateProfileRequest.toServiceRequest(): UpdateProfileServiceRequest =
-    UpdateProfileServiceRequest(
-        nickname = nickname,
-        introduction = introduction,
-        hasImage = hasImage,
-    )
+@Schema(description = "[Request] User 소개 정보를 추가합니다")
+data class PutIntroductionRequest(
+    @Schema(description = "유저 소개")
+    val introduction: String? = null,
+)
 
 @Schema(description = "[Request] User 여행 선호 스타일 정보를 추가합니다")
-data class UpdateTravelPreferenceRequest(
+data class PutTravelPreferenceRequest(
     @Schema(description = "유저 MBTI")
     val mbti: Set<UserMbti>? = emptySet(),
 
@@ -48,7 +40,7 @@ data class UpdateTravelPreferenceRequest(
     val drinkingType: UserDrinkingType? = null,
 )
 
-fun UpdateTravelPreferenceRequest.toServiceRequest(): UpdateTravelPreferenceServiceRequest =
+fun PutTravelPreferenceRequest.toServiceRequest(): UpdateTravelPreferenceServiceRequest =
     UpdateTravelPreferenceServiceRequest(
         mbti = mbti,
         preferTravelType = preferTravelType,
