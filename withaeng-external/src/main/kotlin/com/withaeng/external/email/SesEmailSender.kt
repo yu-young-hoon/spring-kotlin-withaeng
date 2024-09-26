@@ -9,7 +9,7 @@ class SesEmailSender(
 ) : EmailSender {
 
     companion object {
-        private const val FROM = "withaeng@gmail.com"
+        private const val FROM = "reply@withaeng.com"
     }
 
     override fun send(to: String, subject: String, content: String) {
