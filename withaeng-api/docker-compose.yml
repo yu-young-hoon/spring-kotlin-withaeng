@@ -1,0 +1,21 @@
+services:
+  withaeng-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: withaeng-api
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
+      DATABASE_DRIVER: ${DATABASE_DRIVER}
+      DATABASE_URL: ${DATABASE_URL}
+      DATABASE_USERNAME: ${DATABASE_USERNAME}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      WITHAENG_HOST: ${WITHAENG_HOST}
+      JWT_ISSUER: ${JWT_ISSUER}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      AWS_ACCESS_KEY: ${AWS_ACCESS_KEY}
+      AWS_SECRET_KEY: ${AWS_SECRET_KEY}
+      AWS_SES_REGION: ${AWS_SES_REGION}
+      AWS_SES_FROM: ${AWS_SES_FROM}

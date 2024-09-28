@@ -1,0 +1,84 @@
+name: Withaeng CD with Gradle, Github Actions
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: prod
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: temurin
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+        shell: bash
+
+      - name: Build with Gradle
+        run: ./gradlew clean build
+        shell: bash
+
+      - name: Clean Server Directory
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: sudo rm -rf /tmp/withaeng-api
+
+      - name: Send build artifacts to server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          source: withaeng-api
+          target: /tmp
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: prod
+
+    steps:
+      - name: Run Docker Compose
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            export SPRING_PROFILES_ACTIVE=prod
+            export DATABASE_DRIVER=${{ secrets.DATABASE_DRIVER }}
+            export DATABASE_URL=${{ secrets.DATABASE_URL }}
+            export DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}
+            export DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}
+            export WITHAENG_HOST=${{ secrets.WITHAENG_HOST }}
+            export JWT_ISSUER=${{ secrets.JWT_ISSUER }}
+            export JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
+            export AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }}
+            export AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }}
+            export AWS_SES_REGION=${{ secrets.AWS_SES_REGION }}
+            export AWS_SES_FROM=${{ secrets.AWS_SES_FROM }}
+            sudo -E docker compose -f /tmp/withaeng-api/docker-compose.yml down
+            sudo -E docker compose -f /tmp/withaeng-api/docker-compose.yml up --build -d

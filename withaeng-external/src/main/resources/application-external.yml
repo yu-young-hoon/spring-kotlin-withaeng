@@ -1,0 +1,22 @@
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+
+---
+spring.config.activate.on-profile: local
+
+spring.thymeleaf.cache: false
+
+cloud.aws.s3.bucket: withaeng-images-dev
+
+---
+spring.config.activate.on-profile: dev
+
+cloud.aws.s3.bucket: withaeng-images-dev
+
+---
+spring.config.activate.on-profile: prod
+
+cloud.aws.s3.bucket: withaeng-images

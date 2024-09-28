@@ -1,0 +1,56 @@
+spring:
+  datasource:
+    hikari:
+      data-source-properties:
+        rewriteBatchedStatements: true
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate.default_batch_fetch_size: 100
+
+---
+spring.config.activate.on-profile: local
+
+spring:
+  datasource:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:withaeng;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+
+---
+spring.config.activate.on-profile: dev
+
+spring:
+  datasource:
+    driverClassName: ${DATABASE_DRIVER}
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+---
+spring.config.activate.on-profile: prod
+
+spring:
+  datasource:
+    driverClassName: ${DATABASE_DRIVER}
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: none

@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <link
+            as="style"
+            crossorigin
+            href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
+            rel="stylesheet"
+    />
+    <title>같이행(Withaeng) - 이메일 인증</title>
+</head>
+<body
+        style="
+      font-family:
+        'Pretendard Variable',
+        Pretendard,
+        -apple-system,
+        BlinkMacSystemFont,
+        system-ui,
+        Roboto,
+        'Helvetica Neue',
+        'Segoe UI',
+        'Apple SD Gothic Neo',
+        'Noto Sans KR',
+        'Malgun Gothic',
+        'Apple Color Emoji',
+        'Segoe UI Emoji',
+        'Segoe UI Symbol',
+        sans-serif;
+    "
+>
+<main>
+    <div
+            style="
+          background-color: #faf8f6;
+          margin: 0 auto;
+          padding: 80px 80px 72px;
+          width: 510px;
+        "
+    >
+        <header>
+            <img src="data:image/jpg;base64,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"/>
+            <div
+                    style="background-color: #ffdd95; height: 2px; margin-top: 11px"
+            ></div>
+        </header>
+        <section
+                style="padding: 60px 40px 0; text-align: center; color: #333333"
+        >
+            <div>
+                <h2 style="font-weight: 600; font-size: 28px; margin: 0 0 20px">
+                    이메일 주소 인증 메일
+                </h2>
+                <p style="margin: 0; font-weight: 400; font-size: 16px">
+                    안녕하세요.<br/>
+                    같이행 서비스 이용을 위해 이메일 주소 인증을 요청하셨습니다.<br/>
+                    아래 버튼을 클릭하여 서비스를 이용할 수 있습니다.
+                </p>
+            </div>
+            <div style="margin-top: 40px">
+                <div
+                        style="
+                background-color: #fff;
+                font-weight: 600;
+                line-height: 20px;
+                font-size: 14px;
+                padding: 10px 0;
+              "
+                        th:text="${email}"
+                ></div>
+                <p
+                        style="
+                margin: 8px 0 0;
+                font-weight: 500;
+                font-size: 12px;
+                color: #939393;
+              "
+                >
+                    인증은 5분 이내로 완료해주세요.
+                </p>
+            </div>
+            <button
+                    style="
+              height: 44px;
+              padding: 0;
+              outline: none;
+              border: none;
+              width: 100%;
+              margin-top: 40px;
+              cursor: pointer;
+            "
+                    type="button"
+            >
+                <a
+                        style="
+                display: block;
+                padding: 12px 20px;
+                border-radius: 2px;
+                width: 100%;
+                height: 44px;
+                color: #fff;
+                background-color: #ffa500;
+                font-weight: 600;
+                line-height: 20px;
+                font-size: 14px;
+                box-sizing: border-box;
+              "
+                        th:href="${redirectUrl}"
+                >
+                    네, 인증합니다.
+                </a>
+            </button>
+        </section>
+    </div>
+</main>
+</body>
+</html>

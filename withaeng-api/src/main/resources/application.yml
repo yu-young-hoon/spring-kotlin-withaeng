@@ -1,0 +1,30 @@
+spring:
+  application.name: withaeng-api
+  profiles.default: local
+  config.import:
+    - application-domain.yml
+    - application-external.yml
+  web.resources.add-mappings: false
+
+withaeng:
+  host: ${WITHAENG_HOST}
+  auth:
+    jwt-issuer: ${JWT_ISSUER}
+    jwt-secret-key: ${JWT_SECRET_KEY}
+
+springdoc: # todo: 개발 종료 후 prod 에서는 비활성화
+  swagger-ui:
+    path: /api-docs
+    operations-sorter: alpha
+  api-docs:
+    groups:
+      enabled: true
+
+---
+spring.config.activate.on-profile: local
+
+---
+spring.config.activate.on-profile: dev
+
+---
+spring.config.activate.on-profile: prod
