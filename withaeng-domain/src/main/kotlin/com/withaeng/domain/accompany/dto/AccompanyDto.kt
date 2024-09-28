@@ -76,6 +76,7 @@ data class SearchAccompanyDto @QueryProjection constructor(
     val maxMemberCount: Long,
     val title: String,
     val tags: Set<String>? = emptySet(),
+    val viewCount: Long,
     val host: SearchAccompanyHostDto,
 )
 
