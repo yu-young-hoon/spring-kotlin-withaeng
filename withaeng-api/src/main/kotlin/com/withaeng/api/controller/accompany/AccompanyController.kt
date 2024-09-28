@@ -157,4 +157,17 @@ class AccompanyController(
         )
         return ApiResponse.success()
     }
+
+    @Operation(
+        summary = "Delete Accompany API",
+        description = "동행 게시글 삭제 API (For Admin)",
+        security = [SecurityRequirement(name = "Authorization")]
+    )
+    @DeleteMapping("/{accompanyId}")
+    fun delete(
+        @Parameter(description = "동행 id") @PathVariable accompanyId: Long,
+    ): ApiResponse<Unit> {
+        accompanyApplicationService.delete(accompanyId)
+        return ApiResponse.success()
+    }
 }

@@ -99,6 +99,10 @@ class AccompanyApplicationService(
         accompanyJoinRequestService.rejectJoin(accompanyId, joinRequestId)
     }
 
+    fun delete(accompanyId: Long) {
+        accompanyService.delete(accompanyId)
+    }
+
     private fun increaseViewCount(accompanyId: Long) {
         accompanyService.increaseViewCount(accompanyId)
     }

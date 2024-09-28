@@ -62,6 +62,11 @@ class AccompanyService(
         accompany.increaseViewCount()
     }
 
+    @Transactional
+    fun delete(accompanyId: Long) {
+        accompanyRepository.deleteById(accompanyId)
+    }
+
     @Transactional(readOnly = true)
     fun findAll(): List<AccompanyDto> {
         return accompanyRepository.findAll().map { it.toDto() }
