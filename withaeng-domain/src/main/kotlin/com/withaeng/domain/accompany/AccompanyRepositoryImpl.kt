@@ -80,6 +80,7 @@ class AccompanyRepositoryImpl(
                     accompany.memberCount,
                     accompany.title,
                     accompany.tags,
+                    accompany.accompanyStatistics.viewCount,
                     QSearchAccompanyHostDto(
                         user.id,
                         user.profile.nickname,

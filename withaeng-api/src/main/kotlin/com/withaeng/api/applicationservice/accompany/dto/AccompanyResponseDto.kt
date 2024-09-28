@@ -55,6 +55,7 @@ data class AccompanySummaryResponse(
     val maxMemberCount: Long,
     val title: String,
     val tags: Set<String>? = null,
+    val viewCount: Long,
     val host: AccompanyHostSummaryResponse,
 )
 
@@ -74,6 +75,7 @@ fun SearchAccompanyDto.toAccompanyResponse(): AccompanySummaryResponse = Accompa
     maxMemberCount = maxMemberCount,
     title = title,
     tags = tags,
+    viewCount = viewCount,
     host = AccompanyHostSummaryResponse(
         id = host.id,
         nickname = host.nickname,
