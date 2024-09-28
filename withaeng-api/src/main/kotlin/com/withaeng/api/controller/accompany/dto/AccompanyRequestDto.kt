@@ -102,9 +102,9 @@ fun UpdateAccompanyRequest.toServiceRequest(
 
 data class SearchAccompanyRequest(
     @Schema(description = "요청할 페이지 번호 (0부터 시작)")
-    val page: String = "0",
+    val page: Int = 0,
     @Schema(description = "페이지당 데이터 개수")
-    val size: String = "5",
+    val size: Int = 8,
     @Schema(description = "동행 정렬 기준")
     val sort: AccompanySort? = null,
     @Schema(description = "동행 상태")
