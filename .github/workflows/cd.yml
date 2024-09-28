@@ -3,7 +3,7 @@ name: Withaeng CD with Gradle, Github Actions
 on:
   push:
     branches:
-      - develop # todo: main branch로 변경
+      - main
 
 jobs:
   build:
