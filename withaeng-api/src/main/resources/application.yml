@@ -19,7 +19,8 @@ springdoc: # todo: 개발 종료 후 prod 에서는 비활성화
   api-docs:
     groups:
       enabled: true
-
+server:
+  port: 80
 ---
 spring.config.activate.on-profile: local
 
