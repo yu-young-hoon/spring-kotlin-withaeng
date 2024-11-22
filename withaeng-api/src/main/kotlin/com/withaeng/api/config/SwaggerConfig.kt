@@ -28,18 +28,4 @@ class SwaggerConfig {
                     .version("1.0")
             )
     }
-
-    @Profile("prod")
-    @Primary
-    @Bean
-    fun prodSwagger(defaultSwagger: OpenAPI): OpenAPI {
-        return defaultSwagger
-            .servers(
-                listOf(
-                    Server()
-                        .url("https://api.withaeng.com")
-                        .description("Production server"),
-                )
-            )
-    }
 }
