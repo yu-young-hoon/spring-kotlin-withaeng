@@ -17,7 +17,7 @@ data class SignUpRequest(
     val birth: LocalDate,
 
     @Schema(description = "성별")
-    val gender: Gender,
+    val gender: Gender = Gender.MALE,
 )
 
 fun SignUpRequest.toServiceRequest(): SignUpServiceRequest = SignUpServiceRequest(
