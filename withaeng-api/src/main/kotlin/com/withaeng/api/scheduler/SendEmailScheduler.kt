@@ -59,7 +59,7 @@ class SendEmailScheduler(
             variables = mapOf(
                 "email" to verificationEmail.email,
                 "redirectUrl" to createRedirectUrl(verificationEmail),
-            )
+            ),
         )
 
     private fun updateEmailStatuses(verificationEmails: List<VerificationEmailDto>): Int {
@@ -67,8 +67,10 @@ class SendEmailScheduler(
         return verificationEmailService.updateStatusByIds(emailIds, VerificationEmailStatus.DONE)
     }
 
-    private fun createRedirectUrl(verificationEmail: VerificationEmailDto): String =
-        "${host}${verificationEmail.toRedirectPath()}?email=${verificationEmail.email}&code=${verificationEmail.code}"
+    private fun createRedirectUrl(verificationEmail: VerificationEmailDto): String {
+        val verifyHost = verificationEmail.host?: host
+        return "${verifyHost}${verificationEmail.toRedirectPath()}?email=${verificationEmail.email}&code=${verificationEmail.code}"
+    }
 
     private fun VerificationEmailDto.toEmailTemplate(): EmailTemplate = when (this.type) {
         VerificationEmailType.VERIFY_EMAIL -> EmailTemplate.VERIFY_EMAIL
@@ -80,3 +82,4 @@ class SendEmailScheduler(
         VerificationEmailType.CHANGE_PASSWORD -> CHANGE_PASSWORD_REDIRECT_PATH
     }
 }
+

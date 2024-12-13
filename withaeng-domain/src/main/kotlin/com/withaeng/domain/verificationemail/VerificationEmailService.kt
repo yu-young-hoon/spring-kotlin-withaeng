@@ -15,7 +15,13 @@ class VerificationEmailService(
 ) {
 
     @Transactional
-    fun create(email: String, userId: Long, code: String, type: VerificationEmailType): VerificationEmailDto {
+    fun create(
+        email: String,
+        userId: Long,
+        code: String,
+        type: VerificationEmailType,
+        host: String?
+    ): VerificationEmailDto {
         userRepository.findByIdOrNull(userId) ?: throw WithaengException.of(
             type = WithaengExceptionType.NOT_EXIST,
             message = "$userId 에 해당하는 사용자를 찾을 수 없습니다."
@@ -31,7 +37,8 @@ class VerificationEmailService(
                 email = email,
                 userId = userId,
                 code = code,
-                type = type
+                type = type,
+                host = host
             )
         ).toDto()
     }

@@ -9,6 +9,7 @@ data class SignUpServiceRequest(
     val password: String,
     val birth: LocalDate,
     val gender: Gender,
+    val host: String?,
 )
 
 fun SignUpServiceRequest.toCommand(temporaryNickname: String, encodedPassword: String): CreateUserCommand =
@@ -25,8 +26,13 @@ data class SignInServiceRequest(
     val password: String,
 )
 
+data class SignInForOAuthServiceRequest(
+    val code: String,
+)
+
 data class ResendEmailServiceRequest(
     val email: String,
+    val host: String?
 )
 
 data class VerifyEmailServiceRequest(
@@ -36,6 +42,7 @@ data class VerifyEmailServiceRequest(
 
 data class SendEmailForChangePasswordServiceRequest(
     val email: String,
+    val host: String?,
 )
 
 data class ChangePasswordServiceRequest(

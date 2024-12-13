@@ -21,6 +21,11 @@ springdoc: # todo: 개발 종료 후 prod 에서는 비활성화
       enabled: true
 server:
   port: 80
+
+
+logging:
+  level:
+    root: debug
 ---
 spring.config.activate.on-profile: local
 

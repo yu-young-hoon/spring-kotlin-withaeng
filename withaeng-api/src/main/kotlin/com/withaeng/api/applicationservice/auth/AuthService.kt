@@ -17,7 +17,7 @@ import java.util.*
 
 @Service
 @Transactional(readOnly = true)
-class AuthApplicationService(
+class AuthService(
     private val userService: UserService,
     private val verificationEmailService: VerificationEmailService,
     private val jwtAgent: JwtAgent,
@@ -48,7 +48,8 @@ class AuthApplicationService(
             email = newUserDto.email,
             userId = newUserDto.id,
             code = UUID.randomUUID().toString(),
-            type = VerificationEmailType.VERIFY_EMAIL
+            type = VerificationEmailType.VERIFY_EMAIL,
+            host = request.host,
         )
         return UserResponse(newUserDto.id, newUserDto.email, jwtAgent.provide(UserInfo.from(newUserDto)))
     }
@@ -81,7 +82,8 @@ class AuthApplicationService(
             email = userDto.email,
             userId = userDto.id,
             code = UUID.randomUUID().toString(),
-            type = VerificationEmailType.VERIFY_EMAIL
+            type = VerificationEmailType.VERIFY_EMAIL,
+            host = request.host,
         )
     }
 
@@ -118,7 +120,8 @@ class AuthApplicationService(
             email = userDto.email,
             userId = userDto.id,
             code = UUID.randomUUID().toString(),
-            type = VerificationEmailType.CHANGE_PASSWORD
+            type = VerificationEmailType.CHANGE_PASSWORD,
+            host = request.host,
         )
     }
 
@@ -154,4 +157,15 @@ class AuthApplicationService(
             throw WithaengException.of(WithaengExceptionType.AUTHENTICATION_FAILURE)
         }
     }
+
+//    fun signInForOAuth(request: SignInForOAuthServiceRequest): UserResponse {
+//
+//        val userDto = userService.findByEmailOrNull(request.email)
+//            ?: throw WithaengException.of(
+//                type = WithaengExceptionType.NOT_EXIST,
+//                message = "이메일에 해당하는 유저를 찾을 수 없습니다."
+//            )
+//        checkValidUserPassword(request.password, userDto.password)
+//        return UserResponse(userDto.id, userDto.email, jwtAgent.provide(UserInfo.from(userDto)))
+//    }
 }

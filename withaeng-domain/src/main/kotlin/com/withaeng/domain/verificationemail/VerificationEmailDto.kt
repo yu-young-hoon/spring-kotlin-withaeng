@@ -10,6 +10,7 @@ data class VerificationEmailDto(
     val type: VerificationEmailType,
     val status: VerificationEmailStatus,
     val userId: Long,
+    val host: String?,
 )
 
 fun VerificationEmail.toDto(): VerificationEmailDto = VerificationEmailDto(
@@ -20,4 +21,5 @@ fun VerificationEmail.toDto(): VerificationEmailDto = VerificationEmailDto(
     type = type,
     status = status,
     userId = userId,
+    host = host,
 )

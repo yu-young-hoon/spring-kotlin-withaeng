@@ -22,4 +22,7 @@ class VerificationEmail(
 
     @Column(name = "user_id", nullable = false)
     val userId: Long,
+
+    @Column(name = "host", nullable = true)
+    val host: String?,
 ) : BaseEntity()
