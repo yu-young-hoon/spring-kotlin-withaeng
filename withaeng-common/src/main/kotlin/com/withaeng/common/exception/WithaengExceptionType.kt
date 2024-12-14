@@ -15,6 +15,7 @@ enum class WithaengExceptionType(
         500
     ),
     EMPTY_FCM_TOKEN("Not Exist FCM Token", "U004_EMPTY_FCM_TOKEN", 400),
+    VERIFY_NOT_YET_ERROR("이메일 인증이 되지 않았습니다.", "U005_VERIFY_NOT_YET_ERROR", 400),
 
     // COMMON
     NOT_EXIST("존재하지 않습니다.", "C001_NOT_EXIST", 404),
