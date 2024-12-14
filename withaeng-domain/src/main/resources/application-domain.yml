@@ -61,4 +61,4 @@ spring:
         dialect:
           org.hibernate.dialect.MySQL8Dialect
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
