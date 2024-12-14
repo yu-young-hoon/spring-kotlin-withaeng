@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile
     container_name: withaeng-api
     ports:
-      - "443:443"
+      - "80:80"
     environment:
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
       DATABASE_DRIVER: ${DATABASE_DRIVER}
