@@ -21,6 +21,14 @@ fun SignUpServiceRequest.toCommand(temporaryNickname: String, encodedPassword: S
         nickname = temporaryNickname,
     )
 
+fun SignInForOAuthServiceRequest.toCommand(temporaryNickname: String, googleId: String, birth: LocalDate?, gender: Gender?): CreateUserCommand =
+    CreateUserCommand(
+        googleId = googleId,
+        birth = birth,
+        gender = gender,
+        nickname = temporaryNickname,
+    )
+
 data class SignInServiceRequest(
     val email: String,
     val password: String,

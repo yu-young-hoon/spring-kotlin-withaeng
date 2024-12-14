@@ -18,6 +18,9 @@ data class SignUpRequest(
 
     @Schema(description = "성별")
     val gender: Gender = Gender.MALE,
+
+    @Schema(description = "이메일 승인 호스트")
+    val host: String?,
 )
 
 fun SignUpRequest.toServiceRequest(): SignUpServiceRequest = SignUpServiceRequest(
@@ -25,6 +28,7 @@ fun SignUpRequest.toServiceRequest(): SignUpServiceRequest = SignUpServiceReques
     password = password,
     birth = birth,
     gender = gender,
+    host = host
 )
 
 @Schema(description = "[Request] 로그인")
@@ -41,14 +45,28 @@ fun SignInRequest.toServiceRequest(): SignInServiceRequest = SignInServiceReques
     password = password
 )
 
+@Schema(description = "[Request] OAUTH 로그인")
+data class SignInAuthRequest(
+    @Schema(description = "로그인 할 code")
+    val code: String,
+)
+
+fun SignInAuthRequest.toServiceRequest(): SignInForOAuthServiceRequest = SignInForOAuthServiceRequest(
+    code = code,
+)
+
 @Schema(description = "[Request] 이메일 재전송")
 data class ResendEmailRequest(
     @Schema(description = "재전송 할 이메일")
     val email: String,
+
+    @Schema(description = "이메일 승인 호스트")
+    val host: String?
 )
 
 fun ResendEmailRequest.toServiceRequest(): ResendEmailServiceRequest = ResendEmailServiceRequest(
-    email = email
+    email = email,
+    host = host
 )
 
 @Schema(description = "[Request] 이메일 인증")
@@ -70,10 +88,13 @@ fun VerifyEmailRequest.toServiceRequest(): VerifyEmailServiceRequest = VerifyEma
 data class SendEmailForChangePasswordRequest(
     @Schema(description = "이메일 인증 할 이메일")
     val email: String,
+
+    @Schema(description = "이메일 승인 호스트")
+    val host: String?
 )
 
 fun SendEmailForChangePasswordRequest.toServiceRequest(): SendEmailForChangePasswordServiceRequest =
-    SendEmailForChangePasswordServiceRequest(email)
+    SendEmailForChangePasswordServiceRequest(email, host)
 
 @Schema(description = "[Request] 비밀번호 재설정")
 data class ChangePasswordRequest(

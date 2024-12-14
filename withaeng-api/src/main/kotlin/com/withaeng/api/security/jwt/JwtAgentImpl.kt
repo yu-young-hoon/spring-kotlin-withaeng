@@ -29,7 +29,7 @@ class JwtAgentImpl(
         val expiredDateTime = issuerDateTime.plusDays(TOKEN_EXPIRE_DAY)
         return Jwts.builder()
             .setHeaderParam(KEY_TOKEN_TYPE, TOKEN_TYPE_JWT)
-            .setSubject(createSubject(userInfo.email))
+            .setSubject(createSubject(userInfo.email!!))
             .setAudience("${userInfo.email}|${userInfo.id}")
             .setIssuer(issuer)
             .setIssuedAt(issuerDateTime.convertToDate())

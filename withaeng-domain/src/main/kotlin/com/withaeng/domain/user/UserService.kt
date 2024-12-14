@@ -27,6 +27,11 @@ class UserService(private val userRepository: UserRepository) {
     }
 
     @Transactional(readOnly = true)
+    fun findByGoogleId(googleId: String): UserSimpleDto? {
+        return userRepository.findByGoogleId(googleId)?.toSimpleDto()
+    }
+
+    @Transactional(readOnly = true)
     fun getProfileCompletionPercentage(userId: Long): Int {
         val user = userRepository.findByIdOrNull(userId).getOrThrow()
         val profile = user.profile
@@ -101,6 +106,13 @@ class UserService(private val userRepository: UserRepository) {
     fun updateNickname(id: Long, nickname: String?): UserSimpleDto {
         val user = userRepository.findByIdOrNull(id).getOrThrow()
         user.profile.nickname = nickname ?: user.profile.nickname
+        return user.toSimpleDto()
+    }
+
+    @Transactional
+    fun updateInstagram(id: Long, instagram: String?): UserSimpleDto {
+        val user = userRepository.findByIdOrNull(id).getOrThrow()
+        user.profile.instagram = instagram ?: user.profile.instagram
         return user.toSimpleDto()
     }
 

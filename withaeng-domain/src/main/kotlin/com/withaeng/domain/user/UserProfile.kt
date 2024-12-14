@@ -13,4 +13,7 @@ class UserProfile(
 
     @Column(name = "profile_image_url", nullable = true)
     var profileImageUrl: String? = null,
+
+    @Column(name = "instagram", nullable = true)
+    var instagram: String? = null,
 )

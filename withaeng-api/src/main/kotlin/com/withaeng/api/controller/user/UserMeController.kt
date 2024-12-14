@@ -6,10 +6,7 @@ import com.withaeng.api.applicationservice.user.dto.UserStatisticalProfileRespon
 import com.withaeng.api.applicationservice.user.dto.UserTravelPreferenceResponse
 import com.withaeng.api.common.ApiResponse
 import com.withaeng.api.common.IdResponse
-import com.withaeng.api.controller.user.dto.PatchNicknameRequest
-import com.withaeng.api.controller.user.dto.PutIntroductionRequest
-import com.withaeng.api.controller.user.dto.PutTravelPreferenceRequest
-import com.withaeng.api.controller.user.dto.toServiceRequest
+import com.withaeng.api.controller.user.dto.*
 import com.withaeng.api.security.authentication.UserInfo
 import com.withaeng.api.security.resolver.GetAuth
 import io.swagger.v3.oas.annotations.Operation
@@ -107,6 +104,21 @@ class UserMeController(private val userApplicationService: UserApplicationServic
     ): ApiResponse<IdResponse> {
         return ApiResponse.success(
             userApplicationService.updateNickname(userInfo.id, request.nickname)
+        )
+    }
+
+    @Operation(
+        summary = "Update Instagram",
+        description = "Instagram 값이 null 이면 기존 Instagram이 유지됩니다.",
+        security = [SecurityRequirement(name = "Authorization")]
+    )
+    @PatchMapping("/instagram")
+    fun patchInstagram(
+        @GetAuth userInfo: UserInfo,
+        @RequestBody @Valid request: PatchInstagramRequest,
+    ): ApiResponse<IdResponse> {
+        return ApiResponse.success(
+            userApplicationService.updateInstagram(userInfo.id, request.instagram)
         )
     }
 

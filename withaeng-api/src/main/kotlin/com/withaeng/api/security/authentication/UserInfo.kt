@@ -5,7 +5,7 @@ import com.withaeng.domain.user.dto.UserSimpleDto
 
 data class UserInfo(
     val id: Long,
-    val email: String,
+    val email: String?,
     val roles: Set<UserRole>,
 ) {
     companion object {

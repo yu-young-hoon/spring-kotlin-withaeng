@@ -8,18 +8,21 @@ import java.time.LocalDate
 @Table(name = "users")
 @Entity
 class User(
-    @Column(name = "email", nullable = false)
-    val email: String,
+    @Column(name = "email", nullable = true)
+    val email: String? = null,
 
-    @Column(name = "password", nullable = false)
-    var password: String,
+    @Column(name = "password", nullable = true)
+    var password: String? = null,
 
-    @Column(name = "birth", nullable = false)
-    val birth: LocalDate,
+    @Column(name = "google_id", nullable = true)
+    val googleId: String? = null,
+
+    @Column(name = "birth", nullable = true)
+    val birth: LocalDate? = null,
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "gender", nullable = false)
-    val gender: Gender,
+    @Column(name = "gender", nullable = true)
+    val gender: Gender? = null,
 
     @Column(name = "manner_score", nullable = false)
     var mannerScore: Double = 36.5,
@@ -37,10 +40,10 @@ class User(
 
     companion object {
         fun create(
-            email: String,
-            password: String,
-            birth: LocalDate,
-            gender: Gender,
+            email: String?,
+            password: String?,
+            birth: LocalDate?,
+            gender: Gender?,
             nickname: String,
         ): User {
             return User(
@@ -52,6 +55,23 @@ class User(
                     nickname = nickname
                 ),
                 roles = setOf(UserRole.NON_USER)
+            )
+        }
+
+        fun create(
+            googleId: String?,
+            birth: LocalDate,
+            gender: Gender,
+            nickname: String,
+        ): User {
+            return User(
+                googleId = googleId,
+                birth = birth,
+                gender = gender,
+                profile = UserProfile(
+                    nickname = nickname
+                ),
+                roles = setOf(UserRole.USER)
             )
         }
     }

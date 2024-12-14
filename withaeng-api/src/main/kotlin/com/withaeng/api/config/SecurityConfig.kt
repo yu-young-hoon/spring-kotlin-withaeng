@@ -39,13 +39,26 @@ class SecurityConfig(
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         return http
+            .headers {
+                it.frameOptions { frameOptionsConfig ->
+                    frameOptionsConfig.sameOrigin()
+                }
+            }
             .cors { it.configurationSource(corsConfigurationSource()) }
             .csrf { it.disable() }
             .httpBasic { it.disable() }
             .formLogin { it.disable() }
             .authorizeHttpRequests {
                 it
-                    .requestMatchers("/api/v1/auth/**", "/api/v1/test/**", "/api/v1/destinations").permitAll()
+                    .requestMatchers(
+                        "/home",
+                        "/instagram",
+                        "/auth",
+                        "/api/v1/auth/**",
+                        "/api/v1/test/**",
+                        "/api/v1/destinations",
+                        "/h2-console/**",
+                    ).permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/v1/accompany/**").permitAll()
                     .requestMatchers(HttpMethod.DELETE, "/api/v1/accompany/**")
                     .hasRole(UserRole.ADMIN.getActualRoleName())

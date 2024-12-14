@@ -8,7 +8,7 @@ class JwtAuthentication(private val userInfo: UserInfo) : Authentication {
 
     private var isAuthenticated = true
 
-    override fun getName(): String = userInfo.email
+    override fun getName(): String = userInfo.email!!
 
     override fun getAuthorities(): Collection<GrantedAuthority> = userInfo.roles
         .map { userRole -> SimpleGrantedAuthority(userRole.role) }

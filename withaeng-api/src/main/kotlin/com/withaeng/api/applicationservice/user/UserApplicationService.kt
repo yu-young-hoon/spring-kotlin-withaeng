@@ -45,6 +45,10 @@ class UserApplicationService(
         return userService.updateNickname(id, nickname).toIdResponse()
     }
 
+    fun updateInstagram(id: Long, instagram: String?): IdResponse {
+        return userService.updateInstagram(id, instagram).toIdResponse()
+    }
+
     fun putIntroduction(id: Long, introduction: String?): IdResponse {
         return userService.putIntroduction(id, introduction).toIdResponse()
     }

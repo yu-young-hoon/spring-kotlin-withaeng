@@ -8,7 +8,7 @@ import java.time.LocalDate
 
 data class UserSimpleResponse(
     val id: Long,
-    val email: String,
+    val email: String?,
     val nickname: String,
 )
 
@@ -43,8 +43,8 @@ data class UserStatisticalProfileResponse(
     val id: Long,
     val nickname: String,
     val introduction: String? = null,
-    val gender: Gender,
-    val birth: LocalDate,
+    val gender: Gender?,
+    val birth: LocalDate?,
     val profileImageUrl: String? = null,
     val profileCompletionPercentage: Int,
     val mannerScore: Double,

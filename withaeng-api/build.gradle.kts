@@ -23,6 +23,8 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:$jjwtVersion")
+    implementation("org.apache.httpcomponents.client5:httpclient5:5.3.1")
+
 
     // Swagger
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$swaggerVersion")

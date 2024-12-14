@@ -30,13 +30,13 @@ class AuthController(
         )
     }
 
-//    @Operation(summary = "Sign In For OAUTH API", description = "OAUTH 로그인 API")
-//    @PostMapping("/oauth")
-//    fun signInOauth(@RequestBody request: SignInAuthRequest): Unit {
-//        return ApiResponse.success(
-//            authService.signInForOAuth(request.toServiceRequest())
-//        )
-//    }
+    @Operation(summary = "Sign In For OAUTH API", description = "OAUTH 로그인 API")
+    @PostMapping("/oauth")
+    fun signInOauth(@RequestBody request: SignInAuthRequest): ApiResponse<UserResponse> {
+        return ApiResponse.success(
+            authService.signInForOAuth(request.toServiceRequest())
+        )
+    }
 
     @Operation(summary = "Re-sending Email API", description = "이메일 재전송 API")
     @PostMapping("/re-send")

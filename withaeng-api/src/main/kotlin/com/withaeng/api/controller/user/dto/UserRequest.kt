@@ -10,6 +10,12 @@ data class PatchNicknameRequest(
     val nickname: String? = null,
 )
 
+@Schema(description = "[Request] User 프로필 정보를 추가합니다")
+data class PatchInstagramRequest(
+    @Schema(description = "유저 인스타그램")
+    val instagram: String? = null,
+)
+
 @Schema(description = "[Request] User 소개 정보를 추가합니다")
 data class PutIntroductionRequest(
     @Schema(description = "유저 소개")

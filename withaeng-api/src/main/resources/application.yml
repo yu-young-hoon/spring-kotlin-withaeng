@@ -26,6 +26,8 @@ server:
 logging:
   level:
     root: debug
+    org.apache.http: DEBUG
+    org.apache.hc.client5.http: DEBUG
 ---
 spring.config.activate.on-profile: local
 
