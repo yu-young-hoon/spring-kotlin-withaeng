@@ -6,6 +6,11 @@ import org.springframework.web.bind.annotation.GetMapping
 
 @Controller
 class HomeController {
+    @GetMapping("/")
+    fun health(model: Model): String {
+        return "home"
+    }
+
     @GetMapping("/home")
     fun home(model: Model): String {
         return "home"

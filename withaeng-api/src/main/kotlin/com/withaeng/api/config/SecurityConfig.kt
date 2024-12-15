@@ -51,6 +51,7 @@ class SecurityConfig(
             .authorizeHttpRequests {
                 it
                     .requestMatchers(
+                        "/",
                         "/home",
                         "/instagram",
                         "/auth",
