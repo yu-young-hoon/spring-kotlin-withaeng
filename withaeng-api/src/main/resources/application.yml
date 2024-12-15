@@ -20,7 +20,7 @@ springdoc: # todo: 개발 종료 후 prod 에서는 비활성화
     groups:
       enabled: true
 server:
-  port: 443
+  port: 80
 
 
 logging:
