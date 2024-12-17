@@ -158,7 +158,7 @@ class AuthService(
 
     private fun checkValidUserPassword(source: String, encryptedPassword: String) {
         if (!passwordEncoder.matches(source, encryptedPassword)) {
-            throw WithaengException.of(WithaengExceptionType.AUTHENTICATION_FAILURE)
+            throw WithaengException.of(WithaengExceptionType.INVALID_PASSWORD)
         }
     }
 

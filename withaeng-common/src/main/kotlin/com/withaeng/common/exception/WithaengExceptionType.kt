@@ -30,6 +30,7 @@ enum class WithaengExceptionType(
     ARGUMENT_NOT_VALID("Method Argument Not Valid. Check argument validation.", "C009_ARGUMENT_NOT_VALID", 400),
     JSON_PARSE_ERROR("Request JSON parsing error", "C010_JSON_PARSE_ERROR", 400),
     INVALID_JSON_FIELD("Invalid JSON field value", "C011_INVALID_JSON_FIELD", 400),
+    INVALID_PASSWORD("비밀번호가 올바르지 않습니다.", "C012_AUTHENTICATION_FAILURE", 401),
 
     // ACCOMPANY
     INVALID_ACCOMPANY_AGE_VALUE("Invalid accompany age value", "A001_INVALID_ACCOMPANY_AGE_VALUE", 400),
