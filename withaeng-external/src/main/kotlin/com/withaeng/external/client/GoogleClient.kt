@@ -25,7 +25,7 @@ class GoogleClient {
         val code: String,
         val clientId: String = "1083774231549-gham8kln42p4koag86qhuhtouuoakm14.apps.googleusercontent.com",
         val clientSecret: String = "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",
-        val redirectUri: String = "http://localhost/auth",
+        val redirectUri: String = "http://localhost:3000/google",
         val grantType: String = "authorization_code",
     )
 
@@ -46,6 +46,7 @@ class GoogleClient {
     data class MeResponse(
         val id: String,
         val name: String,
+        val email: String,
     )
     fun getInfo(token: String): Info? {
         val restClient = RestClient.create();

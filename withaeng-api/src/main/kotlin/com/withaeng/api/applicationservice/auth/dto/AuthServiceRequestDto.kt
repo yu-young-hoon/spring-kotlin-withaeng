@@ -21,12 +21,13 @@ fun SignUpServiceRequest.toCommand(temporaryNickname: String, encodedPassword: S
         nickname = temporaryNickname,
     )
 
-fun SignInForOAuthServiceRequest.toCommand(temporaryNickname: String, googleId: String, birth: LocalDate?, gender: Gender?): CreateUserCommand =
+fun SignInForOAuthServiceRequest.toCommand(temporaryNickname: String, email: String, googleId: String, birth: LocalDate?, gender: Gender?): CreateUserCommand =
     CreateUserCommand(
+        nickname = temporaryNickname,
+        email = email,
         googleId = googleId,
         birth = birth,
         gender = gender,
-        nickname = temporaryNickname,
     )
 
 data class SignInServiceRequest(

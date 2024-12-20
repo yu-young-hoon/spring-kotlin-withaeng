@@ -162,21 +162,27 @@ class AuthService(
         }
     }
 
+    @Transactional
     fun signInForOAuth(request: SignInForOAuthServiceRequest): UserResponse {
-        val token = googleClient.getToken(request.code)
-        val me = googleClient.getMe(token!!.accessToken)
-        val info = googleClient.getInfo(token!!.accessToken)
-        val userDto = userService.findByGoogleId(me!!.id)?.let {
-            userService.create(
-                request.toCommand(
-                    UserNicknameUtils.createTemporaryNickname(),
-                    googleId = me.id!!,
-                    birth = info?.birthdays?.map { LocalDate.of(it.date.year, it.date.month, it.date.day)}?.firstOrNull(),
-                    gender = info?.genders?.map { Gender.valueOf(it.value) }?.firstOrNull()
-                ),
-            )
-        }
+        val token = googleClient.getToken(request.code) ?: throw WithaengException.of(
+            type = WithaengExceptionType.INVALID_ACCESS,
+            message = "구글 토큰을 받아오는데 실패했습니다.",
+        )
+        val me = googleClient.getMe(token.accessToken) ?: throw WithaengException.of(
+            type = WithaengExceptionType.INVALID_ACCESS,
+            message = "구글 사용자 정보를 받아오는데 실패했습니다.",
+        )
+        val info = googleClient.getInfo(token.accessToken)
+        val userDto = userService.findByGoogleId(me.id) ?: userService.create(
+            request.toCommand(
+                UserNicknameUtils.createTemporaryNickname(),
+                me.email,
+                googleId = me.id,
+                birth = info?.birthdays?.map { LocalDate.of(it.date.year, it.date.month, it.date.day) }?.firstOrNull(),
+                gender = info?.genders?.map { Gender.valueOf(it.value.uppercase()) }?.firstOrNull(),
+            ),
+        )
 
-        return UserResponse(userDto!!.id, userDto.email, jwtAgent.provide(UserInfo.from(userDto)))
+        return UserResponse(userDto.id, userDto.email, jwtAgent.provide(UserInfo.from(userDto)))
     }
 }

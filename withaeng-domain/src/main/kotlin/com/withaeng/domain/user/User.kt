@@ -8,7 +8,7 @@ import java.time.LocalDate
 @Table(name = "users")
 @Entity
 class User(
-    @Column(name = "email", nullable = true)
+    @Column(name = "email", nullable = true, unique = true)
     val email: String? = null,
 
     @Column(name = "password", nullable = true)
@@ -59,12 +59,16 @@ class User(
         }
 
         fun create(
+            email: String?,
+            password: String?,
             googleId: String?,
-            birth: LocalDate,
-            gender: Gender,
+            birth: LocalDate?,
+            gender: Gender?,
             nickname: String,
         ): User {
             return User(
+                email = email,
+                password = password,
                 googleId = googleId,
                 birth = birth,
                 gender = gender,

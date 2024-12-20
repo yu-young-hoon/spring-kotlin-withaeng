@@ -65,6 +65,7 @@ class UserService(private val userRepository: UserRepository) {
         return userRepository.save(
             User.create(
                 email = createUserCommand.email,
+                googleId = createUserCommand.googleId,
                 nickname = createUserCommand.nickname,
                 password = createUserCommand.password,
                 birth = createUserCommand.birth,

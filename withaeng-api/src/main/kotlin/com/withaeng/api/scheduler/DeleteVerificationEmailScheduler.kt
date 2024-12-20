@@ -5,7 +5,6 @@ import com.withaeng.domain.verificationemail.VerificationEmailStatus
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Async
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
@@ -20,7 +19,7 @@ class DeleteVerificationEmailScheduler(
 
     private val log: Logger = LoggerFactory.getLogger(DeleteVerificationEmailScheduler::class.java)
 
-    @Scheduled(cron = "0 * * * * *")
+//    @Scheduled(cron = "0 * * * * *")
     @Async("asyncSchedulerExecutor")
     @Transactional
     fun deleteEmails() {
