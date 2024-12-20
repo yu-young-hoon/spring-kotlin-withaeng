@@ -1,6 +1,7 @@
 package com.withaeng.external.client
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
 import org.springframework.stereotype.Service
@@ -8,9 +9,12 @@ import org.springframework.web.client.RestClient
 
 
 @Service
-class GoogleClient {
+class GoogleClient(
+    @Value("\${redirect-url}")
+    private var redirectUrl: String,
+) {
     fun getToken(code: String): TokenResponse? {
-        val tokenRequest = TokenRequest(code.replace("%2F", "/"))
+        val tokenRequest = TokenRequest(code.replace("%2F", "/"), redirectUri = redirectUrl)
         val restClient = RestClient.builder().requestFactory(HttpComponentsClientHttpRequestFactory()).build()
         val response = restClient.post()
             .uri("https://oauth2.googleapis.com/token")
