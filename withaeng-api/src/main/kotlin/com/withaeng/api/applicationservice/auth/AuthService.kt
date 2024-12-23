@@ -172,17 +172,32 @@ class AuthService(
             type = WithaengExceptionType.INVALID_ACCESS,
             message = "구글 사용자 정보를 받아오는데 실패했습니다.",
         )
+        userService.findByGoogleId(me.id)?.let {
+            return UserResponse(it.id, it.email, jwtAgent.provide(UserInfo.from(it)))
+        }
+
         val info = googleClient.getInfo(token.accessToken)
-        val userDto = userService.findByGoogleId(me.id) ?: userService.create(
+        val birth = info?.birthdays?.map {
+            LocalDate.of(it.date.year, it.date.month, it.date.day)
+        }?.firstOrNull()
+        val gender = info?.genders?.map {
+            Gender.valueOf(it.value.uppercase())
+        }?.firstOrNull()
+        userService.create(
             request.toCommand(
                 UserNicknameUtils.createTemporaryNickname(),
                 me.email,
                 googleId = me.id,
-                birth = info?.birthdays?.map { LocalDate.of(it.date.year, it.date.month, it.date.day) }?.firstOrNull(),
-                gender = info?.genders?.map { Gender.valueOf(it.value.uppercase()) }?.firstOrNull(),
+                birth = birth ?: LocalDate.now(),
+                gender = gender ?: Gender.MALE,
             ),
-        )
-
-        return UserResponse(userDto.id, userDto.email, jwtAgent.provide(UserInfo.from(userDto)))
+        ).let {
+            return UserResponse(
+                userId = it.id,
+                email = it.email,
+                accessToken = jwtAgent.provide(UserInfo.from(it)),
+                signUp = true,
+            )
+        }
     }
 }
