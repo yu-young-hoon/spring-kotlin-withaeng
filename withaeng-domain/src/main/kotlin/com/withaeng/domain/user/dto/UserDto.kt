@@ -25,6 +25,7 @@ fun User.toSimpleDto(): UserSimpleDto = UserSimpleDto(
         nickname = profile.nickname,
         introduction = profile.introduction,
         profileImageUrl = profile.profileImageUrl,
+        instagram = profile.instagram,
     ),
     roles = roles,
 )
@@ -46,6 +47,7 @@ data class UserProfileDto(
     val nickname: String,
     val introduction: String? = null,
     val profileImageUrl: String? = null,
+    val instagram: String?,
 )
 
 data class UserTravelPreferenceDto(
@@ -70,9 +72,10 @@ fun User.toDetailDto(): UserDetailDto = UserDetailDto(
         nickname = profile.nickname,
         introduction = profile.introduction,
         profileImageUrl = profile.profileImageUrl,
+        instagram = profile.instagram,
     ),
     travelPreference = travelPreference?.toDto(),
-    roles = roles
+    roles = roles,
 )
 
 fun UserTravelPreference.toDto(): UserTravelPreferenceDto = UserTravelPreferenceDto(

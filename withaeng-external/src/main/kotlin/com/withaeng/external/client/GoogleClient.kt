@@ -53,13 +53,15 @@ class GoogleClient(
         val email: String,
     )
     fun getInfo(token: String): Info? {
-        val restClient = RestClient.create();
-        val response = restClient.get()
-            .uri("https://people.googleapis.com/v1/people/me?personFields=birthdays,genders")
-            .header("Authorization", "Bearer $token")
-            .retrieve()
-            .toEntity(Info::class.java)
-        return response.body
+        return runCatching {
+            val restClient = RestClient.create()
+            val response = restClient.get()
+                .uri("https://people.googleapis.com/v1/people/me?personFields=birthdays,genders")
+                .header("Authorization", "Bearer $token")
+                .retrieve()
+                .toEntity(Info::class.java)
+            response.body
+        }.getOrDefault(null)
     }
     data class Info(
         val genders: List<Gender>,

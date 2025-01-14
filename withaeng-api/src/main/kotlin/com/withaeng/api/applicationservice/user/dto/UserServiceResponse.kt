@@ -49,6 +49,7 @@ data class UserStatisticalProfileResponse(
     val profileCompletionPercentage: Int,
     val mannerScore: Double,
     val accompanyCount: Int,
+    val instagram: String? = null,
     val createdAt: LocalDate,
 ) {
     companion object {
@@ -66,6 +67,7 @@ data class UserStatisticalProfileResponse(
             profileCompletionPercentage = profileCompletionPercentage,
             mannerScore = userDetail.mannerScore,
             accompanyCount = accompanyCount,
+            instagram = userDetail.profile.instagram,
             createdAt = userDetail.createdDate,
         )
     }
