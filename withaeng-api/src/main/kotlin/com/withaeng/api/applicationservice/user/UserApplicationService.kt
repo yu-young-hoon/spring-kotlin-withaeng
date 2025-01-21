@@ -81,5 +81,4 @@ class UserApplicationService(
     }
 
     fun UserSimpleDto.toIdResponse(): IdResponse = IdResponse(id)
-
 }

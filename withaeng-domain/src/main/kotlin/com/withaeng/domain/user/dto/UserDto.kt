@@ -40,6 +40,7 @@ data class UserDetailDto(
     val mannerScore: Double,
     val profile: UserProfileDto,
     val travelPreference: UserTravelPreferenceDto? = null,
+    val travelLiking: UserTravelLikingDto? = null,
     val roles: Set<UserRole>,
 )
 
@@ -60,6 +61,10 @@ data class UserTravelPreferenceDto(
     val drinkingType: UserDrinkingType? = null,
 )
 
+data class UserTravelLikingDto(
+    val travelLikings: Set<TravelLiking>? = emptySet(),
+)
+
 fun User.toDetailDto(): UserDetailDto = UserDetailDto(
     id = id,
     createdDate = createdAt.toLocalDate(),
@@ -75,6 +80,7 @@ fun User.toDetailDto(): UserDetailDto = UserDetailDto(
         instagram = profile.instagram,
     ),
     travelPreference = travelPreference?.toDto(),
+    travelLiking = travelLikings?.toDto(),
     roles = roles,
 )
 
@@ -86,4 +92,8 @@ fun UserTravelPreference.toDto(): UserTravelPreferenceDto = UserTravelPreference
     foodRestrictions = foodRestrictions,
     smokingType = smokingType,
     drinkingType = drinkingType,
+)
+
+fun MutableSet<UserTravelLiking>.toDto(): UserTravelLikingDto = UserTravelLikingDto(
+    travelLikings = map { TravelLiking(it.likingId, it.likingValue) }.toSet(),
 )

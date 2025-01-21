@@ -27,3 +27,7 @@ data class UpdateTravelPreferenceCommand(
     val smokingType: UserSmokingType? = null,
     val drinkingType: UserDrinkingType? = null,
 )
+
+data class UpdateTravelLikingCommand(
+    val travelLikings: Set<TravelLiking> = emptySet(),
+)

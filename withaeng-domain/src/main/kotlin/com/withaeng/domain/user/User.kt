@@ -33,6 +33,9 @@ class User(
     @OneToOne(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
     var travelPreference: UserTravelPreference? = null,
 
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var travelLikings: MutableSet<UserTravelLiking> = mutableSetOf(),
+
     @Convert(converter = UserRoleConverter::class)
     @Column(name = "roles")
     var roles: Set<UserRole>,
