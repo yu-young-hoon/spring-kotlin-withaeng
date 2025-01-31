@@ -74,10 +74,10 @@ class Accompany(
     @Comment("태그 목록")
     var tags: Set<String> = setOf(),
 
-    @OneToOne(mappedBy = "accompany", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToOne(mappedBy = "accompany", cascade = [CascadeType.ALL], orphanRemoval = false)
     var accompanyStatistics: AccompanyStatistics? = null,
 
-    @OneToMany(mappedBy = "accompany", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(mappedBy = "accompany", cascade = [CascadeType.ALL], orphanRemoval = false)
     var joinRequests: MutableList<AccompanyJoinRequest> = mutableListOf(),
 
     ) : BaseEntity() {

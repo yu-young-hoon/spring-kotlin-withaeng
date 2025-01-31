@@ -30,10 +30,10 @@ class User(
     @Embedded
     val profile: UserProfile,
 
-    @OneToOne(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToOne(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = false)
     var travelPreference: UserTravelPreference? = null,
 
-    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = false)
     var travelLikings: MutableSet<UserTravelLiking> = mutableSetOf(),
 
     @Convert(converter = UserRoleConverter::class)
