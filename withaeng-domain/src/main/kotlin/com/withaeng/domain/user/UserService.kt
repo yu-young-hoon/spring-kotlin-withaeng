@@ -73,8 +73,8 @@ class UserService(private val userRepository: UserRepository) {
     @Transactional
     fun replaceTravelLiking(userId: Long, command: UpdateTravelLikingCommand): UserSimpleDto {
         val user = userRepository.findByIdOrNull(userId).getOrThrow()
-        user.travelLikings =
-            command.travelLikings.map { UserTravelLiking(it.travelLikingId, it.travelLikingValue, user) }.toMutableSet()
+        user.travelLikings.clear()
+        user.travelLikings.addAll(command.travelLikings.map { UserTravelLiking(it.travelLikingId, it.travelLikingValue, user) }.toMutableSet())
         return user.toSimpleDto()
     }
 
