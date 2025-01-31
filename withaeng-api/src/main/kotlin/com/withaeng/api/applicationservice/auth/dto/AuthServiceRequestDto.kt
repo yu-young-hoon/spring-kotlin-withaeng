@@ -12,18 +12,17 @@ data class SignUpServiceRequest(
     val host: String?,
 )
 
-fun SignUpServiceRequest.toCommand(temporaryNickname: String, encodedPassword: String): CreateUserCommand =
-    CreateUserCommand(
-        email = email,
-        password = encodedPassword,
-        birth = birth,
-        gender = gender,
-        nickname = temporaryNickname,
-    )
-
-fun SignInForOAuthServiceRequest.toCommand(temporaryNickname: String, email: String, googleId: String, birth: LocalDate?, gender: Gender?): CreateUserCommand =
+fun SignInForOAuthServiceRequest.toCommand(
+    temporaryNickname: String,
+    name: String,
+    email: String,
+    googleId: String,
+    birth: LocalDate?,
+    gender: Gender?,
+): CreateUserCommand =
     CreateUserCommand(
         nickname = temporaryNickname,
+        name = name,
         email = email,
         googleId = googleId,
         birth = birth,
@@ -41,7 +40,7 @@ data class SignInForOAuthServiceRequest(
 
 data class ResendEmailServiceRequest(
     val email: String,
-    val host: String?
+    val host: String?,
 )
 
 data class VerifyEmailServiceRequest(

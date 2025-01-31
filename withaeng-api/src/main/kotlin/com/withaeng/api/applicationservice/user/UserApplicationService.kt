@@ -1,6 +1,7 @@
 package com.withaeng.api.applicationservice.user
 
-import com.withaeng.api.applicationservice.user.dto.*
+import com.withaeng.api.applicationservice.user.dto.PutProfileImageResponse
+import com.withaeng.api.applicationservice.user.dto.UserStatisticalProfileResponse
 import com.withaeng.api.common.IdResponse
 import com.withaeng.domain.accompany.AccompanyService
 import com.withaeng.domain.user.UserService
@@ -30,15 +31,6 @@ class UserApplicationService(
             profileCompletionPercentage = profileCompletionPercentage,
             accompanyCount = accompanyCount,
         )
-    }
-
-    fun getTravelPreference(userId: Long): UserTravelPreferenceResponse {
-        return userService.findDetailById(userId).travelPreference?.toServiceResponse()
-            ?: UserTravelPreferenceResponse()
-    }
-
-    fun updateTravelPreference(userId: Long, serviceRequest: UpdateTravelPreferenceServiceRequest): IdResponse {
-        return userService.replaceTravelPreference(userId, serviceRequest.toCommand()).toIdResponse()
     }
 
     fun updateNickname(id: Long, nickname: String?): IdResponse {

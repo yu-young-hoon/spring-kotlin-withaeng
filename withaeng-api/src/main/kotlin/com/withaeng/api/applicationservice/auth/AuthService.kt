@@ -27,48 +27,6 @@ class AuthService(
     private val passwordEncoder: PasswordEncoder,
     private val googleClient: GoogleClient,
 ) {
-
-    @Transactional
-    fun signUp(request: SignUpServiceRequest): UserResponse {
-        val userEmail = request.email
-        val userDto = userService.findByEmailOrNull(request.email)
-        if (userDto != null) {
-            if (userDto.isValidUser()) {
-                throw WithaengException.of(
-                    type = WithaengExceptionType.ALREADY_EXIST,
-                    message = "이미 가입된 이메일입니다.",
-                )
-            }
-            userService.deleteByEmail(userEmail)
-            verificationEmailService.deleteAllByUserId(userDto.id)
-        }
-        val newUserDto = userService.create(
-            request.toCommand(
-                UserNicknameUtils.createTemporaryNickname(),
-                passwordEncoder.encode(request.password),
-            ),
-        )
-        verificationEmailService.create(
-            email = newUserDto.email!!,
-            userId = newUserDto.id,
-            code = UUID.randomUUID().toString(),
-            type = VerificationEmailType.VERIFY_EMAIL,
-            host = request.host,
-        )
-        return UserResponse(newUserDto.id, newUserDto.email, jwtAgent.provide(UserInfo.from(newUserDto)))
-    }
-
-    @Transactional
-    fun signIn(request: SignInServiceRequest): UserResponse {
-        val userDto = userService.findByEmailOrNull(request.email)
-            ?: throw WithaengException.of(
-                type = WithaengExceptionType.NOT_EXIST,
-                message = "이메일에 해당하는 유저를 찾을 수 없습니다.",
-            )
-        checkValidUserPassword(request.password, userDto.password!!)
-        return UserResponse(userDto.id, userDto.email, jwtAgent.provide(UserInfo.from(userDto)))
-    }
-
     @Transactional
     fun resendEmail(request: ResendEmailServiceRequest) {
         val userDto = userService.findByEmailOrNull(request.email) ?: throw WithaengException.of(
@@ -156,12 +114,6 @@ class AuthService(
         return roles.any { it == UserRole.USER }
     }
 
-    private fun checkValidUserPassword(source: String, encryptedPassword: String) {
-        if (!passwordEncoder.matches(source, encryptedPassword)) {
-            throw WithaengException.of(WithaengExceptionType.INVALID_PASSWORD)
-        }
-    }
-
     @Transactional
     fun signInForOAuth(request: SignInForOAuthServiceRequest): UserResponse {
         val token = googleClient.getToken(request.code) ?: throw WithaengException.of(
@@ -185,8 +137,9 @@ class AuthService(
         }?.firstOrNull()
         userService.create(
             request.toCommand(
-                UserNicknameUtils.createTemporaryNickname(),
-                me.email,
+                temporaryNickname = UserNicknameUtils.createTemporaryNickname(),
+                name = me.name,
+                email = me.email,
                 googleId = me.id,
                 birth = birth ?: LocalDate.now(),
                 gender = gender ?: Gender.MALE,

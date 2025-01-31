@@ -35,12 +35,11 @@ class UserService(private val userRepository: UserRepository) {
     fun getProfileCompletionPercentage(userId: Long): Int {
         val user = userRepository.findByIdOrNull(userId).getOrThrow()
         val profile = user.profile
-        val travelPreference = user.travelPreference
+        val travelLikings = user.travelLikings
 
         val profileFields = UserProfile::class.declaredMemberProperties.filter { it.name != "user" }
-        val travelPreferenceFields = UserTravelPreference::class.declaredMemberProperties.filter { it.name != "user" }
 
-        val totalFields = profileFields.size + travelPreferenceFields.size
+        val totalFields = profileFields.size + 8
         var filledFields = 0
 
         profileFields.forEach { field ->
@@ -49,12 +48,8 @@ class UserService(private val userRepository: UserRepository) {
             }
         }
 
-        travelPreferenceFields.forEach { field ->
-            if (travelPreference != null && field.get(travelPreference) != null
-                && field.get(travelPreference) != emptySet<Any>()
-            ) {
-                filledFields++
-            }
+        travelLikings.map { it.likingId }.toSet().size.let {
+            filledFields += it
         }
 
         return ((filledFields.toDouble() / totalFields) * 100).toInt()
@@ -67,31 +62,19 @@ class UserService(private val userRepository: UserRepository) {
                 email = createUserCommand.email,
                 googleId = createUserCommand.googleId,
                 nickname = createUserCommand.nickname,
+                name = createUserCommand.name,
                 password = createUserCommand.password,
                 birth = createUserCommand.birth,
-                gender = createUserCommand.gender
-            )
+                gender = createUserCommand.gender,
+            ),
         ).toSimpleDto()
-    }
-
-    @Transactional
-    fun replaceTravelPreference(userId: Long, command: UpdateTravelPreferenceCommand): UserSimpleDto {
-        val user = userRepository.findByIdOrNull(userId).getOrThrow()
-        user.travelPreference = user.travelPreference ?: UserTravelPreference.create(user)
-        user.travelPreference?.mbti = command.mbti ?: emptySet()
-        user.travelPreference?.preferTravelType = command.preferTravelType
-        user.travelPreference?.preferTravelThemes = command.preferTravelThemes ?: emptySet()
-        user.travelPreference?.consumeStyle = command.consumeStyle
-        user.travelPreference?.foodRestrictions = command.foodRestrictions ?: emptySet()
-        user.travelPreference?.smokingType = command.smokingType
-        user.travelPreference?.drinkingType = command.drinkingType
-        return user.toSimpleDto()
     }
 
     @Transactional
     fun replaceTravelLiking(userId: Long, command: UpdateTravelLikingCommand): UserSimpleDto {
         val user = userRepository.findByIdOrNull(userId).getOrThrow()
-        user.travelLikings = command.travelLikings.map { UserTravelLiking(it.travelLikingId, it.travelLikingValue, user) }.toMutableSet()
+        user.travelLikings =
+            command.travelLikings.map { UserTravelLiking(it.travelLikingId, it.travelLikingValue, user) }.toMutableSet()
         return user.toSimpleDto()
     }
 
@@ -152,7 +135,7 @@ class UserService(private val userRepository: UserRepository) {
     private fun User?.getOrThrow(): User {
         this ?: throw WithaengException.of(
             type = WithaengExceptionType.NOT_EXIST,
-            message = "해당하는 유저를 찾을 수 없습니다."
+            message = "해당하는 유저를 찾을 수 없습니다.",
         )
         return this
     }

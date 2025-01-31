@@ -9,13 +9,13 @@ spring.config.activate.on-profile: local
 
 spring.thymeleaf.cache: false
 
-cloud.aws.s3.bucket: withaeng-images-dev
+cloud.aws.s3.bucket: withaeng-images
 redirect-url: http://localhost:3000/google
 
 ---
 spring.config.activate.on-profile: dev
 
-cloud.aws.s3.bucket: withaeng-images-dev
+cloud.aws.s3.bucket: withaeng-images
 redirect-url: http://localhost:3000/google
 
 ---

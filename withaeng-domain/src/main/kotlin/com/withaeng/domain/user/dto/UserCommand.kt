@@ -10,6 +10,7 @@ data class CreateUserCommand(
     val birth: LocalDate? = null,
     val gender: Gender? = null,
     val nickname: String,
+    val name: String,
 )
 
 data class UpdateProfileCommand(

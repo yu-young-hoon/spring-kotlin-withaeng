@@ -26,12 +26,9 @@ class User(
 
     @Column(name = "manner_score", nullable = false)
     var mannerScore: Double = 36.5,
-    
+
     @Embedded
     val profile: UserProfile,
-
-    @OneToOne(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = false)
-    var travelPreference: UserTravelPreference? = null,
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = false)
     var travelLikings: MutableSet<UserTravelLiking> = mutableSetOf(),
@@ -45,29 +42,11 @@ class User(
         fun create(
             email: String?,
             password: String?,
-            birth: LocalDate?,
-            gender: Gender?,
-            nickname: String,
-        ): User {
-            return User(
-                email = email,
-                password = password,
-                birth = birth,
-                gender = gender,
-                profile = UserProfile(
-                    nickname = nickname
-                ),
-                roles = setOf(UserRole.NON_USER)
-            )
-        }
-
-        fun create(
-            email: String?,
-            password: String?,
             googleId: String?,
             birth: LocalDate?,
             gender: Gender?,
             nickname: String,
+            name: String,
         ): User {
             return User(
                 email = email,
@@ -76,9 +55,10 @@ class User(
                 birth = birth,
                 gender = gender,
                 profile = UserProfile(
-                    nickname = nickname
+                    nickname = nickname,
+                    name = name,
                 ),
-                roles = setOf(UserRole.USER)
+                roles = setOf(UserRole.USER),
             )
         }
     }

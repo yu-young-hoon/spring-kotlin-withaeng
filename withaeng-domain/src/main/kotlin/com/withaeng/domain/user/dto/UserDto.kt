@@ -23,6 +23,7 @@ fun User.toSimpleDto(): UserSimpleDto = UserSimpleDto(
     mannerScore = mannerScore,
     profile = UserProfileDto(
         nickname = profile.nickname,
+        name = profile.name,
         introduction = profile.introduction,
         profileImageUrl = profile.profileImageUrl,
         instagram = profile.instagram,
@@ -39,13 +40,13 @@ data class UserDetailDto(
     val gender: Gender?,
     val mannerScore: Double,
     val profile: UserProfileDto,
-    val travelPreference: UserTravelPreferenceDto? = null,
     val travelLiking: UserTravelLikingDto? = null,
     val roles: Set<UserRole>,
 )
 
 data class UserProfileDto(
     val nickname: String,
+    val name: String,
     val introduction: String? = null,
     val profileImageUrl: String? = null,
     val instagram: String?,
@@ -75,23 +76,13 @@ fun User.toDetailDto(): UserDetailDto = UserDetailDto(
     mannerScore = mannerScore,
     profile = UserProfileDto(
         nickname = profile.nickname,
+        name = profile.name,
         introduction = profile.introduction,
         profileImageUrl = profile.profileImageUrl,
         instagram = profile.instagram,
     ),
-    travelPreference = travelPreference?.toDto(),
     travelLiking = travelLikings?.toDto(),
     roles = roles,
-)
-
-fun UserTravelPreference.toDto(): UserTravelPreferenceDto = UserTravelPreferenceDto(
-    mbti = mbti,
-    preferTravelType = preferTravelType,
-    preferTravelThemes = preferTravelThemes,
-    consumeStyle = consumeStyle,
-    foodRestrictions = foodRestrictions,
-    smokingType = smokingType,
-    drinkingType = drinkingType,
 )
 
 fun MutableSet<UserTravelLiking>.toDto(): UserTravelLikingDto = UserTravelLikingDto(

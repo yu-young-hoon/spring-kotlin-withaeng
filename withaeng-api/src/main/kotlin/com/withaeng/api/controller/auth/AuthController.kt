@@ -14,22 +14,6 @@ import org.springframework.web.bind.annotation.*
 class AuthController(
     private val authService: AuthService,
 ) {
-    @Operation(summary = "Sign Up API", description = "회원가입 API")
-    @PostMapping("/sign-up")
-    fun signUp(@RequestBody request: SignUpRequest): ApiResponse<UserResponse> {
-        return ApiResponse.success(
-            authService.signUp(request.toServiceRequest())
-        )
-    }
-
-    @Operation(summary = "Sign In API", description = "로그인 API")
-    @PostMapping("/sign-in")
-    fun signIn(@RequestBody request: SignInRequest): ApiResponse<UserResponse> {
-        return ApiResponse.success(
-            authService.signIn(request.toServiceRequest())
-        )
-    }
-
     @Operation(summary = "Sign In For OAUTH API", description = "OAUTH 로그인 API")
     @PostMapping("/oauth")
     fun signInOauth(@RequestBody request: SignInAuthRequest): ApiResponse<UserResponse> {

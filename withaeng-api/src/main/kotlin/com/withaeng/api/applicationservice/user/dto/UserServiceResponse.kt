@@ -42,6 +42,7 @@ fun UserTravelPreferenceDto.toServiceResponse(): UserTravelPreferenceResponse =
 data class UserStatisticalProfileResponse(
     val id: Long,
     val nickname: String,
+    val name: String,
     val introduction: String? = null,
     val gender: Gender?,
     val birth: LocalDate?,
@@ -60,6 +61,7 @@ data class UserStatisticalProfileResponse(
         ): UserStatisticalProfileResponse = UserStatisticalProfileResponse(
             id = userDetail.id,
             nickname = userDetail.profile.nickname,
+            name = userDetail.profile.name,
             introduction = userDetail.profile.introduction,
             gender = userDetail.gender,
             birth = userDetail.birth,
