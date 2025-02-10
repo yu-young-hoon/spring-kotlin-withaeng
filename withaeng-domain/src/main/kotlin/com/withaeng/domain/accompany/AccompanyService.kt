@@ -69,7 +69,7 @@ class AccompanyService(
 
     @Transactional(readOnly = true)
     fun findAll(): List<AccompanyDto> {
-        return accompanyRepository.findAll().map { it.toDto() }
+        return accompanyRepository.findAllOrderByDesc().map { it.toDto() }
     }
 
     @Transactional(readOnly = true)

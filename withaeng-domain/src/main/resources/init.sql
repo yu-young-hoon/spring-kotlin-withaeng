@@ -21,7 +21,7 @@ CREATE TABLE `accompany`
     `title`               varchar(255) NOT NULL COMMENT '동행 제목',
     `user_id`             bigint(20) NOT NULL,
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 CREATE TABLE `accompany_join_request`
 (
@@ -81,26 +81,21 @@ CREATE TABLE `accompany_statistics`
     PRIMARY KEY (`id`),
     UNIQUE KEY `UK_3lpyg2ol9tw1big2k0kcrgj0h` (`accompany_id`),
     CONSTRAINT `FKnksv9hrwriuldmo3d7ech9jm2` FOREIGN KEY (`accompany_id`) REFERENCES `accompany` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
-
-CREATE TABLE `user_travel_preference`
-(
-    `id`                  bigint(20) NOT NULL AUTO_INCREMENT,
-    `created_at`          datetime(6) NOT NULL,
-    `deleted_at`          datetime(6) DEFAULT NULL,
-    `updated_at`          datetime(6) NOT NULL,
-    `consume_style`       enum('BUDGET_FRIENDLY','SPLURGE','LUXURY') DEFAULT NULL,
-    `drinking_type`       enum('FREQUENT_DRINKER','OCCASIONAL_DRINKER','ABSTAINER','NON_DRINKER') DEFAULT NULL,
-    `food_restriction`    varchar(255) NOT NULL,
-    `mbti`                varchar(255) DEFAULT NULL,
-    `prefer_travel_theme` varchar(255) NOT NULL,
-    `prefer_travel_type`  enum('DOMESTIC','INTERNATIONAL') DEFAULT NULL,
-    `smoking_type`        enum('FREQUENT_SMOKER','OCCASIONAL_SMOKER','QUITTING_SMOKER','NON_SMOKER') DEFAULT NULL,
-    `user_id`             bigint(20) DEFAULT NULL,
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `UK_p8dv4tviuc8b73l3er1esv8je` (`user_id`),
-    CONSTRAINT `FKti9j6ntw8olnb1e9xljjnt4qv` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+CREATE TABLE `user_travel_liking`
+(
+    `id`            bigint(20) NOT NULL AUTO_INCREMENT,
+    `created_at`    datetime(6) NOT NULL,
+    `deleted_at`    datetime(6) DEFAULT NULL,
+    `updated_at`    datetime(6) NOT NULL,
+    `liking_id`     int(11) NOT NULL,
+    `drinking_type` int(11) NOT NULL,
+    `user_id`       bigint(20) DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    KEY             `FKi7ig0qj5cup4de2b6vlrxlw8w` (`user_id`),
+    CONSTRAINT `FKi7ig0qj5cup4de2b6vlrxlw8w` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=91 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 CREATE TABLE `users`
 (
@@ -117,11 +112,12 @@ CREATE TABLE `users`
     `instagram`         varchar(255) DEFAULT NULL,
     `introduction`      varchar(255) DEFAULT NULL,
     `nickname`          varchar(255) NOT NULL,
+    `name`              varchar(255) NOT NULL,
     `profile_image_url` varchar(255) DEFAULT NULL,
     `roles`             varchar(255) DEFAULT NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `email_UNIQUE` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 CREATE TABLE `verification_email`
 (
@@ -136,4 +132,4 @@ CREATE TABLE `verification_email`
     `type`       enum('VERIFY_EMAIL','CHANGE_PASSWORD') NOT NULL,
     `user_id`    bigint(20) NOT NULL,
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;

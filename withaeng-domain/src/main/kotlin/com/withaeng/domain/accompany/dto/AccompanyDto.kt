@@ -92,6 +92,7 @@ data class FindAccompanyDto @QueryProjection constructor(
     val userId: Long,
     val title: String,
     val content: String,
+    val accompanyStatus: AccompanyStatus,
     val destination: AccompanyDestination,
     val startTripDate: LocalDate,
     val endTripDate: LocalDate,

@@ -2,6 +2,7 @@ package com.withaeng.api.applicationservice.accompany.dto
 
 import com.withaeng.domain.accompany.AccompanyDestination
 import com.withaeng.domain.accompany.AccompanyPreferGender
+import com.withaeng.domain.accompany.AccompanyStatus
 import com.withaeng.domain.accompany.dto.FindAccompanyDto
 import com.withaeng.domain.accompany.dto.FindAccompanyUserInfoDto
 import com.withaeng.domain.accompanyjoinrequests.dto.FindAccompanyJoinRequestDto
@@ -12,6 +13,7 @@ data class FindAccompanyResponse(
     val userId: Long,
     val title: String,
     val content: String,
+    val accompanyStatus: AccompanyStatus,
     val destination: AccompanyDestination,
     val startTripDate: LocalDate,
     val endTripDate: LocalDate,
@@ -33,6 +35,7 @@ fun FindAccompanyDto.toHostAccompanyResponse() = FindAccompanyResponse(
     userId = userId,
     title = title,
     content = content,
+    accompanyStatus = accompanyStatus,
     destination = destination,
     startTripDate = startTripDate,
     endTripDate = endTripDate,
@@ -54,6 +57,7 @@ fun FindAccompanyDto.toGuestAccompanyResponse(joinRequests: List<FindAccompanyJo
         userId = userId,
         title = title,
         content = content,
+        accompanyStatus = accompanyStatus,
         destination = destination,
         startTripDate = startTripDate,
         endTripDate = endTripDate,

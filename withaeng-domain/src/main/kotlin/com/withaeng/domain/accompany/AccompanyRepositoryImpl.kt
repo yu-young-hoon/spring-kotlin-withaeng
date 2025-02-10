@@ -32,6 +32,7 @@ class AccompanyRepositoryImpl(
                     accompany.userId,
                     accompany.title,
                     accompany.content,
+                    accompany.accompanyStatus,
                     accompany.accompanyDestination,
                     accompany.startTripDate,
                     accompany.endTripDate,

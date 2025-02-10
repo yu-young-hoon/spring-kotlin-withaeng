@@ -1,5 +1,9 @@
 package com.withaeng.domain.destination
 
+import com.fasterxml.jackson.annotation.JsonValue
+
+
+
 enum class City(
     val countryCode: String,
     val cityCode: String,
@@ -174,6 +178,11 @@ enum class City(
     BANDUNG(Country.INDONESIA.countryCode, "BANDUNG", "반둥"),
     YOGYAKARTA(Country.INDONESIA.countryCode, "YOGYAKARTA", "요가야카르타"),
     SURABAYA(Country.INDONESIA.countryCode, "SURABAYA", "수라바야"),
-    MAKASSAR(Country.INDONESIA.countryCode, "MAKASSAR", "마카사르");
+    MAKASSAR(Country.INDONESIA.countryCode, "MAKASSAR", "마카사르"),
+    ;
 
+    @JsonValue
+    fun toValue(): String {
+        return cityName
+    }
 }
