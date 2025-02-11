@@ -61,8 +61,6 @@ class SecurityConfig(
                         "/h2-console/**",
                     ).permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/v1/accompany/**").permitAll()
-                    .requestMatchers(HttpMethod.DELETE, "/api/v1/accompany/**")
-                    .hasRole(UserRole.ADMIN.getActualRoleName())
                     .anyRequest().hasAnyRole(UserRole.USER.getActualRoleName(), UserRole.ADMIN.getActualRoleName())
             }
             .addFilterBefore(JwtFilter(jwtAgent), UsernamePasswordAuthenticationFilter::class.java)

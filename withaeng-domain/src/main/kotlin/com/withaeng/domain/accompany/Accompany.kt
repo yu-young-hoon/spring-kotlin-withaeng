@@ -88,10 +88,10 @@ class Accompany(
 
     fun update(
         content: String?,
-        tags: Set<String>?,
+        title: String?,
     ) {
         this.content = content ?: this.content
-        this.tags = tags ?: this.tags
+        this.title = title ?: this.title
     }
 
     fun updateStatusToComplete() {

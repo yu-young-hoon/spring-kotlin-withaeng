@@ -83,11 +83,11 @@ fun CreateAccompanyRequest.toServiceRequest(
 )
 
 data class UpdateAccompanyRequest(
+    @Schema(description = "동행 게시글 제목")
+    val title: String? = null,
+
     @Schema(description = "동행 게시글 내용")
     val content: String? = null,
-
-    @Schema(description = "동행 게시글에 부착할 태그 아이디 리스트")
-    val tags: Set<String>? = null,
 )
 
 fun UpdateAccompanyRequest.toServiceRequest(
@@ -97,7 +97,7 @@ fun UpdateAccompanyRequest.toServiceRequest(
     accompanyId = accompanyId,
     userId = userId,
     content = content,
-    tags = tags,
+    title = title,
 )
 
 data class SearchAccompanyRequest(

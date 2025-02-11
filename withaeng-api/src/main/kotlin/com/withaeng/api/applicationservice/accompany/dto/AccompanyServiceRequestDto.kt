@@ -51,14 +51,14 @@ data class UpdateAccompanyServiceRequest(
     val accompanyId: Long,
     val userId: Long,
     val content: String? = null,
-    val tags: Set<String>? = null,
+    val title: String? = null,
 )
 
 fun UpdateAccompanyServiceRequest.toDomainDto(): UpdateAccompanyDto {
     return UpdateAccompanyDto(
         accompanyId = accompanyId,
         content = content,
-        tags = tags?.toSet(),
+        title = title,
     )
 }
 

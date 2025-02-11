@@ -52,6 +52,7 @@ class AccompanyRepositoryImpl(
                         user.profile.introduction,
                         user.createdAt,
                     ),
+                    accompany.deletedAt
                 )
             )
             .from(accompany)

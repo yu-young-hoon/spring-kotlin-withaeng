@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDateTime
 
 @Service
 class AccompanyService(
@@ -33,7 +34,7 @@ class AccompanyService(
         )
         accompany.update(
             content = params.content,
-            tags = params.tags,
+            title = params.title,
         )
 
         return accompany.toDto()
@@ -46,16 +47,23 @@ class AccompanyService(
 
     @Transactional(readOnly = true)
     fun detail(accompanyId: Long): FindAccompanyDto {
-        return accompanyRepository.findAccompanyDetail(accompanyId)
+        val findAccompanyDto = accompanyRepository.findAccompanyDetail(accompanyId)
             ?: throw WithaengException.of(
                 type = WithaengExceptionType.NOT_EXIST,
                 message = NOT_EXIST_MESSAGE
             )
+        if (findAccompanyDto.deletedAt != null) {
+            throw WithaengException.of(
+                type = WithaengExceptionType.NOT_EXIST,
+                message = NOT_EXIST_MESSAGE
+            )
+        }
+        return findAccompanyDto
     }
 
     @Transactional
     fun increaseViewCount(accompanyId: Long) {
-        val accompany = accompanyRepository.findByIdOrNull(accompanyId) ?: throw WithaengException.of(
+        val accompany = accompanyRepository.findByIdAndDeletedAtIsNull(accompanyId) ?: throw WithaengException.of(
             type = WithaengExceptionType.NOT_EXIST,
             message = NOT_EXIST_MESSAGE
         )
@@ -64,7 +72,12 @@ class AccompanyService(
 
     @Transactional
     fun delete(accompanyId: Long) {
-        accompanyRepository.deleteById(accompanyId)
+        val accompany = accompanyRepository.findByIdAndDeletedAtIsNull(accompanyId) ?: throw WithaengException.of(
+            type = WithaengExceptionType.NOT_EXIST,
+            message = NOT_EXIST_MESSAGE
+        )
+        accompany.deletedAt = LocalDateTime.now()
+        accompanyRepository.save(accompany)
     }
 
     @Transactional(readOnly = true)

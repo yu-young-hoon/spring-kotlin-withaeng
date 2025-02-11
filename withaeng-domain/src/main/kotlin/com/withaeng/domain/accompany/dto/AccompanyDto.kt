@@ -25,7 +25,7 @@ data class CreateAccompanyDto(
 data class UpdateAccompanyDto(
     val accompanyId: Long,
     val content: String? = null,
-    val tags: Set<String>? = null,
+    val title: String? = null,
 )
 
 data class AccompanyDto(
@@ -106,6 +106,7 @@ data class FindAccompanyDto @QueryProjection constructor(
     val tags: Set<String>? = emptySet(),
     val likeCount: Long = 0,
     val author: FindAccompanyUserInfoDto,
+    val deletedAt: LocalDateTime?,
 )
 
 data class FindAccompanyUserInfoDto @QueryProjection constructor(
