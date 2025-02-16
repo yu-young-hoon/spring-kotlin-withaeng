@@ -46,14 +46,16 @@ class AccompanyRepositoryImpl(
                     accompany.tags,
                     accompanyLike.count(),
                     QFindAccompanyUserInfoDto(
+                        user.mannerScore,
                         user.profile.nickname,
                         user.profile.profileImageUrl,
                         user.gender,
                         user.profile.introduction,
+                        user.birth,
                         user.createdAt,
                     ),
-                    accompany.deletedAt
-                )
+                    accompany.deletedAt,
+                ),
             )
             .from(accompany)
             .leftJoin(accompanyLike)
@@ -63,7 +65,7 @@ class AccompanyRepositoryImpl(
             .innerJoin(user)
             .on(accompany.userId.eq(user.id))
             .where(
-                accompanyIdEq(accompanyId)
+                accompanyIdEq(accompanyId),
             )
             .groupBy(accompanyLike.accompanyId)
             .fetchOne()
@@ -88,14 +90,14 @@ class AccompanyRepositoryImpl(
                         user.profile.nickname,
                         user.profile.profileImageUrl,
                     ),
-                )
+                ),
             )
             .from(accompany)
             .innerJoin(user).on(accompany.userId.eq(user.id))
             .innerJoin(accompanyStatistics).on(accompany.id.eq(accompanyStatistics.accompany.id))
             .leftJoin(accompanyJoinRequest).on(
                 accompanyJoinRequest.accompany.eq(accompany)
-                    .and(accompanyJoinRequest.status.eq(AccompanyJoinRequestStatus.ACCEPT))
+                    .and(accompanyJoinRequest.status.eq(AccompanyJoinRequestStatus.ACCEPT)),
             )
             .groupBy(
                 accompany.id,
@@ -108,7 +110,7 @@ class AccompanyRepositoryImpl(
                 accompany.endTripDate,
                 accompany.memberCount,
                 accompany.title,
-                accompany.tags
+                accompany.tags,
             )
             .where(
                 statusEq(query.status),
@@ -132,7 +134,7 @@ class AccompanyRepositoryImpl(
             .on(accompany.userId.eq(user.id))
             .leftJoin(accompanyJoinRequest).on(
                 accompanyJoinRequest.accompany.eq(accompany)
-                    .and(accompanyJoinRequest.status.eq(AccompanyJoinRequestStatus.ACCEPT))
+                    .and(accompanyJoinRequest.status.eq(AccompanyJoinRequestStatus.ACCEPT)),
             )
             .where(
                 continentEq(query.continent),

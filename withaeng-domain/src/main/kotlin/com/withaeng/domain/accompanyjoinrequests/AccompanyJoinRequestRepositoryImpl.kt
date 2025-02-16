@@ -26,14 +26,16 @@ class AccompanyJoinRequestRepositoryImpl(
                     user.gender,
                     user.profile.introduction,
                     user.createdAt,
-                )
+                    user.birth,
+                    user.mannerScore,
+                ),
             )
             .from(accompanyJoinRequest)
             .innerJoin(user)
             .on(accompanyJoinRequest.userId.eq(user.id))
             .where(
                 accompanyJoinRequest.accompany.id.eq(accompanyId),
-                accompanyJoinRequest.status.notIn(AccompanyJoinRequestStatus.CANCEL)
+                accompanyJoinRequest.status.notIn(AccompanyJoinRequestStatus.CANCEL),
             )
             .orderBy(findJoinRequestsSort())
             .fetch()

@@ -110,10 +110,12 @@ data class FindAccompanyDto @QueryProjection constructor(
 )
 
 data class FindAccompanyUserInfoDto @QueryProjection constructor(
+    val mannerScore: Double,
     val nickname: String,
     val profileImageUrl: String?,
     val gender: Gender,
     val introduction: String?,
+    val birth: LocalDate?,
     val joinDate: LocalDateTime,
     // TODO : 여행 관심사 Set 추가 필요
     // TODO : 온도 추가 필요
