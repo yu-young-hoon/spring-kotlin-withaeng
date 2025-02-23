@@ -103,4 +103,17 @@ class AccompanyController(
         accompanyApplicationService.delete(accompanyId)
         return ApiResponse.success()
     }
+
+    @Operation(
+        summary = "Update Status Complete Accompany API",
+        description = "동행 게시글 동행완료 API (For Admin)",
+        security = [SecurityRequirement(name = "Authorization")]
+    )
+    @PutMapping("/{accompanyId}/complete")
+    fun updateStatusComplete(
+        @Parameter(description = "동행 id") @PathVariable accompanyId: Long,
+    ): ApiResponse<Unit> {
+        accompanyApplicationService.updateStatusToComplete(accompanyId)
+        return ApiResponse.success()
+    }
 }

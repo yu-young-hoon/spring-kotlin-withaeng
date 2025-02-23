@@ -98,4 +98,13 @@ class AccompanyService(
         )
         return accompany.toDto()
     }
+
+    @Transactional
+    fun updateStatusToComplete(accompanyId: Long) {
+        val accompany = accompanyRepository.findByIdOrNull(accompanyId) ?: throw WithaengException.of(
+            type = WithaengExceptionType.NOT_EXIST,
+            message = NOT_EXIST_MESSAGE
+        )
+        accompany.updateStatusToComplete()
+    }
 }

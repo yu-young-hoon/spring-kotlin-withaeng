@@ -23,6 +23,7 @@ fun AccompanyJoinRequest.toDto() = AccompanyJoinRequestDto(
 
 data class FindAccompanyJoinRequestDto @QueryProjection constructor(
     val joinRequestId: Long,
+    val joinUserId: Long,
     val joinRequestStatus: AccompanyJoinRequestStatus,
     val nickname: String,
     val profileImageUrl: String?,

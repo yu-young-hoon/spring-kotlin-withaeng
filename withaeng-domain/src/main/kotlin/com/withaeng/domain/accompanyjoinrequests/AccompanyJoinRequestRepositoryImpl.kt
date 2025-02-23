@@ -20,6 +20,7 @@ class AccompanyJoinRequestRepositoryImpl(
             .select(
                 QFindAccompanyJoinRequestDto(
                     accompanyJoinRequest.id,
+                    user.id,
                     accompanyJoinRequest.status,
                     user.profile.nickname,
                     user.profile.profileImageUrl,
@@ -35,7 +36,6 @@ class AccompanyJoinRequestRepositoryImpl(
             .on(accompanyJoinRequest.userId.eq(user.id))
             .where(
                 accompanyJoinRequest.accompany.id.eq(accompanyId),
-                accompanyJoinRequest.status.notIn(AccompanyJoinRequestStatus.CANCEL),
             )
             .orderBy(findJoinRequestsSort())
             .fetch()

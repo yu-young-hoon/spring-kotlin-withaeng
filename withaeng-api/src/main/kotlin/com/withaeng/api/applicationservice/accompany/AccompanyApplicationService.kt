@@ -59,12 +59,8 @@ class AccompanyApplicationService(
         increaseViewCount(accompanyId)
         val accompanyDto = accompanyService.detail(accompanyId)
 
-        if (isHost(userId, accompanyDto.userId)) {
-            val joinRequests = accompanyJoinRequestService.findJoinRequestsByAccompanyId(accompanyId)
-            return accompanyDto.toGuestAccompanyResponse(joinRequests)
-        }
-
-        return accompanyDto.toHostAccompanyResponse()
+        val joinRequests = accompanyJoinRequestService.findJoinRequestsByAccompanyId(accompanyId)
+        return accompanyDto.toGuestAccompanyResponse(joinRequests)
     }
 
     fun retrieveAll(): List<AccompanyResponse> {
@@ -102,6 +98,11 @@ class AccompanyApplicationService(
     fun delete(accompanyId: Long) {
         accompanyService.delete(accompanyId)
     }
+
+    fun updateStatusToComplete(accompanyId: Long) {
+        accompanyService.updateStatusToComplete(accompanyId)
+    }
+
 
     private fun increaseViewCount(accompanyId: Long) {
         accompanyService.increaseViewCount(accompanyId)
