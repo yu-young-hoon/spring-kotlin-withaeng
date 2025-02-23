@@ -70,6 +70,14 @@ class AccompanyController(
         )
     }
 
+    @Operation(summary = "Retrieve Random Accompany API", description = "추천 동행 게시글 조회 API")
+    @GetMapping("/random")
+    fun random(): ApiResponse<List<AccompanyResponse>> {
+        return ApiResponse.success(
+            accompanyApplicationService.random()
+        )
+    }
+
     @Operation(
         summary = "Update Accompany API",
         description = "동행 게시글 수정 API",

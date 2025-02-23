@@ -86,6 +86,11 @@ class AccompanyService(
     }
 
     @Transactional(readOnly = true)
+    fun random(): List<AccompanyDto> {
+        return accompanyRepository.random().map { it.toDto() }
+    }
+
+    @Transactional(readOnly = true)
     fun countByUserId(userId: Long): Int {
         return accompanyRepository.countByUserId(userId)
     }

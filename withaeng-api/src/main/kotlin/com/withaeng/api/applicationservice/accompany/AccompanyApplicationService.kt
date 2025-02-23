@@ -9,9 +9,11 @@ import com.withaeng.common.exception.WithaengExceptionType
 import com.withaeng.domain.accompany.AccompanyService
 import com.withaeng.domain.accompanyjoinrequests.AccompanyJoinRequestService
 import com.withaeng.domain.accompanylike.AccompanyLikeService
+import com.withaeng.domain.user.UserRepository
 import com.withaeng.external.image.PreSignedUrl
 import com.withaeng.external.image.PreSignedUrlGenerator
 import org.springframework.stereotype.Service
+import java.time.ZoneId
 import java.util.*
 
 private const val ACCOMPANY_IMAGE_STORAGE_DIR = "accompany"
@@ -22,6 +24,7 @@ class AccompanyApplicationService(
     private val accompanyLikeService: AccompanyLikeService,
     private val accompanyJoinRequestService: AccompanyJoinRequestService,
     private val preSignedUrlGenerator: PreSignedUrlGenerator,
+    private val userRepository: UserRepository,
 ) {
 
     fun create(request: CreateAccompanyServiceRequest): CreateAccompanyResponse {
@@ -71,6 +74,14 @@ class AccompanyApplicationService(
         }
     }
 
+    fun random(): List<AccompanyResponse> {
+        val accompanyDtoList = accompanyService.random()
+        // TODO: Bulk로 가져오는 방법을 고안
+        return accompanyDtoList.map { accompanyDto ->
+            accompanyDto.toAccompanyResponse(countAccompanyLikeByAccompanyId(accompanyDto.id))
+        }
+    }
+
     fun requestJoin(accompanyId: Long, userId: Long) {
         val accompanyDto = accompanyService.findById(accompanyId)
         validateSelfRequestNotAllowed(accompanyDto.userId, userId)
@@ -83,6 +94,19 @@ class AccompanyApplicationService(
         validateSelfRequestNotAllowed(accompanyDto.userId, userId)
         validateCreatorAccess(accompanyJoinRequestDto.userId, userId)
         accompanyJoinRequestService.cancelJoin(accompanyId, joinRequestId)
+        val ago = Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().until(accompanyDto.startTripDate).days
+        userRepository.findById(userId)
+            .orElseThrow { WithaengException.of(WithaengExceptionType.NOT_EXIST, "User not found") }
+            .let {
+                if (ago <= 1) {
+                    it.mannerScore += -0.1
+                } else if (ago <= 3) {
+                    it.mannerScore += -0.5
+                } else if (ago <= 7) {
+                    it.mannerScore += -1
+                }
+                userRepository.save(it)
+            }
     }
 
     fun acceptJoin(accompanyId: Long, userId: Long, joinRequestId: Long) {
@@ -116,7 +140,7 @@ class AccompanyApplicationService(
         if (createUserId == requestUserId) {
             throw WithaengException.of(
                 type = WithaengExceptionType.ACCESS_DENIED,
-                message = "본인의 동행은 신청, 취소할 수 없습니다."
+                message = "본인의 동행은 신청, 취소할 수 없습니다.",
             )
         }
     }
@@ -125,7 +149,7 @@ class AccompanyApplicationService(
         if (createUserId != requestUserId) {
             throw WithaengException.of(
                 type = WithaengExceptionType.ACCESS_DENIED,
-                message = "접근 권한이 없습니다."
+                message = "접근 권한이 없습니다.",
             )
         }
     }
