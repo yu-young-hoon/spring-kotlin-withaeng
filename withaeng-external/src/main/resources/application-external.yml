@@ -22,4 +22,4 @@ redirect-url: http://localhost:3000/google
 spring.config.activate.on-profile: prod
 
 cloud.aws.s3.bucket: withaeng-images
-redirect-url: https://algodico.com/google
+redirect-url: https://withaeng.com/google
